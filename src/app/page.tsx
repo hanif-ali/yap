@@ -18,17 +18,13 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/app-sidebar";
+import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 function FloatingButtons() {
   const { state } = useSidebar();
-
-  const tasks = useQuery(api.tasks.get);
-  console.log({tasks})
-
   return (
     <div
       className={cn(

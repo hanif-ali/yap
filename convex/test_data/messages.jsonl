@@ -1,0 +1,7 @@
+{"threadId":"thread1","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"system","content":"System: Welcome to your two-month-old chat!","status":"done","createdAt":1744192810000}
+{"threadId":"thread1","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"user","content":"User question from April","status":"done","createdAt":1744192860000,"updatedAt":1744192920000}
+{"threadId":"thread1","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"assistant","content":"Assistant answer from April","status":"done","createdAt":1744192980000}
+{"threadId":"thread2","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"user","content":"What should we brainstorm this month?","status":"thinking","createdAt":1746801005000,"updatedAt":1746801060000}
+{"threadId":"thread2","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"assistant","content":"Here are a few ideas…","status":"done","createdAt":1746801120000}
+{"threadId":"thread3","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"user","content":"Checking in on yesterday’s topic.","status":"streaming","createdAt":1749398700000,"updatedAt":1749398730000}
+{"threadId":"thread4","userId":"user_2yHSwopd8ipZW4Ndz7g2zFeLKzi","role":"user","content":"Hello, world!","status":"waiting","createdAt":1749488395000}

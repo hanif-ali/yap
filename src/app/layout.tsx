@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
 
-import { ClerkProvider } from "@clerk/nextjs";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  ClerkProvider,
+  SignedOut,
+  SignedIn,
+  UserButton,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
+import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import { ThemeToggle } from "../components/ThemeToggle";
+// import { ThemeToggle } from "../components/ThemeToggle";
 import "./globals.css";
-import { ConvexClientProvider } from "./ConvexClientProvider";
+import ConvexClientProvider from "./ConvexClientProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
@@ -28,19 +31,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${montserrat.variable} antialiased`}>
+        <ClerkProvider>
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              {children}
+              <SignedOut>
+                <SignInButton />
+                <SignUpButton />
+              </SignedOut>
+              <SignedIn>
+                {children}
+              </SignedIn>
               <ThemeToggle />
             </ThemeProvider>
           </ConvexClientProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
