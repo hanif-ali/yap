@@ -2,104 +2,45 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { ScrollArea } from "../ui/scroll-area";
 import { T3Logo } from "@/components/t3-logo";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { format, isToday, isYesterday, isThisWeek } from "date-fns";
-import { categorizeThreads } from "./utils";
+import { ThreadHistory } from "./thread-history";
 
 export function AppSidebar() {
-  const chats = useQuery(api.threads.getForCurrentUser);
-
-  const categorizedChats = categorizeThreads(chats || []);
-
   return (
     <Sidebar>
       <SidebarHeader>
-        <div
-          data-sidebar="header"
-          className="flex flex-col gap-2 relative m-1 mb-0 space-y-1 p-0 !pt-safe"
-        >
-          <h1 className="flex h-8 shrink-0 items-center justify-center text-lg text-muted-foreground transition-opacity delay-75 duration-75">
-            <a
-              className="relative flex h-8 w-24 items-center justify-center text-sm font-semibold text-foreground"
-              href="/"
-              data-discover="true"
-            >
-              <div className="h-3.5 select-none">
-                <T3Logo />
-              </div>
-            </a>
-          </h1>
-          <div className="px-1">
-            <a
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border-reflect button-reflect rounded-lg bg-[rgb(162,59,103)] p-2 font-semibold text-primary-foreground shadow hover:bg-[#d56698] active:bg-[rgb(162,59,103)] disabled:hover:bg-[rgb(162,59,103)] disabled:active:bg-[rgb(162,59,103)] dark:bg-primary/20 dark:hover:bg-pink-800/70 dark:active:bg-pink-800/40 disabled:dark:hover:bg-primary/20 disabled:dark:active:bg-primary/20 h-9 px-4 py-2 w-full select-none text-sm"
-              href="/"
-              data-discover="true"
-            >
-              <span
-                className="w-full select-none text-center"
-                data-state="closed"
-              >
-                New Chat
-              </span>
-            </a>
-          </div>
-          <div className="border-b border-chat-border px-3">
-            <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-search -ml-[3px] mr-3 !size-4 text-muted-foreground"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </svg>
-              <input
-                role="searchbox"
-                aria-label="Search threads"
-                placeholder="Search your threads..."
-                className="w-full bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground/50 placeholder:select-none focus:outline-none"
-                // value=""
-              />
+        <div className="flex h-8 items-center justify-center p-4">
+          <a
+            className="relative flex h-8 w-24 items-center justify-center text-sm font-semibold text-foreground"
+            href="/"
+            data-discover="true"
+          >
+            <div className="h-3.5 select-none">
+              <T3Logo />
             </div>
-          </div>
+          </a>
         </div>
-        <div className="flex items-center justify-between mb-4"></div>
       </SidebarHeader>
       <SidebarContent>
-        <ScrollArea className="flex-1 px-4">
-          {categorizedChats &&
-            Object.entries(categorizedChats).map(([category, chats]) => (
-              <div key={category} className="mb-4">
-                <h3 className="text-sm font-medium text-gray-400 mb-2">
-                  {category}
-                </h3>
-                {chats.map((chat) => (
-                  <div
-                    key={chat._id}
-                    className="p-2 rounded-md hover:bg-gray-700 cursor-pointer text-sm text-gray-300 mb-1"
-                  >
-                    {chat.title || "Untitled Chat"}
-                  </div>
-                ))}
-              </div>
-            ))}
-        </ScrollArea>
+        <div className="p-4 mb-4">
+          <a
+            className="inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border-reflect button-reflect rounded-lg bg-[rgb(162,59,103)] p-2 font-semibold text-primary-foreground shadow hover:bg-[#d56698] active:bg-[rgb(162,59,103)] disabled:hover:bg-[rgb(162,59,103)] disabled:active:bg-[rgb(162,59,103)] dark:bg-primary/20 dark:hover:bg-pink-800/70 dark:active:bg-pink-800/40 disabled:dark:hover:bg-primary/20 disabled:dark:active:bg-primary/20 h-9 px-4 py-2 w-full select-none text-sm"
+            href="/"
+            data-discover="true"
+          >
+            <span
+              className="w-full select-none text-center"
+              data-state="closed"
+            >
+              New Chat
+            </span>
+          </a>
+        </div>
+        <ThreadHistory />
       </SidebarContent>
       <SidebarFooter>
-        {/* User Profile */}
         <div className="p-4 border-t border-gray-700">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-sm font-medium">
