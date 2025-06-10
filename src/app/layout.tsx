@@ -14,6 +14,8 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
+import { FloatingButtons } from "@/components/floating-buttons";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -41,7 +43,9 @@ export default function RootLayout({
                 <SignUpButton />
               </SignedOut>
               <SignedIn>
-                {children}
+                <SidebarWrapper>
+                  {children}
+                </SidebarWrapper>
               </SignedIn>
               <ThemeToggle />
             </ThemeProvider>
