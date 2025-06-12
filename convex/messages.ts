@@ -30,7 +30,7 @@ export const saveMessage = mutation({
     // todo fix auth
     // const identity = await ctx.auth.getUserIdentity();
     // if (!identity) {
-      // todo: proper error handling
+    // todo: proper error handling
     //   throw new Error("Unauthorized");
     // }
 
@@ -44,11 +44,10 @@ export const saveMessage = mutation({
   },
 });
 
-
 export const updateMessage = mutation({
   args: {
     message: v.object({
-      id: v.string(),
+      id: v.id("messages"),
       content: v.string(),
     }),
   },

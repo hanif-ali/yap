@@ -6,6 +6,9 @@ import { useChat } from "@ai-sdk/react";
 // import { useSWRConfig } from "swr";
 import { Messages } from "@/components/chat/messages";
 import { MultimodalInput } from "../../../../ai-chatbot/components/multimodal-input";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { generateUUID } from "@/lib/utils";
 
 export default function ChatView({
   preloadedMessages,
@@ -14,7 +17,6 @@ export default function ChatView({
   preloadedMessages: any;
   id: string;
 }) {
-
   const {
     messages,
     setMessages,
@@ -54,6 +56,17 @@ export default function ChatView({
       // }
     },
   });
+
+  const createThread = useMutation(api.threads.createThread);
+
+  const handleSubmitWithCreateThread = async (message: string) => {
+    if (!id) {
+      const threadId = await createThread();
+      await handleSubmit(message);
+    } else {
+      console.log("id", id);
+    }
+  };
 
   return (
     <>

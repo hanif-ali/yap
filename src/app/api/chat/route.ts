@@ -33,7 +33,7 @@ import {
 // import { myProvider } from '@/lib/ai/providers';
 // import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
-// import { geolocation } from '@vercel/functions';
+import { geolocation } from "@vercel/functions";
 import {
   createResumableStreamContext,
   type ResumableStreamContext,
@@ -140,14 +140,14 @@ export async function POST(request: Request) {
       message,
     });
 
-    // const { longitude, latitude, city, country } = geolocation(request);
+    const { longitude, latitude, city, country } = geolocation(request);
 
-    // const requestHints: RequestHints = {
-    //   longitude,
-    //   latitude,
-    //   city,
-    //   country,
-    // };
+    const requestHints: RequestHints = {
+      longitude,
+      latitude,
+      city,
+      country,
+    };
 
     await fetchMutation(
       api.messages.saveMessage,
@@ -180,12 +180,16 @@ export async function POST(request: Request) {
       threadId: id,
     });
 
+    console.log({ messages });
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: groq("gemma2-9b-it"),
+          // model: groq("gemma2-9b-it"),
+          model: google("gemini-2.0-flash"),
           // model: myProvider.languageModel(selectedChatModel),
           // system: systemPrompt({ selectedChatModel, requestHints }),
+          system:
+            "You are a friendly assistant! Keep your responses concise and helpful.",
           messages,
           maxSteps: 5,
           // experimental_activeTools:
@@ -235,6 +239,7 @@ export async function POST(request: Request) {
                   content: assistantMessage.content,
                 },
               });
+              console.log("saved")
               //
               // await saveMessages({
               //   messages: [
@@ -249,7 +254,9 @@ export async function POST(request: Request) {
               //     },
               //   ],
               // });
-            } catch (_) {
+            } catch (error) {
+              console.log({error})
+              throw error;
               console.error("Failed to save chat");
             }
             // }
