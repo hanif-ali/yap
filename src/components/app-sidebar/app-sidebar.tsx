@@ -6,8 +6,14 @@ import {
 } from "@/components/ui/sidebar";
 import { T3Logo } from "@/components/t3-logo";
 import { ThreadHistory } from "./thread-history";
+import { Preloaded } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
-export function AppSidebar() {
+export function AppSidebar({ 
+  preloadedThreads 
+}: { 
+  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
+}) {
   return (
     <Sidebar>
       <SidebarHeader>
@@ -38,7 +44,7 @@ export function AppSidebar() {
             </span>
           </a>
         </div>
-        <ThreadHistory />
+        <ThreadHistory preloadedThreads={preloadedThreads} />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4 ">

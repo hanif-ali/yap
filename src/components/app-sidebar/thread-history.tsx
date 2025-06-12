@@ -1,11 +1,15 @@
-import { useQuery } from "convex/react";
+import { usePreloadedQuery, Preloaded } from "convex/react";
 import { ScrollArea } from "../ui/scroll-area";
 import { api } from "../../../convex/_generated/api";
 import { categorizeThreads } from "./utils";
 import { HistoricalChatButton } from "./historical-chat-button";
 
-export function ThreadHistory() {
-  const chats = useQuery(api.threads.getForCurrentUser);
+export function ThreadHistory({ 
+  preloadedThreads 
+}: { 
+  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
+}) {
+  const chats = usePreloadedQuery(preloadedThreads);
 
   const categorizedChats = categorizeThreads(chats || []);
 
