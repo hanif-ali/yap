@@ -5,7 +5,7 @@ import { useChat } from "@ai-sdk/react";
 // import { getChatHistoryPaginationKey } from "../../../../ai-chatbot/lib/pagination";
 // import { useSWRConfig } from "swr";
 import { Messages } from "@/components/chat/messages";
-import { MultimodalInput } from "../../../../ai-chatbot/components/multimodal-input";
+import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";

@@ -8,7 +8,7 @@ export function categorizeThreads(chats: Doc<"threads">[]) {
   
   return sortedChats.reduce((acc, chat) => {
     const creationTime = new Date(chat.createdAt);
-    let category = isToday(creationTime) ? "Today" 
+    const category = isToday(creationTime) ? "Today" 
       : isYesterday(creationTime) ? "Yesterday"
       : isThisWeek(creationTime) ? "Last Week"
       : "Older";
