@@ -44,7 +44,7 @@ export function ThreadHistory() {
                 {category}
               </h3>
               {chats.map((chat) => (
-								<HistoricalChatButton chat={chat} />
+								<HistoricalChatButton chat={chat} key={chat._id} />
               ))}
             </div>
           ))}

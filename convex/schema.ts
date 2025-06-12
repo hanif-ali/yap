@@ -42,4 +42,11 @@ export default defineSchema({
     .index("by_threadId", ["threadId"])
     .index("by_thread_and_userId", ["threadId", "userId"])
     .index("by_user", ["userId"]),
+  
+  streams: defineTable({
+    threadId: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_threadId", ["threadId"])
+    .index("by_thread_and_createdAt", ["threadId", "createdAt"])
 });
