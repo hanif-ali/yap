@@ -34,7 +34,7 @@ export default function ChatView({
     initialMessages: preloadedMessages,
     experimental_throttle: 100,
     sendExtraMessageFields: true,
-    // generateId: generateUUID,
+    generateId: generateUUID,
     // fetch: fetchWithErrorHandlers,
     experimental_prepareRequestBody: (body) => ({
       id,
@@ -56,17 +56,6 @@ export default function ChatView({
       // }
     },
   });
-
-  const createThread = useMutation(api.threads.createThread);
-
-  const handleSubmitWithCreateThread = async (message: string) => {
-    if (!id) {
-      const threadId = await createThread();
-      await handleSubmit(message);
-    } else {
-      console.log("id", id);
-    }
-  };
 
   return (
     <>

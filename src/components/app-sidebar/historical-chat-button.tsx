@@ -9,7 +9,7 @@ export function HistoricalChatButton({ chat }: { chat: Doc<"threads"> }) {
       className="w-full transition-colors duration-200 text-muted-foreground text-start justify-start"
       asChild
     >
-      <Link href={`/chat/${chat._id}`}>{chat.title || "Untitled Chat"}</Link>
+      <Link href={`/chat/${chat.id}`}>{chat.title || "Untitled Chat"}</Link>
     </Button>
   );
 }

@@ -13,12 +13,14 @@ export const MessageStatusValidator = v.union(
 
 export default defineSchema({
   threads: defineTable({
+    id: v.string(),
     userId: v.string(),
     title: v.string(),
     createdAt: v.number(),
     updatedAt: v.number(),
     pinned: v.boolean(),
   })
+    .index("by_thread_id", ["id"])
     .index("by_user", ["userId"])
     .index("by_userId_and_updatedAt", ["userId", "updatedAt"])
     .index("by_user_and_pinned", ["userId", "pinned"])
@@ -27,6 +29,7 @@ export default defineSchema({
     }),
 
   messages: defineTable({
+    id: v.string(),
     threadId: v.string(),
     userId: v.string(),
     content: v.string(),
@@ -39,14 +42,17 @@ export default defineSchema({
     ),
     createdAt: v.number(),
   })
+    .index("by_message_id", ["id"])
     .index("by_threadId", ["threadId"])
     .index("by_thread_and_userId", ["threadId", "userId"])
     .index("by_user", ["userId"]),
   
   streams: defineTable({
+    id: v.string(),
     threadId: v.string(),
     createdAt: v.number(),
   })
+    .index("by_stream_id", ["id"])
     .index("by_threadId", ["threadId"])
     .index("by_thread_and_createdAt", ["threadId", "createdAt"])
 });

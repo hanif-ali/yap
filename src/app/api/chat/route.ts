@@ -49,6 +49,9 @@ import { api } from "../../../../convex/_generated/api";
 import { getMessagesForThread } from "../../../../convex/messages";
 import { updateDocument } from "../../../../ai-chatbot/lib/ai/tools/update-document";
 import { auth } from "@clerk/nextjs/server";
+import { generateTitleFromUserMessage } from "@/app/chat/actions";
+import { createThread } from "../../../../convex/threads";
+import { generateUUID, getTrailingMessageId } from "@/lib/utils";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -76,13 +79,13 @@ export async function POST(request: Request) {
   let requestBody: PostRequestBody;
 
   // todo fix auth
-  // const { getToken } = await auth();
-  // const token = await getToken();
-  const token = undefined;
+  const authData = await auth();
+  const token = await authData.getToken({ template: "convex" });
+  // const token = undefined;
 
-  // if (!token) {
-  //   return new Response("Unauthorized", { status: 401 });
-  // }
+  if (!token) {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   try {
     const json = await request.json();
@@ -109,18 +112,17 @@ export async function POST(request: Request) {
     // }
 
     const thread = await fetchQuery(api.threads.getThreadById, { id });
-
     if (!thread) {
       // TODO: handle no chat case
-      //   const title = await generateTitleFromUserMessage({
-      //     message,
-      //   });
-      //   await saveChat({
-      //     id,
-      //     userId: session.user.id,
-      //     title,
-      //     visibility: selectedVisibilityType,
-      //   });
+      const title = await generateTitleFromUserMessage({
+        message,
+      });
+      // todo fix user id being passed as empty
+      await fetchMutation(api.threads.createThread, {
+        id: id,
+        title,
+        userId: authData.userId ?? "",
+      });
       // } else {
       //   if (chat.userId !== session.user.id) {
       //     return new ChatSDKError("forbidden:chat").toResponse();
@@ -153,6 +155,7 @@ export async function POST(request: Request) {
       api.messages.saveMessage,
       {
         message: {
+          id: message.id,
           threadId: id,
           role: "user",
           content: message.content,
@@ -161,24 +164,9 @@ export async function POST(request: Request) {
       { token }
     );
 
-    const responseMessageId = await fetchMutation(
-      api.messages.saveMessage,
-      {
-        message: {
-          threadId: id,
-          role: "assistant",
-          content: "",
-        },
-      },
-      { token }
-    );
-
-    // const streamId = generateUUID();
-    // await createStreamId({ streamId, chatId: id });
-
-    const streamId = await fetchMutation(api.streams.createStream, {
-      threadId: id,
-    });
+    // const streamId = await fetchMutation(api.streams.createStream, {
+    //   threadId: id,
+    // });
 
     console.log({ messages });
     const stream = createDataStream({
@@ -202,7 +190,7 @@ export async function POST(request: Request) {
           //         "requestSuggestions",
           //       ],
           // experimental_transform: smoothStream({ chunking: "word" }),
-          // experimental_generateMessageId: generateUUID,
+          experimental_generateMessageId: generateUUID,
           // tools: {
           //   getWeather,
           //   createDocument: createDocument({ session, dataStream }),
@@ -218,46 +206,31 @@ export async function POST(request: Request) {
           onFinish: async ({ response }) => {
             // if (session.user?.id) {
             try {
-              // const assistantId = getTrailingMessageId({
-              //   messages: response.messages.filter(
-              //     (message) => message.role === "assistant"
-              //   ),
-              // });
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (message) => message.role === "assistant"
+                ),
+              });
 
-              // if (!assistantId) {
-              //   throw new Error("No assistant message found!");
-              // }
+              if (!assistantId) {
+                throw new Error("No assistant message found!");
+              }
 
               const [, assistantMessage] = appendResponseMessages({
                 messages: [message],
                 responseMessages: response.messages,
               });
-              console.log({ responseMessageId, assistantMessage });
-              await fetchMutation(api.messages.updateMessage, {
+              await fetchMutation(api.messages.saveMessage, {
                 message: {
-                  id: responseMessageId,
+                  id: assistantId,
+                  threadId: id,
+                  role: "assistant",
                   content: assistantMessage.content,
                 },
               });
-              console.log("saved")
-              //
-              // await saveMessages({
-              //   messages: [
-              //     {
-              //       id: assistantId,
-              //       chatId: id,
-              //       role: assistantMessage.role,
-              //       parts: assistantMessage.parts,
-              //       attachments:
-              //         assistantMessage.experimental_attachments ?? [],
-              //       createdAt: new Date(),
-              //     },
-              //   ],
-              // });
             } catch (error) {
-              console.log({error})
+              console.log({ error });
               throw error;
-              console.error("Failed to save chat");
             }
             // }
           },

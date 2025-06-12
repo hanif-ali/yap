@@ -18,6 +18,7 @@ import type * as messages from "../messages.js";
 import type * as original_schema from "../original_schema.js";
 import type * as streams from "../streams.js";
 import type * as threads from "../threads.js";
+import type * as utils from "../utils.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   original_schema: typeof original_schema;
   streams: typeof streams;
   threads: typeof threads;
+  utils: typeof utils;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -1,16 +1,19 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { generateThreadId } from "./utils";
 
 export const createThread = mutation({
   args: {
-    id: v.id("threads"),
+    id: v.string(),
     title: v.string(),
     userId: v.string(),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("threads", {
-      userId: args.userId,
-      title: args.title,
+      ...args,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      pinned: false,
     });
   },
 });
@@ -19,6 +22,7 @@ export const getForCurrentUser = query({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
+    console.log({identity})
 
     if (identity === null) {
       return [];
@@ -38,7 +42,7 @@ export const getThreadById = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("threads")
-      .filter((q) => q.eq(q.field("_id"), args.id))
+      .filter((q) => q.eq(q.field("id"), args.id))
       .first();
   },
 });

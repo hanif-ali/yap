@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { generateMessageId } from "./utils";
 
 export const getMessagesForThread = query({
   args: {
@@ -17,6 +18,7 @@ export const getMessagesForThread = query({
 export const saveMessage = mutation({
   args: {
     message: v.object({
+      id: v.string(),
       threadId: v.string(),
       role: v.union(
         v.literal("user"),
@@ -47,13 +49,35 @@ export const saveMessage = mutation({
 export const updateMessage = mutation({
   args: {
     message: v.object({
-      id: v.id("messages"),
+      id: v.string(),
       content: v.string(),
     }),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.patch(args.message.id, {
+    const message = await ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("id"), args.message.id))
+      .first();
+    
+    if (!message) {
+      throw new Error("Message not found");
+    }
+
+    return await ctx.db.patch(message._id, {
       content: args.message.content,
+      updatedAt: Date.now(),
     });
+  },
+});
+
+export const getMessageById = query({
+  args: {
+    id: v.string(),
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("id"), args.id))
+      .first();
   },
 });
