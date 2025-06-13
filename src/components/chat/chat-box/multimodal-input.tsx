@@ -142,6 +142,7 @@ function PureMultimodalInput({
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("threadId", chatId);
 
     try {
       const response = await fetch("/api/files/upload", {
@@ -154,6 +155,7 @@ function PureMultimodalInput({
         const { url, pathname, contentType } = data;
 
         return {
+          id: data.attachmentId,
           url,
           name: pathname,
           contentType: contentType,
@@ -178,6 +180,7 @@ function PureMultimodalInput({
         const successfullyUploadedAttachments = uploadedAttachments.filter(
           (attachment) => attachment !== undefined
         );
+        console.log({ successfullyUploadedAttachments });
 
         setAttachments((currentAttachments) => [
           ...currentAttachments,

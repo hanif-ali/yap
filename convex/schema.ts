@@ -41,12 +41,13 @@ export default defineSchema({
       v.literal("system")
     ),
     createdAt: v.number(),
+    attachments: v.array(v.id("attachments")),
   })
     .index("by_message_id", ["id"])
     .index("by_threadId", ["threadId"])
     .index("by_thread_and_userId", ["threadId", "userId"])
     .index("by_user", ["userId"]),
-  
+
   streams: defineTable({
     id: v.string(),
     threadId: v.string(),
@@ -54,5 +55,15 @@ export default defineSchema({
   })
     .index("by_stream_id", ["id"])
     .index("by_threadId", ["threadId"])
-    .index("by_thread_and_createdAt", ["threadId", "createdAt"])
+    .index("by_thread_and_createdAt", ["threadId", "createdAt"]),
+
+  attachments: defineTable({
+    userId: v.string(),
+    attachmentType: v.string(),
+    fileName: v.string(),
+    mimeType: v.string(),
+    fileSize: v.number(),
+    status: v.optional(v.union(v.literal("deleted"), v.literal("uploaded"))),
+  })
+    .index("by_userId", ["userId"])
 });

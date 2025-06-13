@@ -12,6 +12,7 @@ import { generateUUID } from "@/lib/utils";
 import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
 import { useAutoResume } from "../../../../ai-chatbot/hooks/use-auto-resume";
+import { Attachment } from "ai";
 
 export default function ChatView({
   preloadedMessages,
@@ -22,8 +23,12 @@ export default function ChatView({
   id: string;
   autoResume?: boolean;
 }) {
-  const [model, setModel] =
-    useState<ModelDefinition["key"]>("gemini-2.0-flash-lite");
+  const [model, setModel] = useState<ModelDefinition["key"]>(
+    "gemini-2.0-flash-lite"
+  );
+
+  const [attachments, setAttachments] = useState<Array<Attachment>>([]);
+  console.log({ attachments });
 
   const {
     messages,
@@ -102,8 +107,8 @@ export default function ChatView({
           handleSubmit={handleSubmit}
           status={status}
           stop={stop}
-          attachments={[]}
-          setAttachments={() => {}}
+          attachments={attachments}
+          setAttachments={setAttachments}
           messages={messages}
           setMessages={setMessages}
           append={append}

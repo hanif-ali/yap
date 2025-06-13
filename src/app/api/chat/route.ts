@@ -5,29 +5,13 @@ import {
   smoothStream,
   streamText,
 } from "ai";
-// import { auth, type UserType } from '@/app/(auth)/auth';
 // import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
 
-// import {
-// createStreamId,
-// deleteChatById,
-// getChatById,
-// getMessageCountByUserId,
-// getMessagesByChatId,
-// getStreamIdsByChatId,
-// saveChat,
-// saveMessages,
-// } from "@/lib/db/queries";
-
-// import { generateUUID, getTrailingMessageId } from "@/lib/utils";
-
-// import { generateTitleFromUserMessage } from "../../actions";
 // import { createDocument } from '@/lib/ai/tools/create-document';
 // import { updateDocument } from '@/lib/ai/tools/update-document';
 // import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 // import { getWeather } from '@/lib/ai/tools/get-weather';
 // import { isProductionEnvironment } from '@/lib/constants';
-// import { myProvider } from '@/lib/ai/providers';
 // import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 import { geolocation } from "@vercel/functions";
@@ -160,6 +144,10 @@ export async function POST(request: Request) {
           threadId: id,
           role: "user",
           content: message.content,
+          attachments:
+            message.experimental_attachments?.map(
+              (attachment) => attachment.id
+            ) ?? [],
         },
       },
       { token }
@@ -189,7 +177,7 @@ export async function POST(request: Request) {
           //         "updateDocument",
           //         "requestSuggestions",
           //       ],
-          // experimental_transform: smoothStream({ chunking: "word" }),
+          experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
           // tools: {
           //   getWeather,
@@ -226,6 +214,7 @@ export async function POST(request: Request) {
                   threadId: id,
                   role: "assistant",
                   content: assistantMessage.content,
+                  attachments: [],
                 },
               });
             } catch (error) {

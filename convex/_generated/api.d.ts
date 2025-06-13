@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as attachments from "../attachments.js";
 import type * as current_schema from "../current_schema.js";
 import type * as messages from "../messages.js";
 import type * as original_schema from "../original_schema.js";
@@ -29,6 +30,7 @@ import type * as utils from "../utils.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  attachments: typeof attachments;
   current_schema: typeof current_schema;
   messages: typeof messages;
   original_schema: typeof original_schema;

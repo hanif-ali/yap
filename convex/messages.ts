@@ -26,6 +26,7 @@ export const saveMessage = mutation({
         v.literal("system")
       ),
       content: v.string(),
+      attachments: v.array(v.id("attachments")),
     }),
   },
   handler: async (ctx, args) => {
