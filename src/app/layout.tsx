@@ -40,20 +40,20 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} antialiased`}>
         <ClerkProvider>
-          <ConvexClientProvider>
-            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              <SignedOut>
-                <SignInButton />
-                <SignUpButton />
-              </SignedOut>
-              <SignedIn>
-                <SidebarWrapper preloadedThreads={preloadedThreads}>
-                  {children}
-                </SidebarWrapper>
-              </SignedIn>
-              <ThemeToggle />
-            </ThemeProvider>
-          </ConvexClientProvider>
+            <ConvexClientProvider>
+              <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+                <SignedOut>
+                  <SignInButton />
+                  <SignUpButton />
+                </SignedOut>
+                <SignedIn>
+                  <SidebarWrapper preloadedThreads={preloadedThreads}>
+                    {children}
+                  </SidebarWrapper>
+                </SignedIn>
+                <ThemeToggle />
+              </ThemeProvider>
+            </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>

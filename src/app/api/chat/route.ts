@@ -1,6 +1,3 @@
-import { openai } from "@ai-sdk/openai";
-import { google } from "@ai-sdk/google";
-import { groq } from "@ai-sdk/groq";
 import {
   appendClientMessage,
   appendResponseMessages,
@@ -41,7 +38,7 @@ import {
 import { after } from "next/server";
 // import type { Chat } from '@/lib/db/schema';
 // import { differenceInSeconds } from 'date-fns';
-// import { ChatSDKError } from "@/lib/errors";
+// import { ChatError } from "@/lib/errors";
 // import { getThreadById } from "../../../../convex/threads";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
@@ -50,9 +47,12 @@ import { getMessagesForThread } from "../../../../convex/messages";
 import { updateDocument } from "../../../../ai-chatbot/lib/ai/tools/update-document";
 import { auth } from "@clerk/nextjs/server";
 import { generateTitleFromUserMessage } from "@/app/chat/actions";
-import { createThread } from "../../../../convex/threads";
+import { createThread, getThreadById } from "../../../../convex/threads";
 import { generateUUID, getTrailingMessageId } from "@/lib/utils";
 import { getModelInstance } from "@/lib/models/models";
+import { ChatError } from "@/lib/errors";
+import { Doc } from "../../../../convex/_generated/dataModel";
+import { differenceInSeconds } from "date-fns";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -68,6 +68,7 @@ function getStreamContext() {
           " > Resumable streams are disabled due to missing REDIS_URL"
         );
       } else {
+        console.log("errlkjwerlkj");
         console.error(error);
       }
     }
@@ -82,7 +83,6 @@ export async function POST(request: Request) {
   // todo fix auth
   const authData = await auth();
   const token = await authData.getToken({ template: "convex" });
-  // const token = undefined;
 
   if (!token) {
     return new Response("Unauthorized", { status: 401 });
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
     const json = await request.json();
     requestBody = postRequestBodySchema.parse(json);
   } catch (error) {
-    // return new ChatSDKError("bad_request:api").toResponse();
+    // return new ChatError("bad_request:api").toResponse();
     throw error;
   }
 
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
     // });
 
     // if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
-    //   return new ChatSDKError("rate_limit:chat").toResponse();
+    //   return new ChatError("rate_limit:chat").toResponse();
     // }
 
     const thread = await fetchQuery(api.threads.getThreadById, { id });
@@ -126,7 +126,7 @@ export async function POST(request: Request) {
       });
       // } else {
       //   if (chat.userId !== session.user.id) {
-      //     return new ChatSDKError("forbidden:chat").toResponse();
+      //     return new ChatError("forbidden:chat").toResponse();
       //   }
     }
 
@@ -145,12 +145,12 @@ export async function POST(request: Request) {
 
     const { longitude, latitude, city, country } = geolocation(request);
 
-    const requestHints: RequestHints = {
-      longitude,
-      latitude,
-      city,
-      country,
-    };
+    // const requestHints: RequestHints = {
+    //   longitude,
+    //   latitude,
+    //   city,
+    //   country,
+    // };
 
     await fetchMutation(
       api.messages.saveMessage,
@@ -165,9 +165,11 @@ export async function POST(request: Request) {
       { token }
     );
 
-    // const streamId = await fetchMutation(api.streams.createStream, {
-    //   threadId: id,
-    // });
+    const streamId = generateUUID();
+    await fetchMutation(api.streams.createStream, {
+      id: streamId,
+      threadId: id,
+    });
 
     console.log({ messages });
     const stream = createDataStream({
@@ -249,7 +251,6 @@ export async function POST(request: Request) {
       },
     });
 
-    return new Response(stream);
     const streamContext = getStreamContext();
 
     if (streamContext) {
@@ -262,8 +263,105 @@ export async function POST(request: Request) {
   } catch (error) {
     console.log("error");
     throw error;
-    // if (error instanceof ChatSDKError) {
-    //   return error.toResponse();
-    // }
   }
+}
+
+export async function GET(request: Request) {
+  const streamContext = getStreamContext();
+  const resumeRequestedAt = new Date();
+
+  if (!streamContext) {
+    return new Response(null, { status: 204 });
+  }
+
+  const { searchParams } = new URL(request.url);
+  const threadId = searchParams.get("chatId");
+
+  if (!threadId) {
+    return new ChatError("bad_request:api").toResponse();
+  }
+
+  // const session = await auth();
+
+  // if (!session?.user) {
+  //   return new ChatError("unauthorized:chat").toResponse();
+  // }
+
+  let thread: Doc<"threads"> | null;
+
+  try {
+    thread = await fetchQuery(api.threads.getThreadById, { id: threadId });
+  } catch {
+    return new ChatError("not_found:chat").toResponse();
+  }
+
+  if (!thread) {
+    return new ChatError("not_found:chat").toResponse();
+  }
+
+  // if (chat.visibility === "private" && chat.userId !== session.user.id) {
+  //   return new ChatError("forbidden:chat").toResponse();
+  // }
+
+  const streamIds = await fetchQuery(api.streams.getStreamIdsByThreadId, {
+    threadId,
+  });
+
+  if (!streamIds.length) {
+    return new ChatError("not_found:stream").toResponse();
+  }
+
+  const recentStreamId = streamIds.at(-1);
+
+  if (!recentStreamId) {
+    return new ChatError("not_found:stream").toResponse();
+  }
+
+  const emptyDataStream = createDataStream({
+    execute: () => {},
+  });
+
+  const stream = await streamContext.resumableStream(
+    recentStreamId,
+    () => emptyDataStream
+  );
+
+  /*
+   * For when the generation is streaming during SSR
+   * but the resumable stream has concluded at this point.
+   */
+  if (!stream) {
+    const messages = await fetchQuery(api.messages.getMessagesForThread, {
+      threadId,
+    });
+
+    const mostRecentMessage = messages.at(-1);
+
+    if (!mostRecentMessage) {
+      return new Response(emptyDataStream, { status: 200 });
+    }
+
+    if (mostRecentMessage.role !== "assistant") {
+      return new Response(emptyDataStream, { status: 200 });
+    }
+
+    const messageCreatedAt = new Date(mostRecentMessage.createdAt);
+
+    if (differenceInSeconds(resumeRequestedAt, messageCreatedAt) > 15) {
+      return new Response(emptyDataStream, { status: 200 });
+    }
+
+    const restoredStream = createDataStream({
+      execute: (buffer) => {
+        buffer.writeData({
+          type: "append-message",
+          message: JSON.stringify(mostRecentMessage),
+        });
+      },
+    });
+
+    return new Response(restoredStream, { status: 200 });
+  }
+
+  return new Response(stream, { status: 200 });
 }

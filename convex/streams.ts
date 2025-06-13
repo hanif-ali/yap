@@ -4,12 +4,12 @@ import { generateStreamId } from "./utils";
 
 export const createStream = mutation({
   args: {
+    id: v.string(),
     threadId: v.string(),
   },
   handler: async (ctx, args) => {
-    const streamId = generateStreamId();
     return await ctx.db.insert("streams", {
-      id: streamId,
+      id: args.id,
       threadId: args.threadId,
       createdAt: Date.now(),
     });
@@ -37,5 +37,18 @@ export const getStreamsForThread = query({
       .query("streams")
       .filter((q) => q.eq(q.field("threadId"), args.threadId))
       .collect();
+  },
+});
+
+export const getStreamIdsByThreadId = query({
+  args: {
+    threadId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const streams = await ctx.db
+      .query("streams")
+      .filter((q) => q.eq(q.field("threadId"), args.threadId))
+      .collect();
+    return streams.map((stream) => stream.id);
   },
 });

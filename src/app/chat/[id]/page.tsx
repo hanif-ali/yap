@@ -11,13 +11,13 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
     api.messages.getMessagesForThread,
     {
       threadId: params.id,
-    },
+    }
     // { token: token ?? undefined }
   );
 
   return (
     <main className="flex-1 flex flex-col">
-      <ChatView preloadedMessages={messages} id={params.id} />
+      <ChatView preloadedMessages={messages} id={params.id} autoResume={true} />
     </main>
   );
 }

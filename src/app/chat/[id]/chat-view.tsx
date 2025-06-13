@@ -11,16 +11,19 @@ import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";
 import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
+import { useAutoResume } from "../../../../ai-chatbot/hooks/use-auto-resume";
 
 export default function ChatView({
   preloadedMessages,
   id,
+  autoResume = false,
 }: {
   preloadedMessages: any;
   id: string;
+  autoResume?: boolean;
 }) {
   const [model, setModel] =
-    useState<ModelDefinition["key"]>("gemini-2.5-flash");
+    useState<ModelDefinition["key"]>("gemini-2.0-flash-lite");
 
   const {
     messages,
@@ -60,6 +63,14 @@ export default function ChatView({
       //   });
       // }
     },
+  });
+
+  useAutoResume({
+    autoResume,
+    initialMessages: preloadedMessages,
+    experimental_resume,
+    data,
+    setMessages,
   });
 
   return (
