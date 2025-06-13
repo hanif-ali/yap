@@ -52,6 +52,7 @@ import { auth } from "@clerk/nextjs/server";
 import { generateTitleFromUserMessage } from "@/app/chat/actions";
 import { createThread } from "../../../../convex/threads";
 import { generateUUID, getTrailingMessageId } from "@/lib/utils";
+import { getModelInstance } from "@/lib/models/models";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -98,7 +99,7 @@ export async function POST(request: Request) {
   try {
     // const { id, message, selectedChatModel, selectedVisibilityType } =
     //   requestBody;
-    const { id, message } = requestBody;
+    const { id, message, selectedChatModel } = requestBody;
 
     // TODO: add auth, rate limiting
 
@@ -172,10 +173,7 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          // model: groq("gemma2-9b-it"),
-          model: google("gemini-2.0-flash"),
-          // model: myProvider.languageModel(selectedChatModel),
-          // system: systemPrompt({ selectedChatModel, requestHints }),
+          model: getModelInstance(selectedChatModel),
           system:
             "You are a friendly assistant! Keep your responses concise and helpful.",
           messages,

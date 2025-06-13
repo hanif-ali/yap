@@ -29,6 +29,7 @@ import { ArrowDown, ChevronDown, Paperclip, Search } from "lucide-react";
 import type { VisibilityType } from "./visibility-selector";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
+import { ModelDefinition } from "@/lib/models/models";
 
 function PureMultimodalInput({
   chatId,
@@ -44,6 +45,8 @@ function PureMultimodalInput({
   handleSubmit,
   className,
   selectedVisibilityType,
+  model,
+  setModel,
 }: {
   chatId: string;
   input: UseChatHelpers["input"];
@@ -52,6 +55,8 @@ function PureMultimodalInput({
   stop: () => void;
   attachments: Array<Attachment>;
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
+  model: ModelDefinition["key"];
+  setModel: Dispatch<SetStateAction<ModelDefinition["key"]>>;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers["setMessages"];
   append: UseChatHelpers["append"];
@@ -295,7 +300,7 @@ function PureMultimodalInput({
             }}
           />
           <div className="p-2 w-fit flex flex-row justify-start space-x-4">
-            <ModelSelector onModelSelect={(model) => {}} />
+            <ModelSelector onModelSelect={setModel} selectedModel={model} />
             <button className="flex items-center space-x-2 text-gray-400 hover:text-gray-300 transition-colors">
               <Search className="w-4 h-4" />
               <span className="text-sm">Search</span>
@@ -332,6 +337,7 @@ export const MultimodalInput = memo(
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
     if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
       return false;
+    if (prevProps.model !== nextProps.model) return false;
 
     return true;
   }

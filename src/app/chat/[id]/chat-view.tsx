@@ -9,6 +9,8 @@ import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";
+import { useState } from "react";
+import { ModelDefinition } from "@/lib/models/models";
 
 export default function ChatView({
   preloadedMessages,
@@ -17,6 +19,9 @@ export default function ChatView({
   preloadedMessages: any;
   id: string;
 }) {
+  const [model, setModel] =
+    useState<ModelDefinition["key"]>("gemini-2.5-flash");
+
   const {
     messages,
     setMessages,
@@ -39,7 +44,7 @@ export default function ChatView({
     experimental_prepareRequestBody: (body) => ({
       id,
       message: body.messages.at(-1),
-      // selectedChatModel: initialChatModel,
+      selectedChatModel: model,
       // selectedVisibilityType: visibilityType,
     }),
     onFinish: () => {
@@ -92,6 +97,8 @@ export default function ChatView({
           setMessages={setMessages}
           append={append}
           selectedVisibilityType="public"
+          model={model}
+          setModel={setModel}
         />
         {/* )} */}
       </div>
