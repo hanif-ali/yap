@@ -1,6 +1,11 @@
 import { cn } from "@/lib/utils";
 import { ModelDefinition } from "@/lib/models/models";
-import { Eye, Globe, FileText, Brain, ImageIcon } from "lucide-react";
+import {
+  ImageCapabilityIcon,
+  ReasoningCapabilityIcon,
+  TextCapabilityIcon,
+  WebCapabilityIcon,
+} from "./capabilities-icons";
 
 interface ModelItemProps {
   name: string;
@@ -34,31 +39,10 @@ export function ListModelItem({
         {isPremium && <span className="text-yellow-500 text-xs">♦</span>}
       </div>
       <div className="flex items-center gap-2">
-        {capabilities.includes("vision") && (
-          <div className="bg-gray-700 rounded-full p-1" style={{"--colorDark" : "hsl(168 54% 74%)", "--color": "hsl(168 54% 52%)"}}>
-            <Eye className="h-4 w-4 text-gray-300" />
-          </div>
-        )}
-        {capabilities.includes("web") && (
-          <div className="bg-gray-700 rounded-full p-1">
-            <Globe className="h-4 w-4 text-gray-300" />
-          </div>
-        )}
-        {capabilities.includes("text") && (
-          <div className="bg-gray-700 rounded-full p-1">
-            <FileText className="h-4 w-4 text-gray-300" />
-          </div>
-        )}
-        {capabilities.includes("reasoning") && (
-          <div className="bg-gray-700 rounded-full p-1">
-            <Brain className="h-4 w-4 text-gray-300" />
-          </div>
-        )}
-        {capabilities.includes("image") && (
-          <div className="bg-gray-700 rounded-full p-1">
-            <ImageIcon className="h-4 w-4 text-gray-300" />
-          </div>
-        )}
+        {capabilities.includes("image") && <ImageCapabilityIcon />}
+        {capabilities.includes("web") && <WebCapabilityIcon />}
+        {capabilities.includes("text") && <TextCapabilityIcon />}
+        {capabilities.includes("reasoning") && <ReasoningCapabilityIcon />}
       </div>
     </div>
   );

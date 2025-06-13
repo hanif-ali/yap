@@ -7,7 +7,7 @@ export type ModelDefinition = {
   name: string;
   description: string;
   getProvider: () => any;
-  capabilities: Array<"vision" | "web" | "reasoning" | "image" | "text">;
+  capabilities: Array<"web" | "reasoning" | "image" | "text">;
 };
 
 export const models: ModelDefinition[] = [

@@ -125,6 +125,11 @@
   --heading: #c46095;
 
   --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
+
+  --vision-icon-color: hsl(168 54% 74%);
+  --web-icon-color: hsl(208 56% 74%);
+  --text-icon-color: hsl(237 75% 77%);
+  --reasoning-icon-color: hsl(263 58% 75%);
 }
 
 button {
@@ -173,3 +178,5 @@ button {
 .backdrop-blur-lg {
   --tw-backdrop-blur: blur(16px);
 }
+
+
