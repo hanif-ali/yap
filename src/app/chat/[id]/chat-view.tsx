@@ -71,7 +71,6 @@ export default function ChatView({
         <Messages
           chatId={id}
           status={status}
-          votes={[]}
           messages={messages}
           setMessages={setMessages}
           reload={reload}

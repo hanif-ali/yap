@@ -28,7 +28,7 @@ import { ArrowDown, ChevronDown, Paperclip, Search } from "lucide-react";
 // import { useScrollToBottom } from '../hooks/use-scroll-to-bottom';
 import type { VisibilityType } from "./visibility-selector";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { ModelSelector } from "./model-selector";
+import { ModelSelector } from "./model-selector/model-selector";
 
 function PureMultimodalInput({
   chatId,
@@ -272,7 +272,6 @@ function PureMultimodalInput({
             data-testid="multimodal-input"
             ref={textareaRef}
             placeholder="Type your message here..."
-            placeholder="Type your message here..."
             onChange={handleInput}
             rows={2}
             className="w-full bg-transparent text-gray-300 placeholder-gray-500 resize-none border-none outline-none text-lg min-h-[00px]"
@@ -296,9 +295,7 @@ function PureMultimodalInput({
             }}
           />
           <div className="p-2 w-fit flex flex-row justify-start space-x-4">
-            <button className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
-              <ModelSelector onModelSelect={(model) => {}} />
-            </button>
+            <ModelSelector onModelSelect={(model) => {}} />
             <button className="flex items-center space-x-2 text-gray-400 hover:text-gray-300 transition-colors">
               <Search className="w-4 h-4" />
               <span className="text-sm">Search</span>

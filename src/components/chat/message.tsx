@@ -3,7 +3,6 @@
 import type { UIMessage } from 'ai';
 import { AnimatePresence, motion } from 'framer-motion';
 import { memo, useState } from 'react';
-// import type { Vote } from '@/lib/db/schema';
 // import { DocumentToolResult } from './document';
 import { PencilEditIcon, SparklesIcon } from '@/components/icons'
 import { Markdown } from './markdown';
@@ -22,7 +21,6 @@ import type { UseChatHelpers } from '@ai-sdk/react';
 const PurePreviewMessage = ({
   chatId,
   message,
-  // vote,
   isLoading,
   setMessages,
   reload,
@@ -31,7 +29,6 @@ const PurePreviewMessage = ({
 }: {
   chatId: string;
   message: UIMessage;
-  // vote: Vote | undefined;
   isLoading: boolean;
   setMessages: UseChatHelpers['setMessages'];
   reload: UseChatHelpers['reload'];
@@ -126,14 +123,12 @@ const PurePreviewMessage = ({
 
                       <div
                         data-testid="message-content"
-                        className={cn('flex flex-col gap-4', {
+                        className={cn('flex flex-col gap-4 text-sm', {
                           'bg-secondary/50 border-secondary/50 px-4 py-4 rounded-xl max-w-xs':
                             message.role === 'user',
                         })}
                       >
-                        <p className="text-sm">
                           <Markdown>{part.text}</Markdown>
-                        </p>
                       </div>
                     </div>
                   );
@@ -233,7 +228,6 @@ const PurePreviewMessage = ({
                 key={`action-${message.id}`}
                 chatId={chatId}
                 message={message}
-                vote={vote}
                 isLoading={isLoading}
               />
             )} */}
@@ -252,7 +246,6 @@ export const PreviewMessage = memo(
     if (prevProps.requiresScrollPadding !== nextProps.requiresScrollPadding)
       return false;
     if (!equal(prevProps.message.parts, nextProps.message.parts)) return false;
-    // if (!equal(prevProps.vote, nextProps.vote)) return false;
 
     return true;
   },
