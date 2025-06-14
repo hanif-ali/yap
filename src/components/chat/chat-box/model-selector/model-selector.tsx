@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, ChevronLeft, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, PinOff } from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import {
@@ -11,11 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 import { ModelDefinition, models } from "@/lib/models/models";
 import { providerLogos } from "@/lib/models/provider-logos";
 import { ListModelItem } from "./list-model-item";
 import { GridModelItem } from "./grid-model-item";
+import { useLocalStorage } from "usehooks-ts";
 
 interface ModelSelectorProps {
   onModelSelect: (model: ModelDefinition["key"]) => void;
@@ -29,9 +30,25 @@ export function ModelSelector({
   const [open, setOpen] = useState(false);
   const [showAll, setShowAll] = useState(true);
 
+  const [favorites, setFavorites] = useLocalStorage<
+    Array<ModelDefinition["key"]>
+  >("favorite-models", [
+    "grok-3-mini",
+    "gemini-2.0-flash-lite",
+    "gemini-2.0-flash",
+  ]);
+
   const handleModelSelect = (model: string) => {
     onModelSelect(model);
     setOpen(false);
+  };
+
+  const handleFavorite = (model: string) => {
+    setFavorites([...favorites, model]);
+  };
+
+  const handleUnfavorite = (model: string) => {
+    setFavorites(favorites.filter((m) => m !== model));
   };
 
   return (
@@ -76,57 +93,81 @@ export function ModelSelector({
             />
           </div>
 
-          <div className="p-4 border-reflect mx-4 my-2 rounded-lg">
-            <h3 className="text-xl font-semibold mb-2">
-              Unlock all models + higher limits
-            </h3>
-            <div className="flex items-center justify-between">
-              <div className="text-3xl font-bold text-pink-500">
-                $8{" "}
-                <span className="text-base font-normal text-gray-400">
-                  /month
-                </span>
-              </div>
-              <Button className="bg-[#3a1a2a] hover:bg-[#4a2a3a] text-white border-0">
-                Upgrade now
-              </Button>
-            </div>
-          </div>
-
           <ScrollArea className="h-[400px]">
             {showAll ? (
-              <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4 pl-3 pr-2 pt-2.5">
-                {models.map((model) => (
-                  <GridModelItem
-                    key={model.key}
-                    name={model.name}
-                    icon={
-                      providerLogos[
-                        model.provider as keyof typeof providerLogos
-                      ]
-                    }
-                    capabilities={model.capabilities}
-                    onClick={() => handleModelSelect(model.key)}
-                    allowed={model.allowed}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="px-3 pt-4">
+                  <div className="flex w-full select-none items-center justify-start gap-1.5 text-[var(--heading)] mb-3">
+                    <PinOff className="mt-px size-4" />
+                    Favorites
+                  </div>
+                  <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
+                    {models
+                      .filter((model) => favorites.includes(model.key))
+                      .map((model: ModelDefinition) => (
+                        <GridModelItem
+                          key={model.key}
+                          name={model.name}
+                          icon={
+                            providerLogos[
+                              model.provider as keyof typeof providerLogos
+                            ]
+                          }
+                          capabilities={model.capabilities}
+                          onClick={() => handleModelSelect(model.key)}
+                          allowed={model.allowed}
+                          onFavorite={() => handleFavorite(model.key)}
+                          onUnfavorite={() => handleUnfavorite(model.key)}
+                          isFavorite={true}
+                        />
+                      ))}
+                  </div>
+                </div>
+                <div className="px-3">
+                  <div className="flex w-full select-none items-center justify-start gap-1.5 text-[var(--heading)] mb-3">
+                    Others
+                  </div>
+                  <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
+                    {models
+                      .filter((model) => !favorites.includes(model.key))
+                      .map((model: ModelDefinition) => (
+                        <GridModelItem
+                          key={model.key}
+                          name={model.name}
+                          icon={
+                            providerLogos[
+                              model.provider as keyof typeof providerLogos
+                            ]
+                          }
+                          capabilities={model.capabilities}
+                          onClick={() => handleModelSelect(model.key)}
+                          allowed={model.allowed}
+                          onFavorite={() => handleFavorite(model.key)}
+                          onUnfavorite={() => handleUnfavorite(model.key)}
+                          isFavorite={false}
+                        />
+                      ))}
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="py-4">
-                {models.map((model) => (
-                  <ListModelItem
-                    key={model.key}
-                    name={model.name}
-                    icon={
-                      providerLogos[
-                        model.provider as keyof typeof providerLogos
-                      ]
-                    }
-                    capabilities={model.capabilities}
-                    onClick={() => handleModelSelect(model.key)}
-                    allowed={model.allowed}
-                  />
-                ))}
+                {models
+                  .filter((model) => favorites.includes(model.key))
+                  .map((model: ModelDefinition) => (
+                    <ListModelItem
+                      key={model.key}
+                      name={model.name}
+                      icon={
+                        providerLogos[
+                          model.provider as keyof typeof providerLogos
+                        ]
+                      }
+                      capabilities={model.capabilities}
+                      onClick={() => handleModelSelect(model.key)}
+                      allowed={model.allowed}
+                    />
+                  ))}
               </div>
             )}
           </ScrollArea>

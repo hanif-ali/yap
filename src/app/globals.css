@@ -171,12 +171,20 @@ button {
 }
 
 .dark .border-reflect {
-  --gradientBorder-gradient: linear-gradient(180deg, #93335b00, #93335bbd, #93335b17), linear-gradient(15deg, #93335b1f 50%, #93335bbd);
-  --start: rgba(0, 0, 0, .92);
+  --gradientBorder-gradient:
+    linear-gradient(180deg, #93335b00, #93335bbd, #93335b17),
+    linear-gradient(15deg, #93335b1f 50%, #93335bbd);
+  --start: rgba(0, 0, 0, 0.92);
 }
 
 .backdrop-blur-lg {
   --tw-backdrop-blur: blur(16px);
 }
 
-
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

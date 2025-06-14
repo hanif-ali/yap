@@ -10,7 +10,6 @@ export const Greeting = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.5 }}
         className="text-2xl font-semibold"
       >
         Hello there!
@@ -19,7 +18,6 @@ export const Greeting = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.6 }}
         className="text-2xl text-zinc-500"
       >
         How can I help you today?

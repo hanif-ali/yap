@@ -7,10 +7,10 @@ export function HistoricalChatButton({ chat }: { chat: Doc<"threads"> }) {
   return (
     <Button
       variant="ghost"
-      className="w-full transition-colors duration-200 text-muted-foreground text-start justify-start"
+      className="w-full overflow-x-hidden transition-colors duration-200 text-muted-foreground text-start justify-start"
       asChild
     >
-      <Link href={`/chat/${chat.id}`}>{chat.title || "Untitled Chat"}</Link>
+      <Link href={`/chat/${chat.id}`} className="overflow-x-hidden">{chat.title || "Untitled Chat"}</Link>
     </Button>
   );
 }
