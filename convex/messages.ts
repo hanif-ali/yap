@@ -26,7 +26,15 @@ export const saveMessage = mutation({
         v.literal("system")
       ),
       content: v.string(),
-      attachments: v.array(v.id("attachments")),
+      attachments: v.array(
+        v.object({
+          id: v.string(),
+          url: v.string(),
+          contentType: v.string(),
+        })
+      ),
+      // better validation needed here
+      parts: v.array(v.any()),
     }),
   },
   handler: async (ctx, args) => {
@@ -59,7 +67,7 @@ export const updateMessage = mutation({
       .query("messages")
       .filter((q) => q.eq(q.field("id"), args.message.id))
       .first();
-    
+
     if (!message) {
       throw new Error("Message not found");
     }

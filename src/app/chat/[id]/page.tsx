@@ -2,6 +2,7 @@ import { api } from "../../../../convex/_generated/api";
 import { fetchQuery, preloadQuery } from "convex/nextjs";
 import ChatView from "./chat-view";
 import { auth } from "@clerk/nextjs/server";
+import { convertToUIMessages } from "@/lib/utils";
 
 export default async function ChatPage({ params }: { params: { id: string } }) {
   const { getToken } = await auth();
@@ -15,9 +16,15 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
     // { token: token ?? undefined }
   );
 
+  const uiMessages = convertToUIMessages(messages);
+
   return (
     <main className="flex-1 flex flex-col">
-      <ChatView preloadedMessages={messages} id={params.id} autoResume={true} />
+      <ChatView
+        preloadedMessages={uiMessages}
+        id={params.id}
+        autoResume={true}
+      />
     </main>
   );
 }

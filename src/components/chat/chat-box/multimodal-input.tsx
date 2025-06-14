@@ -24,7 +24,7 @@ import { SuggestedActions } from "./suggested-actions";
 import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, Paperclip, Search } from "lucide-react";
+import { ArrowDown, Globe, Paperclip, Search } from "lucide-react";
 import type { VisibilityType } from "./visibility-selector";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
@@ -304,13 +304,10 @@ function PureMultimodalInput({
           <div className="p-2 w-fit flex flex-row justify-start space-x-4">
             <ModelSelector onModelSelect={setModel} selectedModel={model} />
             <button className="flex items-center space-x-2 text-gray-400 hover:text-gray-300 transition-colors">
-              <Search className="w-4 h-4" />
-              <span className="text-sm">Search</span>
+              <Globe className="w-4 h-4" />
+              <span className="text-sm">Web Search</span>
             </button>
 
-            <button className="text-gray-400 hover:text-gray-300 transition-colors">
-              <Paperclip className="w-4 h-4" />
-            </button>
             <AttachmentsButton fileInputRef={fileInputRef} status={status} />
           </div>
 

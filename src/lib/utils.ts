@@ -1,6 +1,9 @@
 import type { CoreAssistantMessage, CoreToolMessage } from "ai";
+import { Attachment } from "ai";
+import { UIMessage } from "ai";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Doc } from "../../convex/_generated/dataModel";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,4 +30,18 @@ export function getTrailingMessageId({
   if (!trailingMessage) return null;
 
   return trailingMessage.id;
+}
+
+export function convertToUIMessages(
+  messages: Array<Doc<"messages">>
+): Array<UIMessage> {
+  return messages.map((message) => ({
+    id: message.id,
+    parts: message.parts as UIMessage["parts"],
+    role: message.role as UIMessage["role"],
+    // Note: content will soon be deprecated in @ai-sdk/react
+    content: "",
+    createdAt: new Date(message.createdAt),
+    experimental_attachments: (message.attachments as Array<Attachment>) ?? [],
+  }));
 }

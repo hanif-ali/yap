@@ -37,6 +37,8 @@ import { getModelInstance } from "@/lib/models/models";
 import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
+import { ReasoningUIPart } from "@ai-sdk/ui-utils";
+import { xai } from "@ai-sdk/xai";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -145,9 +147,12 @@ export async function POST(request: Request) {
           role: "user",
           content: message.content,
           attachments:
-            message.experimental_attachments?.map(
-              (attachment) => attachment.id
-            ) ?? [],
+            message.experimental_attachments?.map((attachment) => ({
+              id: attachment.id,
+              url: attachment.url,
+              contentType: attachment.contentType,
+            })) ?? [],
+          parts: message.parts,
         },
       },
       { token }
@@ -163,7 +168,7 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: getModelInstance(selectedChatModel),
+          model: xai("grok-3-mini"),
           system:
             "You are a friendly assistant! Keep your responses concise and helpful.",
           messages,
@@ -215,6 +220,7 @@ export async function POST(request: Request) {
                   role: "assistant",
                   content: assistantMessage.content,
                   attachments: [],
+                  parts: assistantMessage.parts ?? [],
                 },
               });
             } catch (error) {

@@ -350,7 +350,7 @@ export const models: ModelDefinition[] = [
     description: "Grok 3 Mini is a compact version for quick tasks.",
     getModelInstance: () => xai("grok-3-mini"),
     capabilities: ["text"],
-    allowed: false,
+    allowed: true,
   },
 ];
 

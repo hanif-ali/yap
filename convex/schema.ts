@@ -41,7 +41,14 @@ export default defineSchema({
       v.literal("system")
     ),
     createdAt: v.number(),
-    attachments: v.array(v.id("attachments")),
+    attachments: v.array(
+      v.object({
+        id: v.string(),
+        url: v.string(),
+        contentType: v.string(),
+      })
+    ),
+    parts: v.array(v.any()),
   })
     .index("by_message_id", ["id"])
     .index("by_threadId", ["threadId"])
@@ -64,6 +71,5 @@ export default defineSchema({
     mimeType: v.string(),
     fileSize: v.number(),
     status: v.optional(v.union(v.literal("deleted"), v.literal("uploaded"))),
-  })
-    .index("by_userId", ["userId"])
+  }).index("by_userId", ["userId"]),
 });
