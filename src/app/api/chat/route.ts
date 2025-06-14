@@ -28,7 +28,7 @@ import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 
 import { getMessagesForThread } from "../../../../convex/messages";
-import { updateDocument } from "../../../../ai-chatbot/lib/ai/tools/update-document";
+// import { updateDocument } from "../../../../ai-chatbot/lib/ai/tools/update-document";
 import { auth } from "@clerk/nextjs/server";
 import { generateTitleFromUserMessage } from "@/app/chat/actions";
 import { createThread, getThreadById } from "../../../../convex/threads";
@@ -38,7 +38,6 @@ import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
 import { ReasoningUIPart } from "@ai-sdk/ui-utils";
-import { xai } from "@ai-sdk/xai";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -168,7 +167,7 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: xai("grok-3-mini"),
+          model: getModelInstance(selectedChatModel),
           system:
             "You are a friendly assistant! Keep your responses concise and helpful.",
           messages,

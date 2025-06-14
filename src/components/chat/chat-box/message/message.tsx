@@ -19,10 +19,9 @@ import {
 } from "@/components/ui/tooltip";
 // import { MessageEditor } from './message-editor';
 // import { DocumentPreview } from './document-preview';
-// import { MessageReasoning } from './message-reasoning';
+import { MessageReasoning } from "./message-reasoning";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import { PreviewAttachment } from "./chat-box/preview-attachment";
-import { MessageReasoning } from "../../../ai-chatbot/components/message-reasoning";
+import { PreviewAttachment } from "../preview-attachment";
 
 const PurePreviewMessage = ({
   chatId,

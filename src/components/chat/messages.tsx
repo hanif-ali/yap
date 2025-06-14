@@ -1,5 +1,5 @@
 import type { UIMessage } from "ai";
-import { PreviewMessage, ThinkingMessage } from "./message";
+import { PreviewMessage, ThinkingMessage } from "./chat-box/message/message";
 import { Greeting } from "./greeting";
 import { memo } from "react";
 import equal from "fast-deep-equal";

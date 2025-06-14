@@ -15,7 +15,7 @@ export function AppSidebar({
   preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {
   return (
-    <Sidebar>
+    <Sidebar collapsible="none" className="w-full border-r">
       <SidebarHeader>
         <div className="flex h-8 items-center justify-center p-4">
           <a

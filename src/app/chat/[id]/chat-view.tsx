@@ -2,7 +2,6 @@
 
 import { useChat } from "@ai-sdk/react";
 // import { unstable_serialize } from "swr";
-// import { getChatHistoryPaginationKey } from "../../../../ai-chatbot/lib/pagination";
 // import { useSWRConfig } from "swr";
 import { Messages } from "@/components/chat/messages";
 import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
@@ -11,7 +10,7 @@ import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";
 import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
-import { useAutoResume } from "../../../../ai-chatbot/hooks/use-auto-resume";
+import { useAutoResume } from "@/hooks/use-auto-resume";
 import { Attachment } from "ai";
 
 export default function ChatView({
