@@ -21,7 +21,6 @@ export const sheetArtifact = new Artifact<"sheet", Metadata>({
       setArtifact((draftArtifact: any) => ({
         ...draftArtifact,
         content: streamPart.content as string,
-        isVisible: true,
         status: "streaming",
       }));
     }
