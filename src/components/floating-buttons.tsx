@@ -11,11 +11,11 @@ export function FloatingButtons() {
   return (
     <div
       className={cn(
-        "fixed top-2 left-1 flex items-center gap-0.5 z-50 transition-all duration-300 ease-in-out rounded-md p-1",
+        "fixed top-3 left-3 flex items-center gap-0.5 z-50 transition-all duration-300 ease-in-out rounded-md",
         state === "collapsed" ? "bg-sidebar" : "bg-transparent"
       )}
     >
-      <SidebarTrigger className="h-8 w-8 transition-colors duration-200 hover:text-muted-foreground" />
+      <SidebarTrigger className="h-9 w-9 transition-colors duration-200 hover:text-muted-foreground" />
       <div
         className={cn(
           "flex items-center gap-0.5 transition-all duration-300 ease-in-out",

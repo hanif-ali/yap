@@ -29,9 +29,11 @@ export function ThreadHistory({
               {category}
             </SidebarGroupLabel>
             <SidebarGroupContent>
-              {chats.map((chat) => (
-                <HistoricalChatButton chat={chat} key={chat._id} />
-              ))}
+              <ul className="flex flex-col gap-1">
+                {chats.map((chat) => (
+                  <HistoricalChatButton chat={chat} key={chat._id} />
+                ))}
+              </ul>
             </SidebarGroupContent>
           </SidebarGroup>
         ))}

@@ -4,12 +4,12 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { T3Logo } from "@/components/t3-logo";
 import { ThreadHistory } from "./thread-history";
 import { Preloaded } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import { SidebarControls } from "./sidebar-controls";
+import { YapIcon } from "../icons";
 
 export function AppSidebar({
   preloadedThreads,
@@ -17,16 +17,17 @@ export function AppSidebar({
   preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {
   return (
-    <Sidebar>
+    <Sidebar className="bg-sidebar">
       <SidebarHeader>
-        <div className="flex h-8 items-center justify-center p-4">
+        <div className="flex h-9 items-center justify-center m-1">
           <Link
             className="relative flex h-8 w-24 items-center justify-center text-sm font-semibold text-foreground"
             href="/"
             data-discover="true"
           >
-            <div className="h-3.5 select-none">
-              <T3Logo />
+            <div className="h-4 select-none">
+              {/* <T3Logo /> */}
+              <YapIcon />
             </div>
           </Link>
         </div>

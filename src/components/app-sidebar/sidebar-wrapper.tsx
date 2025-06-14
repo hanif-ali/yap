@@ -6,10 +6,10 @@ import { FloatingButtons } from "@/components/floating-buttons";
 import { Preloaded } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 
-export function SidebarWrapper({ 
+export function SidebarWrapper({
   children,
-  preloadedThreads 
-}: { 
+  preloadedThreads,
+}: {
   children: React.ReactNode;
   preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {

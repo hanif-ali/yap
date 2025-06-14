@@ -7,7 +7,6 @@ import {
   SignInButton,
   SignUpButton,
 } from "@clerk/nextjs";
-import { Montserrat } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 // import { ThemeToggle } from "../components/ThemeToggle";
 import "./globals.css";
@@ -16,10 +15,10 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
+import localFont from "next/font/local";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
+const proxima_var = localFont({
+  src: "./proxima_vara.woff2",
 });
 
 export const metadata: Metadata = {
@@ -36,22 +35,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${montserrat.variable} antialiased`}>
+      <body className={`${proxima_var.className} antialiased`}>
         <ClerkProvider>
-            <ConvexClientProvider>
-              <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-                <SignedOut>
-                  <SignInButton />
-                  <SignUpButton />
-                </SignedOut>
-                <SignedIn>
-                  <SidebarWrapper preloadedThreads={preloadedThreads}>
-                    {children}
-                  </SidebarWrapper>
-                </SignedIn>
-                <ThemeToggle />
-              </ThemeProvider>
-            </ConvexClientProvider>
+          <ConvexClientProvider>
+            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+              <SignedOut>
+                <SignInButton />
+                <SignUpButton />
+              </SignedOut>
+              <SignedIn>
+                <SidebarWrapper preloadedThreads={preloadedThreads}>
+                  {children}
+                </SidebarWrapper>
+              </SignedIn>
+              <ThemeToggle />
+            </ThemeProvider>
+          </ConvexClientProvider>
         </ClerkProvider>
       </body>
     </html>

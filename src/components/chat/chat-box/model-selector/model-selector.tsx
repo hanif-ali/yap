@@ -69,7 +69,7 @@ export function ModelSelector({
           align="start"
           sideOffset={8}
         >
-          <div className="flex items-center gap-2 px-3 py-2 border-b border-chat-border">
+          <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--chat-border)]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

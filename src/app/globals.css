@@ -86,6 +86,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --chat-border: hsl(333.3 22% 16.1%);
 }
 
 .dark {
@@ -94,9 +96,9 @@
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(0.21 0.006 285.885);
+  --popover-foreground: hsl(326 85% 90%);
+  --primary: hsl(332 100% 32%);
+  --primary-foreground: hsl(326 85% 90%);
   --secondary: hsl(273.8 15.1% 20.8%);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
@@ -116,8 +118,8 @@
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-accent: hsl(318.5 20.6% 12.4%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.439 0 0);
 
@@ -125,7 +127,7 @@
   --heading: #c46095;
 
   --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
-
+  --chat-border: hsl(333.3 22% 16.1%);
   --vision-icon-color: hsl(168 54% 74%);
   --web-icon-color: hsl(208 56% 74%);
   --text-icon-color: hsl(237 75% 77%);
