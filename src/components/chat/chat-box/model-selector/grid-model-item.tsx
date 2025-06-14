@@ -20,7 +20,6 @@ interface ModelItemProps {
 export function GridModelItem({
   name,
   icon,
-  isPremium,
   capabilities = [],
   onClick,
   allowed,

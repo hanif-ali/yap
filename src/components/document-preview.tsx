@@ -5,7 +5,6 @@ import {
   MouseEvent,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
 } from "react";
 import { ArtifactKind, UIArtifact } from "./artifact";
@@ -24,13 +23,11 @@ import { api } from "../../convex/_generated/api";
 import { Doc } from "../../convex/_generated/dataModel";
 
 interface DocumentPreviewProps {
-  isReadonly: boolean;
   result?: any;
   args?: any;
 }
 
 export function DocumentPreview({
-  isReadonly,
   result,
   args,
 }: DocumentPreviewProps) {
@@ -64,7 +61,6 @@ export function DocumentPreview({
         <DocumentToolResult
           type="create"
           result={{ id: result.id, title: result.title, kind: result.kind }}
-          isReadonly={isReadonly}
         />
       );
     }
@@ -74,7 +70,6 @@ export function DocumentPreview({
         <DocumentToolCall
           type="create"
           args={{ title: args.title }}
-          isReadonly={isReadonly}
         />
       );
     }

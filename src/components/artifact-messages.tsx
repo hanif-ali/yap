@@ -4,7 +4,6 @@ import {
 } from "./chat/chat-box/message/message";
 import type { UIMessage } from "ai";
 import { memo } from "react";
-import equal from "fast-deep-equal";
 import type { UIArtifact } from "./artifact";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
@@ -16,7 +15,6 @@ interface ArtifactMessagesProps {
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers["setMessages"];
   reload: UseChatHelpers["reload"];
-  isReadonly: boolean;
   artifactStatus: UIArtifact["status"];
 }
 
@@ -26,7 +24,6 @@ function PureArtifactMessages({
   messages,
   setMessages,
   reload,
-  isReadonly,
 }: ArtifactMessagesProps) {
   const {
     containerRef: messagesContainerRef,
@@ -52,7 +49,6 @@ function PureArtifactMessages({
           isLoading={status === "streaming" && index === messages.length - 1}
           setMessages={setMessages}
           reload={reload}
-          isReadonly={isReadonly}
           requiresScrollPadding={
             hasSentMessage && index === messages.length - 1
           }

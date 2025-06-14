@@ -1,19 +1,14 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-// import { unstable_serialize } from "swr";
-// import { useSWRConfig } from "swr";
 import { Messages } from "@/components/chat/messages";
 import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
-import { useMutation } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { Attachment } from "ai";
 import { Artifact } from "@/components/artifact";
-import { DataStreamHandler } from "@/components/data-stream-handler";
 
 export default function ChatView({
   preloadedMessages,
@@ -53,12 +48,8 @@ export default function ChatView({
       id,
       message: body.messages.at(-1),
       selectedChatModel: model,
-      // selectedVisibilityType: visibilityType,
     }),
-    onFinish: () => {
-      // mutate(unstable_serialize(getChatHistoryPaginationKey));
-    },
-    onError: (error) => {
+    onError: () => {
       // TODO: Error handling
       // if (error instanceof ChatSDKError) {
       //   toast({
@@ -80,25 +71,15 @@ export default function ChatView({
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
-        {/* <ChatHeader
-          chatId={id}
-          selectedModelId="gpt-4o"
-          selectedVisibilityType="public"
-          isReadonly={false}
-          session={null}
-        /> */}
-
         <Messages
           chatId={id}
           status={status}
           messages={messages}
           setMessages={setMessages}
           reload={reload}
-          isReadonly={false}
           isArtifactVisible={true}
         />
 
-        {/* {!isReadonly && ( */}
         <MultimodalInput
           chatId={id}
           input={input}
@@ -111,7 +92,6 @@ export default function ChatView({
           messages={messages}
           setMessages={setMessages}
           append={append}
-          selectedVisibilityType="public"
           model={model}
           setModel={setModel}
         />
@@ -125,14 +105,12 @@ export default function ChatView({
         handleSubmit={handleSubmit}
         status={status}
         stop={stop}
-        // attachments={attachments}
-        // setAttachments={setAttachments}
+        attachments={attachments}
+        setAttachments={setAttachments}
         append={append}
         messages={messages}
         setMessages={setMessages}
         reload={reload}
-        // isReadonly={isReadonly}
-        // selectedVisibilityType={visibilityType}
         model={model}
         setModel={setModel}
       />

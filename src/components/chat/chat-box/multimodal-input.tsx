@@ -1,7 +1,6 @@
 "use client";
 
 import type { Attachment, UIMessage } from "ai";
-import { cn } from "@/lib/utils";
 import type React from "react";
 import {
   useRef,
@@ -20,15 +19,14 @@ import { ArrowUpIcon, PaperclipIcon, StopIcon } from "@/components/icons";
 import { PreviewAttachment } from "./preview-attachment";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { SuggestedActions } from "./suggested-actions";
 import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, Globe, Paperclip, Search } from "lucide-react";
-import type { VisibilityType } from "./visibility-selector";
+import { ArrowDown, Globe } from "lucide-react";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
+import { SuggestedActions } from "./suggested-actions";
 
 function PureMultimodalInput({
   chatId,
@@ -42,8 +40,7 @@ function PureMultimodalInput({
   setMessages,
   append,
   handleSubmit,
-  className,
-  selectedVisibilityType,
+  // className,
   model,
   setModel,
 }: {
@@ -61,7 +58,6 @@ function PureMultimodalInput({
   append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
-  selectedVisibilityType: VisibilityType;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -139,34 +135,38 @@ function PureMultimodalInput({
     chatId,
   ]);
 
-  const uploadFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("threadId", chatId);
+  const uploadFile = useCallback(
+    async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("threadId", chatId);
 
-    try {
-      const response = await fetch("/api/files/upload", {
-        method: "POST",
-        body: formData,
-      });
+      try {
+        const response = await fetch("/api/files/upload", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        const { url, pathname, contentType } = data;
+        if (response.ok) {
+          const data = await response.json();
+          const { url, pathname, contentType } = data;
 
-        return {
-          id: data.attachmentId,
-          url,
-          name: pathname,
-          contentType: contentType,
-        };
+          return {
+            id: data.attachmentId,
+            url,
+            name: pathname,
+            contentType: contentType,
+          };
+        }
+        const { error } = await response.json();
+        toast.error(error);
+      } catch (error) {
+        toast.error("Failed to upload file, please try again!");
+        console.error(error);
       }
-      const { error } = await response.json();
-      toast.error(error);
-    } catch (error) {
-      toast.error("Failed to upload file, please try again!");
-    }
-  };
+    },
+    [chatId]
+  );
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
@@ -190,7 +190,7 @@ function PureMultimodalInput({
         setUploadQueue([]);
       }
     },
-    [setAttachments]
+    [setAttachments, uploadFile]
   );
 
   const { isAtBottom, scrollToBottom } = useScrollToBottom();
@@ -230,12 +230,9 @@ function PureMultimodalInput({
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
-          <SuggestedActions
-            append={append}
-            chatId={chatId}
-            selectedVisibilityType={selectedVisibilityType}
-          />
+          <SuggestedActions append={append} chatId={chatId} />
         )}
+
       <div className="mt-4 rounded-t-[20px] overflow-hidden border-reflect backdrop-blur-lg bg-chat-input-background border-b-0">
         <div className="relative w-full flex flex-col gap-4 border-1 p-2 pt-4">
           <input
@@ -332,8 +329,7 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
-      return false;
+    return false;
     if (prevProps.model !== nextProps.model) return false;
 
     return true;

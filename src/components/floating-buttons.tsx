@@ -4,8 +4,7 @@ import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useSidebar } from "./ui/sidebar";
 import { cn } from "@/lib/utils";
-import { Plus, Search, Settings } from "lucide-react";
-import { Sun } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 
 export function FloatingButtons() {
   const { state } = useSidebar();

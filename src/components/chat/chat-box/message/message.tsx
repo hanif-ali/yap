@@ -3,34 +3,25 @@
 import type { UIMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { memo, useState } from "react";
-// import { DocumentToolResult } from './document';
 import { PencilEditIcon, SparklesIcon } from "@/components/icons";
 import { Markdown } from "./markdown";
-// import { MessageActions } from './message-actions';
-// import { PreviewAttachment } from './preview-attachment';
-// import { Weather } from './weather';
 import equal from "fast-deep-equal";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-// import { MessageEditor } from './message-editor';
-// import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from "./message-reasoning";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { PreviewAttachment } from "../preview-attachment";
 import { DocumentPreview } from "@/components/document-preview";
+import { DocumentToolCall, DocumentToolResult } from "@/components/document";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 const PurePreviewMessage = ({
-  chatId,
   message,
   isLoading,
-  setMessages,
-  reload,
-  isReadonly,
   requiresScrollPadding,
 }: {
   chatId: string;
@@ -38,9 +29,9 @@ const PurePreviewMessage = ({
   isLoading: boolean;
   setMessages: UseChatHelpers["setMessages"];
   reload: UseChatHelpers["reload"];
-  isReadonly: boolean;
   requiresScrollPadding: boolean;
 }) => {
+  // todo add editing
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   return (
@@ -108,7 +99,7 @@ const PurePreviewMessage = ({
                 if (mode === "view") {
                   return (
                     <div key={key} className="flex flex-row gap-2 items-start">
-                      {message.role === "user" && !isReadonly && (
+                      {message.role === "user" && (
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
@@ -125,7 +116,6 @@ const PurePreviewMessage = ({
                           <TooltipContent>Edit message</TooltipContent>
                         </Tooltip>
                       )}
-
                       <div
                         data-testid="message-content"
                         className={cn("flex flex-col gap-4 text-sm", {
@@ -172,63 +162,42 @@ const PurePreviewMessage = ({
                       })}
                     >
                       {toolName === "createDocument" ? (
-                        <DocumentPreview isReadonly={isReadonly} args={args} />
+                        <DocumentPreview args={args} />
+                      ) : toolName === "updateDocument" ? (
+                        <DocumentToolCall type="update" args={args} />
                       ) : null}
-                      {/* Todo fix */}
-                      {/*
-                      ) : toolName === 'createDocument' ? (
-                        <DocumentPreview isReadonly={isReadonly} args={args} />
-                      ) : toolName === 'updateDocument' ? (
-                        <DocumentToolCall
-                          type="update"
-                          args={args}
-                          isReadonly={isReadonly}
-                        />
-                      ) : null} */}
                     </div>
                   );
                 }
 
-                // todo fix
                 if (state === "result") {
                   const { result } = toolInvocation;
 
                   if (toolName === "createDocument") {
+                    return <DocumentPreview result={result} key={key} />;
+                  }
+                  if (toolName === "updateDocument") {
                     return (
-                      <DocumentPreview
-                        isReadonly={isReadonly}
+                      <DocumentToolResult
+                        type="update"
                         result={result}
+                        key={key}
                       />
                     );
                   }
-                }
 
-                // return (
-                // <div key={toolCallId}>
-                //       {toolName === 'updateDocument' ? (
-                //         <DocumentToolResult
-                //           type="update"
-                //           result={result}
-                //           isReadonly={isReadonly}
-                //         />
-                //       ) : (
-                //         <pre>{JSON.stringify(result, null, 2)}</pre>
-                //       )}
-                //     </div>
-                //   );
-                // }
+                  return <pre key={key}>{JSON.stringify(result, null, 2)}</pre>;
+                }
               }
             })}
 
             {/* todo fix */}
-            {/* {!isReadonly && (
-              <MessageActions
-                key={`action-${message.id}`}
-                chatId={chatId}
-                message={message}
-                isLoading={isLoading}
-              />
-            )} */}
+            {/* <MessageActions
+              key={`action-${message.id}`}
+              chatId={chatId}
+              message={message}
+              isLoading={isLoading}
+            /> */}
           </div>
         </div>
       </motion.div>

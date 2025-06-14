@@ -2,7 +2,6 @@ import type { UIMessage } from "ai";
 import { PreviewMessage, ThinkingMessage } from "./chat-box/message/message";
 import { Greeting } from "./greeting";
 import { memo } from "react";
-import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
 import { useMessages } from "@/hooks/use-messages";
@@ -72,7 +71,8 @@ function PureMessages({
   );
 }
 
-export const Messages = memo(PureMessages, (prevProps, nextProps) => {
+export const Messages = memo(PureMessages, () => {
+  // todo fix memoization here
   // if (prevProps.isArtifactVisible && nextProps.isArtifactVisible) return true;
 
   // if (prevProps.status !== nextProps.status) return false;

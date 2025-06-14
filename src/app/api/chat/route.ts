@@ -5,14 +5,6 @@ import {
   smoothStream,
   streamText,
 } from "ai";
-// import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
-
-// import { createDocument } from '@/lib/ai/tools/create-document';
-// import { updateDocument } from '@/lib/ai/tools/update-document';
-// import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
-// import { getWeather } from '@/lib/ai/tools/get-weather';
-// import { isProductionEnvironment } from '@/lib/constants';
-// import { entitlementsByUserType } from '@/lib/ai/entitlements';
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
 import { geolocation } from "@vercel/functions";
 import {
@@ -20,24 +12,16 @@ import {
   type ResumableStreamContext,
 } from "resumable-stream";
 import { after } from "next/server";
-// import type { Chat } from '@/lib/db/schema';
-// import { differenceInSeconds } from 'date-fns';
-// import { ChatError } from "@/lib/errors";
-// import { getThreadById } from "../../../../convex/threads";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 
-import { getMessagesForThread } from "../../../../convex/messages";
-// import { updateDocument } from "../../../../ai-chatbot/lib/ai/tools/update-document";
 import { auth } from "@clerk/nextjs/server";
 import { generateTitleFromUserMessage } from "@/app/chat/actions";
-import { createThread, getThreadById } from "../../../../convex/threads";
 import { generateUUID, getTrailingMessageId } from "@/lib/utils";
 import { getModelInstance } from "@/lib/models/models";
 import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
-import { ReasoningUIPart } from "@ai-sdk/ui-utils";
 import { createDocument } from "@/lib/documents/create-document";
 import { RequestHints, systemPrompt } from "@/lib/models/prompts";
 import { updateDocument } from "@/lib/documents/update-document";
@@ -84,8 +68,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    // const { id, message, selectedChatModel, selectedVisibilityType } =
-    //   requestBody;
     const { id, message, selectedChatModel } = requestBody;
 
     // TODO: add auth, rate limiting
@@ -280,10 +262,6 @@ export async function GET(request: Request) {
   if (!thread) {
     return new ChatError("not_found:chat").toResponse();
   }
-
-  // if (chat.visibility === "private" && chat.userId !== session.user.id) {
-  //   return new ChatError("forbidden:chat").toResponse();
-  // }
 
   const streamIds = await fetchQuery(api.streams.getStreamIdsByThreadId, {
     threadId,

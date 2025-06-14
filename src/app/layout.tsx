@@ -4,7 +4,6 @@ import {
   ClerkProvider,
   SignedOut,
   SignedIn,
-  UserButton,
   SignInButton,
   SignUpButton,
 } from "@clerk/nextjs";
@@ -15,7 +14,6 @@ import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
-import { FloatingButtons } from "@/components/floating-buttons";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 

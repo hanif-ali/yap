@@ -5,9 +5,7 @@ import { groq } from "@ai-sdk/groq";
 import { deepseek } from "@ai-sdk/deepseek";
 import { fireworks } from "@ai-sdk/fireworks";
 import { mistral } from "@ai-sdk/mistral";
-import { cohere } from "@ai-sdk/cohere";
 import { deepinfra } from "@ai-sdk/deepinfra";
-import { togetherai } from "@ai-sdk/togetherai";
 import { xai } from "@ai-sdk/xai";
 
 export type ModelDefinition = {
@@ -191,15 +189,6 @@ export const models: ModelDefinition[] = [
     allowed: false,
   },
   // Groq models (unallowed)
-  {
-    provider: "",
-    key: "qwen-qwq-32b",
-    name: "Qwen qwq-32b",
-    description: "Qwen qwq-32b is a large model for advanced tasks.",
-    getModelInstance: () => groq("qwen-qwq-32b"),
-    capabilities: ["text"],
-    allowed: false,
-  },
   {
     provider: "groq",
     key: "qwen-2.5-32b",

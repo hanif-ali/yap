@@ -11,9 +11,6 @@ import {
 } from "react";
 import { useDebounceCallback, useWindowSize } from "usehooks-ts";
 import { MultimodalInput } from "./chat/chat-box/multimodal-input";
-import { Toolbar } from "./toolbar";
-import { VersionFooter } from "./version-footer";
-import { ArtifactActions } from "./artifact-actions";
 import { ArtifactCloseButton } from "./artifact-close-button";
 import { ArtifactMessages } from "./artifact-messages";
 import { useSidebar } from "./ui/sidebar";
@@ -24,7 +21,6 @@ import { sheetArtifact } from "@/artifacts/sheet/client";
 import { textArtifact } from "@/artifacts/text/client";
 import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
-import type { VisibilityType } from "./visibility-selector";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -64,8 +60,6 @@ function PureArtifact({
   messages,
   setMessages,
   reload,
-  isReadonly,
-  selectedVisibilityType,
   model,
   setModel,
 }: {
@@ -81,12 +75,10 @@ function PureArtifact({
   append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   reload: UseChatHelpers["reload"];
-  isReadonly: boolean;
-  selectedVisibilityType: VisibilityType;
   model: string;
   setModel: Dispatch<SetStateAction<string>>;
 }) {
-  const { artifact, setArtifact, metadata, setMetadata } = useArtifact();
+  const { artifact, metadata, setMetadata } = useArtifact();
 
   const document = useQuery(api.documents.getDocumentById, {
     id: artifact.documentId,
@@ -109,7 +101,7 @@ function PureArtifact({
       });
       setIsContentDirty(false);
     },
-    [artifact]
+    [artifact, updateDocument]
   );
 
   const debouncedHandleContentChange = useDebounceCallback(
@@ -124,7 +116,7 @@ function PureArtifact({
         debouncedHandleContentChange(updatedContent);
       }
     },
-    [document, debouncedHandleContentChange, handleContentChange]
+    [document, debouncedHandleContentChange]
   );
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -203,7 +195,6 @@ function PureArtifact({
                   messages={messages}
                   setMessages={setMessages}
                   reload={reload}
-                  isReadonly={isReadonly}
                   artifactStatus={artifact.status}
                 />
 
@@ -215,13 +206,12 @@ function PureArtifact({
                     handleSubmit={handleSubmit}
                     status={status}
                     stop={stop}
-                    attachments={[]}
-                    setAttachments={() => {}}
+                    attachments={attachments}
+                    setAttachments={setAttachments}
                     messages={messages}
                     append={append}
                     className="bg-background dark:bg-muted"
                     setMessages={setMessages}
-                    selectedVisibilityType={selectedVisibilityType}
                     model={model}
                     setModel={setModel}
                   />
@@ -369,8 +359,7 @@ export const Artifact = memo(PureArtifact, (prevProps, nextProps) => {
   if (prevProps.status !== nextProps.status) return false;
   if (prevProps.input !== nextProps.input) return false;
   if (!equal(prevProps.messages, nextProps.messages.length)) return false;
-  if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
-    return false;
+  return false;
 
   return true;
 });

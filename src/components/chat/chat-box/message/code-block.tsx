@@ -1,4 +1,5 @@
-'use client';
+/* eslint-disable */
+"use client";
 
 interface CodeBlockProps {
   node: any;

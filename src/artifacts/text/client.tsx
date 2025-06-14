@@ -5,18 +5,16 @@ import { Editor } from "@/components/text-editor";
 import {
   ClockRewind,
   CopyIcon,
-  MessageIcon,
   PenIcon,
   RedoIcon,
   UndoIcon,
 } from "@/components/icons";
 import { toast } from "sonner";
 
-
 export const textArtifact = new Artifact<"text">({
   kind: "text",
   description: "Useful for text content, like drafting essays and emails.",
-  onStreamPart: ({ streamPart, setMetadata, setArtifact }) => {
+  onStreamPart: ({ streamPart, setArtifact }) => {
     if (streamPart.type === "text-delta") {
       setArtifact((draftArtifact) => {
         return {
@@ -42,7 +40,6 @@ export const textArtifact = new Artifact<"text">({
     onSaveContent,
     getDocumentContentById,
     isLoading,
-    metadata,
   }) => {
     if (isLoading) {
       return <DocumentSkeleton artifactKind="text" />;
@@ -78,7 +75,7 @@ export const textArtifact = new Artifact<"text">({
       onClick: ({ handleVersionChange }) => {
         handleVersionChange("toggle");
       },
-      isDisabled: ({ currentVersionIndex, setMetadata }) => {
+      isDisabled: ({ currentVersionIndex }) => {
         if (currentVersionIndex === 0) {
           return true;
         }
@@ -135,6 +132,5 @@ export const textArtifact = new Artifact<"text">({
         });
       },
     },
-
   ],
 });
