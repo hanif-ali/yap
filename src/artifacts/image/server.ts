@@ -1,6 +1,6 @@
 import { createDocumentHandler } from "@/lib/artifacts/server";
 import { xai } from "@ai-sdk/xai";
-import { experimental_generateImage } from "ai";
+import { customProvider, experimental_generateImage } from "ai";
 
 export const imageDocumentHandler = createDocumentHandler<"image">({
   kind: "image",
@@ -9,7 +9,7 @@ export const imageDocumentHandler = createDocumentHandler<"image">({
 
     const { image } = await experimental_generateImage({
       // todo fix and make configurable
-      model: xai("grok-2-image"),
+      model: xai.image("grok-2-image"),
       prompt: title,
       n: 1,
     });
@@ -27,7 +27,7 @@ export const imageDocumentHandler = createDocumentHandler<"image">({
     let draftContent = "";
 
     const { image } = await experimental_generateImage({
-      model: xai("grok-2-image"),
+      model: xai.image("grok-2-image"),
       prompt: description,
       n: 1,
     });
