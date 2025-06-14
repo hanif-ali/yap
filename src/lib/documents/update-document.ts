@@ -20,7 +20,6 @@ export const updateDocument = ({ session, dataStream }: UpdateDocumentProps) =>
         .describe("The description of changes that need to be made"),
     }),
     execute: async ({ id, description }) => {
-      console.log("called update document");
       const document = await fetchQuery(api.documents.getDocumentById, { id });
 
       if (!document) {

@@ -3,6 +3,7 @@ import { fetchQuery, preloadQuery } from "convex/nextjs";
 import ChatView from "./chat-view";
 import { auth } from "@clerk/nextjs/server";
 import { convertToUIMessages } from "@/lib/utils";
+import { DataStreamHandler } from "@/components/data-stream-handler";
 
 export default async function ChatPage({ params }: { params: { id: string } }) {
   const { getToken } = await auth();
@@ -25,6 +26,7 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
         id={params.id}
         autoResume={true}
       />
+      <DataStreamHandler id={params.id} />
     </main>
   );
 }

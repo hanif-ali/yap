@@ -56,7 +56,6 @@ function getStreamContext() {
           " > Resumable streams are disabled due to missing REDIS_URL"
         );
       } else {
-        console.log("errlkjwerlkj");
         console.error(error);
       }
     }
@@ -166,7 +165,6 @@ export async function POST(request: Request) {
       threadId: id,
     });
 
-    console.log({ messages });
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({

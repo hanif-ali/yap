@@ -342,7 +342,9 @@ function PureArtifact({
                   // isCurrentVersion
                   //   ? artifact.content
                   //   : getDocumentContentById(currentVersionIndex)
-                  document.content
+                  artifact.status === "streaming"
+                    ? artifact.content
+                    : document?.content || ""
                 }
                 status={artifact.status}
                 // currentVersionIndex={currentVersionIndex}

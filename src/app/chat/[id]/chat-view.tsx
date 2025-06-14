@@ -8,11 +8,12 @@ import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { generateUUID } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { Attachment } from "ai";
 import { Artifact } from "@/components/artifact";
+import { DataStreamHandler } from "@/components/data-stream-handler";
 
 export default function ChatView({
   preloadedMessages,
@@ -28,7 +29,6 @@ export default function ChatView({
   );
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
-  console.log({ attachments });
 
   const {
     messages,
@@ -56,7 +56,6 @@ export default function ChatView({
       // selectedVisibilityType: visibilityType,
     }),
     onFinish: () => {
-      console.log("finished");
       // mutate(unstable_serialize(getChatHistoryPaginationKey));
     },
     onError: (error) => {

@@ -10,7 +10,6 @@ export const PreviewAttachment = ({
   isUploading?: boolean;
 }) => {
   const { name, url, contentType } = attachment;
-  console.log({ attachment });
 
   return (
     <div data-testid="input-attachment-preview" className="flex flex-col gap-2">

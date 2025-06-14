@@ -40,8 +40,6 @@ export function DocumentPreview({
     id: result?.id,
   });
 
-  console.log({ previewDocument, artifact });
-
   const hitboxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -83,7 +81,7 @@ export function DocumentPreview({
   }
 
   if (!previewDocument) {
-    return <LoadingSkeleton artifactKind={result.kind ?? args.kind} />;
+    return <LoadingSkeleton artifactKind={artifact.kind} />;
   }
 
   // todo fix id

@@ -21,8 +21,8 @@ export const createThread = mutation({
 export const getForCurrentUser = query({
   args: {},
   handler: async (ctx) => {
+    // todo fix auth
     const identity = await ctx.auth.getUserIdentity();
-    console.log({identity})
 
     if (identity === null) {
       return [];

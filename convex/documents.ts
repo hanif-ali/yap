@@ -3,9 +3,11 @@ import { mutation, query } from "./_generated/server";
 
 export const getDocumentById = query({
   args: {
-    id: v.string(),
+    id: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    if (!args.id) return null;
+
     return await ctx.db
       .query("documents")
       .filter((q) => q.eq(q.field("id"), args.id))

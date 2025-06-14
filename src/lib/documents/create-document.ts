@@ -22,7 +22,6 @@ export const createDocument = ({ session, dataStream }: CreateDocumentProps) =>
     }),
     execute: async ({ title, kind }) => {
       const id = generateUUID();
-      console.log("executing tool");
 
       dataStream.writeData({
         type: "kind",

@@ -180,8 +180,6 @@ function PureMultimodalInput({
         const successfullyUploadedAttachments = uploadedAttachments.filter(
           (attachment) => attachment !== undefined
         );
-        console.log({ successfullyUploadedAttachments });
-
         setAttachments((currentAttachments) => [
           ...currentAttachments,
           ...successfullyUploadedAttachments,

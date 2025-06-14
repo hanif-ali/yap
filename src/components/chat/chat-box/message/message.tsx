@@ -42,7 +42,6 @@ const PurePreviewMessage = ({
   requiresScrollPadding: boolean;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
-  console.log({ message });
 
   return (
     <AnimatePresence>
@@ -172,23 +171,16 @@ const PurePreviewMessage = ({
                         skeleton: ["getWeather"].includes(toolName),
                       })}
                     >
-                      {/* {toolName === "createDocument" && ? (
+                      {toolName === "createDocument" ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
-                      ) : null} */}
+                      ) : null}
                       {/* Todo fix */}
-                      {/* {toolName === 'getWeather' ? (
-                        <Weather />
+                      {/*
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
                       ) : toolName === 'updateDocument' ? (
                         <DocumentToolCall
                           type="update"
-                          args={args}
-                          isReadonly={isReadonly}
-                        />
-                      ) : toolName === 'requestSuggestions' ? (
-                        <DocumentToolCall
-                          type="request-suggestions"
                           args={args}
                           isReadonly={isReadonly}
                         />
@@ -198,16 +190,21 @@ const PurePreviewMessage = ({
                 }
 
                 // todo fix
-                if (state === 'result') {
+                if (state === "result") {
                   const { result } = toolInvocation;
 
                   if (toolName === "createDocument") {
-                    return <DocumentPreview isReadonly={isReadonly} result={result} />;
+                    return (
+                      <DocumentPreview
+                        isReadonly={isReadonly}
+                        result={result}
+                      />
+                    );
                   }
                 }
 
-                  // return (
-                    // <div key={toolCallId}>
+                // return (
+                // <div key={toolCallId}>
                 //       {toolName === 'updateDocument' ? (
                 //         <DocumentToolResult
                 //           type="update"
