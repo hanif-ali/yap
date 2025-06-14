@@ -22,6 +22,7 @@ import {
 import { MessageReasoning } from "./message-reasoning";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { PreviewAttachment } from "../preview-attachment";
+import { DocumentPreview } from "@/components/document-preview";
 
 const PurePreviewMessage = ({
   chatId,
@@ -41,6 +42,7 @@ const PurePreviewMessage = ({
   requiresScrollPadding: boolean;
 }) => {
   const [mode, setMode] = useState<"view" | "edit">("view");
+  console.log({ message });
 
   return (
     <AnimatePresence>
@@ -170,6 +172,9 @@ const PurePreviewMessage = ({
                         skeleton: ["getWeather"].includes(toolName),
                       })}
                     >
+                      {/* {toolName === "createDocument" && ? (
+                        <DocumentPreview isReadonly={isReadonly} args={args} />
+                      ) : null} */}
                       {/* Todo fix */}
                       {/* {toolName === 'getWeather' ? (
                         <Weather />
@@ -193,27 +198,19 @@ const PurePreviewMessage = ({
                 }
 
                 // todo fix
-                // if (state === 'result') {
-                //   const { result } = toolInvocation;
+                if (state === 'result') {
+                  const { result } = toolInvocation;
 
-                //   return (
-                //     <div key={toolCallId}>
-                //       {toolName === 'getWeather' ? (
-                //         <Weather weatherAtLocation={result} />
-                //       ) : toolName === 'createDocument' ? (
-                //         <DocumentPreview
-                //           isReadonly={isReadonly}
-                //           result={result}
-                //         />
-                //       ) : toolName === 'updateDocument' ? (
+                  if (toolName === "createDocument") {
+                    return <DocumentPreview isReadonly={isReadonly} result={result} />;
+                  }
+                }
+
+                  // return (
+                    // <div key={toolCallId}>
+                //       {toolName === 'updateDocument' ? (
                 //         <DocumentToolResult
                 //           type="update"
-                //           result={result}
-                //           isReadonly={isReadonly}
-                //         />
-                //       ) : toolName === 'requestSuggestions' ? (
-                //         <DocumentToolResult
-                //           type="request-suggestions"
                 //           result={result}
                 //           isReadonly={isReadonly}
                 //         />

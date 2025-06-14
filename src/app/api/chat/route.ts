@@ -38,6 +38,9 @@ import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
 import { ReasoningUIPart } from "@ai-sdk/ui-utils";
+import { createDocument } from "@/lib/documents/create-document";
+import { RequestHints, systemPrompt } from "@/lib/models/prompts";
+import { updateDocument } from "@/lib/documents/update-document";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -130,12 +133,12 @@ export async function POST(request: Request) {
 
     const { longitude, latitude, city, country } = geolocation(request);
 
-    // const requestHints: RequestHints = {
-    //   longitude,
-    //   latitude,
-    //   city,
-    //   country,
-    // };
+    const requestHints: RequestHints = {
+      longitude,
+      latitude,
+      city,
+      country,
+    };
 
     await fetchMutation(
       api.messages.saveMessage,
@@ -168,30 +171,17 @@ export async function POST(request: Request) {
       execute: (dataStream) => {
         const result = streamText({
           model: getModelInstance(selectedChatModel),
-          system:
-            "You are a friendly assistant! Keep your responses concise and helpful.",
+          system: systemPrompt({ selectedChatModel, requestHints }),
           messages,
           maxSteps: 5,
-          // experimental_activeTools:
-          //   selectedChatModel === "chat-model-reasoning"
-          //     ? []
-          //     : [
-          //         "getWeather",
-          //         "createDocument",
-          //         "updateDocument",
-          //         "requestSuggestions",
-          //       ],
+          // todo disable for reasoning models
+          experimental_activeTools: ["createDocument", "updateDocument"],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
-          // tools: {
-          //   getWeather,
-          //   createDocument: createDocument({ session, dataStream }),
-          //   updateDocument: updateDocument({ session, dataStream }),
-          //   requestSuggestions: requestSuggestions({
-          //     session,
-          //     dataStream,
-          //   }),
-          // },
+          tools: {
+            createDocument: createDocument({ session: authData, dataStream }),
+            updateDocument: updateDocument({ session: authData, dataStream }),
+          },
           onError: (error) => {
             console.log({ error });
           },

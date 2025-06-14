@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { Attachment } from "ai";
+import { Artifact } from "@/components/artifact";
 
 export default function ChatView({
   preloadedMessages,
@@ -117,9 +118,9 @@ export default function ChatView({
         />
         {/* )} */}
       </div>
-      {/* 
-      <ArtifactsView
-        // chatId={id}
+
+      <Artifact
+        chatId={id}
         input={input}
         setInput={setInput}
         handleSubmit={handleSubmit}
@@ -131,10 +132,11 @@ export default function ChatView({
         messages={messages}
         setMessages={setMessages}
         reload={reload}
-        // votes={votes}
         // isReadonly={isReadonly}
         // selectedVisibilityType={visibilityType}
-      /> */}
+        model={model}
+        setModel={setModel}
+      />
     </>
   );
 }

@@ -72,4 +72,18 @@ export default defineSchema({
     fileSize: v.number(),
     status: v.optional(v.union(v.literal("deleted"), v.literal("uploaded"))),
   }).index("by_userId", ["userId"]),
+
+  documents: defineTable({
+    id: v.string(),
+    title: v.string(),
+    content: v.optional(v.string()),
+    kind: v.union(
+      v.literal("text"),
+      v.literal("code"),
+      v.literal("image"),
+      v.literal("sheet")
+    ),
+    userId: v.string(),
+    updatedAt: v.number(),
+  }).index("by_userId", ["userId"]),
 });
