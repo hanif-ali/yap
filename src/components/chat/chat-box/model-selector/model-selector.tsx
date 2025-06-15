@@ -1,6 +1,12 @@
 "use client";
 
-import { ChevronDown, ChevronLeft, ChevronUp, PinOff } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
+  PinOff,
+  Search,
+} from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -62,29 +68,15 @@ export function ModelSelector({
         </PopoverTrigger>
         <PopoverContent
           className={cn(
-            "p-2 bg-sidebar border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200",
+            "p-2 border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200",
             showAll ? "w-[550px]" : "w-[425px]"
           )}
           side="top"
           align="start"
-          sideOffset={8}
+          // sideOffset={8}
         >
           <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--chat-border)]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-search -ml-[3px] mr-3 !size-4 text-muted-foreground"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.3-4.3"></path>
-            </svg>
+            <Search className="mr-3 !size-4 text-muted-foreground" />
             <input
               role="searchbox"
               aria-label="Search threads"
@@ -172,10 +164,10 @@ export function ModelSelector({
             )}
           </ScrollArea>
 
-          <div className="flex items-center justify-between p-4 border-t border-gray-800">
+          <div className="flex items-center justify-between mt-4 pt-2 border-t border-[var(--chat-border)]">
             <Button
               variant="ghost"
-              className="text-white gap-2"
+              className="gap-2 text-muted-foreground"
               onClick={() => setShowAll(!showAll)}
             >
               {showAll ? (

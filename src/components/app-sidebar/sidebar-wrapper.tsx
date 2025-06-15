@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { FloatingButtons } from "@/components/floating-buttons";
 import { Preloaded } from "convex/react";
@@ -30,7 +30,9 @@ export function SidebarWrapper({
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
         <AppSidebar preloadedThreads={preloadedThreads} />
-        {children}
+        <SidebarInset>
+          {children}
+        </SidebarInset>
       </SidebarProvider>
     </div>
   );

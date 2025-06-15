@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,10 +19,12 @@ export function AppSidebar({
 }: {
   preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex h-9 items-center justify-center">
+        <div className="flex pt-2.5 items-center justify-center">
           <Link
             className="relative flex h-8 w-24 items-center justify-center text-sm font-semibold text-foreground"
             href="/"
@@ -31,10 +36,16 @@ export function AppSidebar({
             </div>
           </Link>
         </div>
-        <SidebarControls />
+        <SidebarControls 
+          searchQuery={searchQuery} 
+          setSearchQuery={setSearchQuery} 
+        />
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
-        <ThreadHistory preloadedThreads={preloadedThreads} />
+        <ThreadHistory 
+          preloadedThreads={preloadedThreads} 
+          searchQuery={searchQuery} 
+        />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4 ">

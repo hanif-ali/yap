@@ -11,20 +11,30 @@ import {
   SidebarGroupLabel,
 } from "../ui/sidebar";
 
+interface ThreadHistoryProps {
+  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
+  searchQuery: string;
+}
+
 export function ThreadHistory({
   preloadedThreads,
-}: {
-  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
-}) {
+  searchQuery,
+}: ThreadHistoryProps) {
   const chats = usePreloadedQuery(preloadedThreads);
 
-  const categorizedChats = categorizeThreads(chats || []);
+  // Filter chats based on search query
+  const filteredChats = chats?.filter((chat) => {
+    if (!searchQuery.trim()) return true;
+    return chat.title.toLowerCase().includes(searchQuery.toLowerCase());
+  }) || [];
+
+  const categorizedChats = categorizeThreads(filteredChats);
 
   return (
     <div>
       {categorizedChats &&
         Object.entries(categorizedChats).map(([category, chats]) => (
-          <SidebarGroup>
+          <SidebarGroup key={category}>
             <SidebarGroupLabel className="text-sm font-medium text-[var(--heading)] mb-2">
               {category}
             </SidebarGroupLabel>

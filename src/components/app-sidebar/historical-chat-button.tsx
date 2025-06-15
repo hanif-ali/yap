@@ -15,6 +15,8 @@ export function HistoricalChatButton({ chat }: { chat: Doc<"threads"> }) {
             <input
               value={chat.title ?? "Untitled"}
               className="border-none cursor-pointer overflow-hidden truncate outline-none bg-transparent w-full pointer-events-none"
+              // fix this add event handling
+              onChange={() => {}}
             />
           </div>
         </Link>

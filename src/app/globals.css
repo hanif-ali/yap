@@ -95,7 +95,8 @@
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
+  /* --popover: oklch(0.21 0.006 285.885); */
+  --popover: hsl(320 23.08% 5.1%);
   --popover-foreground: hsl(326 85% 90%);
   --primary: hsl(332 100% 32%);
   --primary-foreground: hsl(326 85% 90%);
@@ -135,6 +136,15 @@
   --web-icon-color: hsl(208 56% 74%);
   --text-icon-color: hsl(237 75% 77%);
   --reasoning-icon-color: hsl(263 58% 75%);
+  --chat-input-gradient: hsl(289 23% 23%);
+
+  --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, .4));
+  --chat-border: #322028;
+  --vision-icon-color: #99e1d2;
+  --web-icon-color: #98bfe2;
+  --text-icon-color: #989df0;
+  --reasoning-icon-color: #b79ae4;
+  --chat-input-gradient: #432d48;
 }
 
 button {

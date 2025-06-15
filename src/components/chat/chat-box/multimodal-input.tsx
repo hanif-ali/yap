@@ -120,6 +120,7 @@ function PureMultimodalInput({
     });
 
     setAttachments([]);
+    setInput("");
     setLocalStorageInput("");
     resetHeight();
 
@@ -130,6 +131,7 @@ function PureMultimodalInput({
     attachments,
     handleSubmit,
     setAttachments,
+    setInput,
     setLocalStorageInput,
     width,
     chatId,
@@ -195,12 +197,6 @@ function PureMultimodalInput({
 
   const { isAtBottom, scrollToBottom } = useScrollToBottom();
 
-  useEffect(() => {
-    if (status === "submitted") {
-      scrollToBottom();
-    }
-  }, [status, scrollToBottom]);
-
   return (
     <div className="relative mx-auto flex w-full max-w-3xl flex-col text-center ">
       <AnimatePresence>
@@ -233,8 +229,22 @@ function PureMultimodalInput({
           <SuggestedActions append={append} chatId={chatId} />
         )}
 
-      <div className="mt-4 rounded-t-[20px] overflow-hidden border-reflect backdrop-blur-lg bg-chat-input-background border-b-0">
-        <div className="relative w-full flex flex-col gap-4 border-1 p-2 pt-4">
+      <div
+        className="mt-2 border-reflect rounded-t-[20px] bg-[--chat-input-background] p-1.5 pb-0 backdrop-blur-lg ![--c:--chat-input-gradient]"
+        // style={{
+        //   "--gradientBorder-gradient":
+        //     "linear-gradient(180deg, var(--min), var(--max), var(--min)), linear-gradient(15deg, var(--min) 50%, var(--max))",
+        //   "--start": "#000000e0",
+        //   "--opacity": "1",
+        // }}
+      >
+        <div
+          className="pb-2 relative flex w-full flex-col items-stretch gap-2 rounded-t-xl border border-b-0 border-white/70 bg-[--chat-input-background] px-3 pt-2 text-secondary-foreground dark:border-[hsl(0,0%,83%)]/[0.04] dark:bg-secondary/[0.045]"
+          style={{
+            boxShadow:
+              "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
+          }}
+        >
           <input
             type="file"
             className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
@@ -244,78 +254,92 @@ function PureMultimodalInput({
             tabIndex={-1}
           />
 
-          {(attachments.length > 0 || uploadQueue.length > 0) && (
-            <div
-              data-testid="attachments-preview"
-              className="flex flex-row gap-2 overflow-x-scroll items-end"
-            >
-              {attachments.map((attachment) => (
-                <PreviewAttachment
-                  key={attachment.url}
-                  attachment={attachment}
-                />
-              ))}
+          <div className="flex flex-grow flex-col">
+            {(attachments.length > 0 || uploadQueue.length > 0) && (
+              <div
+                data-testid="attachments-preview"
+                className="flex flex-row gap-2 overflow-x-scroll items-end mb-2"
+              >
+                {attachments.map((attachment) => (
+                  <PreviewAttachment
+                    key={attachment.url}
+                    attachment={attachment}
+                  />
+                ))}
 
-              {uploadQueue.map((filename) => (
-                <PreviewAttachment
-                  key={filename}
-                  attachment={{
-                    url: "",
-                    name: filename,
-                    contentType: "",
-                  }}
-                  isUploading={true}
-                />
-              ))}
-            </div>
-          )}
-
-          <Textarea
-            data-testid="multimodal-input"
-            ref={textareaRef}
-            placeholder="Type your message here..."
-            onChange={handleInput}
-            rows={2}
-            className="w-full bg-transparent text-gray-300 placeholder-gray-500 resize-none border-none outline-none text-lg min-h-[00px]"
-            autoFocus
-            onKeyDown={(event) => {
-              if (
-                event.key === "Enter" &&
-                !event.shiftKey &&
-                !event.nativeEvent.isComposing
-              ) {
-                event.preventDefault();
-
-                if (status !== "ready") {
-                  toast.error(
-                    "Please wait for the model to finish its response!"
-                  );
-                } else {
-                  submitForm();
-                }
-              }
-            }}
-          />
-          <div className="p-2 w-fit flex flex-row justify-start space-x-4">
-            <ModelSelector onModelSelect={setModel} selectedModel={model} />
-            <button className="flex items-center space-x-2 text-gray-400 hover:text-gray-300 transition-colors">
-              <Globe className="w-4 h-4" />
-              <span className="text-sm">Web Search</span>
-            </button>
-
-            <AttachmentsButton fileInputRef={fileInputRef} status={status} />
-          </div>
-
-          <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
-            {status === "submitted" ? (
-              <StopButton stop={stop} setMessages={setMessages} />
-            ) : (
-              <SendButton
-                input={input}
-                submitForm={submitForm}
-                uploadQueue={uploadQueue}
-              />
+                {uploadQueue.map((filename) => (
+                  <PreviewAttachment
+                    key={filename}
+                    attachment={{
+                      url: "",
+                      name: filename,
+                      contentType: "",
+                    }}
+                    isUploading={true}
+                  />
+                ))}
+              </div>
             )}
+
+            <div className="flex flex-grow flex-row items-start">
+              <Textarea
+                data-testid="multimodal-input"
+                ref={textareaRef}
+                value={input}
+                placeholder="Type your message here..."
+                onChange={handleInput}
+                rows={2}
+                className="w-full resize-none bg-transparent text-base leading-6 text-foreground outline-none border-none placeholder:text-secondary-foreground/60 disabled:opacity-0"
+                style={{ height: "48px !important" }}
+                autoFocus
+                onKeyDown={(event) => {
+                  if (
+                    event.key === "Enter" &&
+                    !event.shiftKey &&
+                    !event.nativeEvent.isComposing
+                  ) {
+                    event.preventDefault();
+
+                    if (status !== "ready") {
+                      toast.error(
+                        "Please wait for the model to finish its response!"
+                      );
+                    } else {
+                      submitForm();
+                    }
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="-mb-px mt-2 flex w-full flex-row-reverse justify-between">
+            <div
+              className="-mr-0.5 -mt-0.5 flex items-center justify-center gap-2"
+              aria-label="Message actions"
+            >
+              {status === "submitted" ? (
+                <StopButton stop={stop} setMessages={setMessages} />
+              ) : (
+                <SendButton
+                  input={input}
+                  submitForm={submitForm}
+                  uploadQueue={uploadQueue}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center">
+              <div className="ml-[-7px] flex items-center gap-1">
+                <ModelSelector onModelSelect={setModel} selectedModel={model} />
+                <button className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 text-xs -mb-1.5 h-auto gap-2 rounded-full border border-solid border-secondary-foreground/10 px-2 py-1.5 pr-2.5 text-muted-foreground max-sm:p-2">
+                  <Globe className="w-4 h-4" />
+                  <span className="text-sm max-sm:sr-only">Web Search</span>
+                </button>
+                <AttachmentsButton
+                  fileInputRef={fileInputRef}
+                  status={status}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -346,7 +370,7 @@ function PureAttachmentsButton({
   return (
     <Button
       data-testid="attachments-button"
-      className="rounded-md rounded-bl-lg p-[7px] h-fit dark:border-zinc-700 hover:dark:bg-zinc-900 hover:bg-zinc-200"
+      className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 text-xs -mb-1.5 h-auto gap-2 rounded-full border border-solid border-secondary-foreground/10 px-2 py-1.5 pr-2.5 text-muted-foreground max-sm:p-2"
       onClick={(event) => {
         event.preventDefault();
         fileInputRef.current?.click();
@@ -354,7 +378,7 @@ function PureAttachmentsButton({
       disabled={status !== "ready"}
       variant="ghost"
     >
-      <PaperclipIcon size={14} />
+      <PaperclipIcon size={16} />
     </Button>
   );
 }
@@ -397,14 +421,14 @@ function PureSendButton({
   return (
     <Button
       data-testid="send-button"
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-reflect button-reflect bg-[rgb(162,59,103)] font-semibold shadow hover:bg-[#d56698] active:bg-[rgb(162,59,103)] disabled:hover:bg-[rgb(162,59,103)] disabled:active:bg-[rgb(162,59,103)] dark:bg-primary/20 dark:hover:bg-pink-800/70 dark:active:bg-pink-800/40 disabled:dark:hover:bg-primary/20 disabled:dark:active:bg-primary/20 h-9 w-9 relative rounded-lg p-2 text-pink-50"
       onClick={(event) => {
         event.preventDefault();
         submitForm();
       }}
       disabled={input.length === 0 || uploadQueue.length > 0}
     >
-      <ArrowUpIcon size={14} />
+      <ArrowUpIcon size={20} />
     </Button>
   );
 }

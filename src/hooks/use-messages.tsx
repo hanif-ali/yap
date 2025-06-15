@@ -32,8 +32,10 @@ export function useMessages({
   useEffect(() => {
     if (status === 'submitted') {
       setHasSentMessage(true);
+      // Scroll to bottom instantly to avoid disrupting fixed elements
+      scrollToBottom('smooth');
     }
-  }, [status]);
+  }, [status, scrollToBottom]);
 
   return {
     containerRef,

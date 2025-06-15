@@ -156,7 +156,7 @@ export async function POST(request: Request) {
           maxSteps: 5,
           // todo disable for reasoning models
           experimental_activeTools: ["createDocument", "updateDocument"],
-          experimental_transform: smoothStream({ chunking: "word" }),
+          // Remove smoothStream to reduce buffering for real-time streaming
           experimental_generateMessageId: generateUUID,
           tools: {
             createDocument: createDocument({ session: authData, dataStream }),
@@ -217,12 +217,21 @@ export async function POST(request: Request) {
 
     const streamContext = getStreamContext();
 
+    // Create proper streaming headers
+    const headers = new Headers({
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Connection": "keep-alive",
+      "X-Accel-Buffering": "no", // Disable nginx buffering
+    });
+
     if (streamContext) {
       return new Response(
-        await streamContext.resumableStream(streamId, () => stream)
+        await streamContext.resumableStream(streamId, () => stream),
+        { headers }
       );
     } else {
-      return new Response(stream);
+      return new Response(stream, { headers });
     }
   } catch (error) {
     console.log("error");

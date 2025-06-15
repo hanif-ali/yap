@@ -1,9 +1,18 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import Link from "next/link";
 
-export function SidebarControls() {
+interface SidebarControlsProps {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
+
+export function SidebarControls({ searchQuery, setSearchQuery }: SidebarControlsProps) {
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
   return (
     <div className="flex flex-col gap-4 mt-2 px-1">
       <div>
@@ -22,8 +31,19 @@ export function SidebarControls() {
             role="searchbox"
             aria-label="Search threads"
             placeholder="Search your threads..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground/50 placeholder:select-none focus:outline-none"
           />
+          {searchQuery && (
+            <button
+              onClick={handleClearSearch}
+              className="ml-2 p-1 hover:bg-muted rounded-sm transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="size-3 text-muted-foreground hover:text-foreground" />
+            </button>
+          )}
         </div>
       </div>
     </div>

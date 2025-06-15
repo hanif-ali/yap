@@ -17,8 +17,20 @@ export function useScrollToBottom() {
     useSWR<ScrollFlag>('messages:should-scroll', null, { fallbackData: false });
 
   useEffect(() => {
-    if (scrollBehavior) {
-      endRef.current?.scrollIntoView({ behavior: scrollBehavior });
+    if (scrollBehavior && containerRef.current) {
+      // Use scrollTop instead of scrollIntoView to prevent layout shifts
+      const container = containerRef.current;
+      const scrollTop = container.scrollHeight - container.clientHeight;
+      
+      if (scrollBehavior === 'smooth') {
+        container.scrollTo({
+          top: scrollTop,
+          behavior: 'smooth'
+        });
+      } else {
+        container.scrollTop = scrollTop;
+      }
+      
       setScrollBehavior(false);
     }
   }, [setScrollBehavior, scrollBehavior]);

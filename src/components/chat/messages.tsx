@@ -4,7 +4,6 @@ import { Greeting } from "./greeting";
 import { memo } from "react";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { motion } from "framer-motion";
-import { useMessages } from "@/hooks/use-messages";
 
 interface MessagesProps {
   chatId: string;
@@ -14,6 +13,10 @@ interface MessagesProps {
   reload: UseChatHelpers["reload"];
   isReadonly: boolean;
   isArtifactVisible: boolean;
+  endRef: React.RefObject<HTMLDivElement | null>;
+  onViewportEnter: () => void;
+  onViewportLeave: () => void;
+  hasSentMessage: boolean;
 }
 
 function PureMessages({
@@ -23,23 +26,13 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
+  endRef: messagesEndRef,
+  onViewportEnter,
+  onViewportLeave,
+  hasSentMessage,
 }: MessagesProps) {
-  const {
-    containerRef: messagesContainerRef,
-    endRef: messagesEndRef,
-    onViewportEnter,
-    onViewportLeave,
-    hasSentMessage,
-  } = useMessages({
-    chatId,
-    status,
-  });
-
   return (
-    <div
-      ref={messagesContainerRef}
-      className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-auto pt-4 relative"
-    >
+    <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-auto pt-4 relative">
       {messages.length === 0 && <Greeting />}
 
       {messages.map((message, index) => (
@@ -50,7 +43,6 @@ function PureMessages({
           isLoading={status === "streaming" && messages.length - 1 === index}
           setMessages={setMessages}
           reload={reload}
-          isReadonly={isReadonly}
           requiresScrollPadding={
             hasSentMessage && index === messages.length - 1
           }
