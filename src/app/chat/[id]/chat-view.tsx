@@ -70,7 +70,7 @@ export default function ChatView({
 
   return (
     <>
-      <div className="flex flex-col min-w-0 h-dvh bg-background">
+      <div className="flex flex-col min-w-0 h-dvh bg-[var(--chat-background)]">
         <Messages
           chatId={id}
           status={status}

@@ -78,7 +78,7 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 1 1);
+  /* --sidebar: oklch(0.985 1 1); */
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -91,7 +91,7 @@
 }
 
 .dark {
-  --background: #1f1a24;
+  --background: hsl(313.8 24.5% 10.4%);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);
@@ -114,7 +114,9 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #21141e;
+
+  /* --sidebar-background: hsl(240 2.6% 7.6%); */
+  --sidebar-bg: hsl(240 2.6% 7.6%);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -126,6 +128,7 @@
   --wordmark-color: #e3bad1;
   --heading: #c46095;
 
+  --chat-background: hsl(270, 16.13%, 12.6%);
   --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
   --chat-border: hsl(333.3 22% 16.1%);
   --vision-icon-color: hsl(168 54% 74%);
@@ -189,4 +192,11 @@ button {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.bg-noise {
+  background-image: url("/noise.png");
+  background-size: auto;
+  background-repeat: repeat;
+  background-size: 96px 96px;
 }

@@ -17,9 +17,9 @@ export function AppSidebar({
   preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {
   return (
-    <Sidebar className="bg-sidebar">
+    <Sidebar>
       <SidebarHeader>
-        <div className="flex h-9 items-center justify-center m-1">
+        <div className="flex h-9 items-center justify-center">
           <Link
             className="relative flex h-8 w-24 items-center justify-center text-sm font-semibold text-foreground"
             href="/"
