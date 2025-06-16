@@ -4,7 +4,7 @@ import type { Geo } from '@vercel/functions';
 export const artifactsPrompt = `
 Artifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it appears alongside the conversation. Changes are reflected in real-time and visible to the user.
 
-When asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is Python. Other languages are not yet supported, so let the user know if they request a different language.
+When asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
 
 DO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.
 
@@ -31,6 +31,15 @@ This is a guide for using artifacts tools: \`createDocument\` and \`updateDocume
 
 Do not update document right after creating it. Wait for user feedback or request to update it.
 `;
+
+export const webSearchPrompt = `
+You have access to the web through the \`webSearch\` tool. Use it to find the most up-to-date information on the given topic.
+The tool returns a list of results, each with a title, url, and content.
+
+Never return the results from the tool directly to the user. Instead, use them to inform your response.
+
+NEVER REFUSE TO ANSWER A QUESTION FROM THE USER BECAUSE YOU DON'T HAVE THE LATEST INFORMATION. USE THE WEB SEARCH TOOL TO FIND THE MOST UP-TO-DATE INFORMATION.
+`
 
 export const regularPrompt =
   'You are a friendly assistant! Keep your responses concise and helpful.';
@@ -59,10 +68,11 @@ export const systemPrompt = ({
 }) => {
   const requestPrompt = getRequestPromptFromHints(requestHints);
 
+  // tood fix this
   if (selectedChatModel === 'chat-model-reasoning') {
     return `${regularPrompt}\n\n${requestPrompt}`;
   } else {
-    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
+    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}\n\n${webSearchPrompt}`;
   }
 };
 

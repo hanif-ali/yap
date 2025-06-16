@@ -23,6 +23,7 @@ export function DataStreamHandler({ id }: { id: string }) {
   const { data: dataStream } = useChat({ id });
   const { artifact, setArtifact, setMetadata } = useArtifact();
   const lastProcessedIndex = useRef(-1);
+  console.log({dataStream})
 
   useEffect(() => {
     if (!dataStream?.length) return;
@@ -45,7 +46,7 @@ export function DataStreamHandler({ id }: { id: string }) {
 
       setArtifact((draftArtifact) => {
         if (!draftArtifact) {
-          return { ...initialArtifactData, status: "streaming" };
+          return { ...initialArtifactData, status: "streaming", isVisible: true };
         }
 
         switch (delta.type) {
@@ -54,6 +55,7 @@ export function DataStreamHandler({ id }: { id: string }) {
               ...draftArtifact,
               documentId: delta.content as string,
               status: "streaming",
+              isVisible: true,
             };
 
           case "title":
@@ -61,6 +63,7 @@ export function DataStreamHandler({ id }: { id: string }) {
               ...draftArtifact,
               title: delta.content as string,
               status: "streaming",
+              isVisible: true,
             };
 
           case "kind":
@@ -68,6 +71,7 @@ export function DataStreamHandler({ id }: { id: string }) {
               ...draftArtifact,
               kind: delta.content as ArtifactKind,
               status: "streaming",
+              isVisible: true,
             };
 
           case "clear":
@@ -75,6 +79,7 @@ export function DataStreamHandler({ id }: { id: string }) {
               ...draftArtifact,
               content: "",
               status: "streaming",
+              isVisible: true,
             };
 
           case "finish":
@@ -88,7 +93,7 @@ export function DataStreamHandler({ id }: { id: string }) {
         }
       });
     });
-  }, [dataStream, setArtifact, setMetadata, artifact]);
+  }, [dataStream, setArtifact, setMetadata, artifact.kind]);
 
   return null;
 }

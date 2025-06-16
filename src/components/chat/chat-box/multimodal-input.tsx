@@ -236,7 +236,7 @@ function PureMultimodalInput({
         )}
 
       <div
-        className="mt-2 border-reflect rounded-t-[20px] bg-[var(--chat-input-background)] p-2 pb-0 backdrop-blur-lg [--c:var(--chat-input-gradient)]"
+        className="mt-2 border-reflect rounded-t-[20px] bg-[var(--chat-input-background)] p-2 pb-0 backdrop-blur-lg"
         style={{
           // @ts-ignore
           "--start": "#000000e0",
@@ -249,8 +249,8 @@ function PureMultimodalInput({
           style={{
             boxShadow:
               "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
-            // @ts-ignore
-            "--opacity": "1",
+              // @ts-ignore
+              "--opacity": "1"
           }}
         >
           <input

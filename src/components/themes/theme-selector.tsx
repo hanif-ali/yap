@@ -3,13 +3,22 @@ import { PopoverContent } from "../ui/popover";
 import { Popover, PopoverTrigger } from "../ui/popover";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 // Define theme options
 const themes = [
-  { key: "default", name: "Default", description: "Classic dark theme", color: "#1a1a1a" },
-  { key: "midnight", name: "Midnight", description: "Deep blue dark", color: "#0f0f23" },
-  { key: "forest", name: "Forest", description: "Dark green theme", color: "#0d1b2a" },
-  { key: "sunset", name: "Sunset", description: "Warm orange theme", color: "#2a1810" },
+  {
+    key: "dark",
+    name: "Dark",
+    description: "T3 Chat Dark",
+    color: "#000",
+  },
+  {
+    key: "forest",
+    name: "Forest",
+    description: "Forest",
+    color: "#0d1b2a",
+  },
 ];
 
 interface ThemeItemProps {
@@ -20,7 +29,13 @@ interface ThemeItemProps {
   isSelected: boolean;
 }
 
-const ThemeItem = ({ name, description, color, onClick, isSelected }: ThemeItemProps) => {
+const ThemeItem = ({
+  name,
+  description,
+  color,
+  onClick,
+  isSelected,
+}: ThemeItemProps) => {
   return (
     <button
       onClick={onClick}
@@ -29,7 +44,7 @@ const ThemeItem = ({ name, description, color, onClick, isSelected }: ThemeItemP
         isSelected ? "border-muted-foreground/30 bg-muted/20" : "border-border"
       )}
     >
-      <div 
+      <div
         className="size-4 rounded-full border border-border flex-shrink-0"
         style={{ backgroundColor: color }}
       />
@@ -43,7 +58,7 @@ const ThemeItem = ({ name, description, color, onClick, isSelected }: ThemeItemP
 
 export const ThemeSelector = () => {
   const [open, setOpen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState("default");
+  const { theme: selectedTheme, setTheme: setSelectedTheme } = useTheme();
 
   const handleThemeSelect = (theme: string) => {
     setSelectedTheme(theme);
@@ -89,4 +104,4 @@ export const ThemeSelector = () => {
       </PopoverContent>
     </Popover>
   );
-}; 
+};

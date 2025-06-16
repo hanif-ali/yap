@@ -202,10 +202,6 @@ export function ModelSelector({
                   Show all
                 </>
               )}
-              <Badge
-                variant="outline"
-                className="rounded-full h-2 w-2 p-0 bg-pink-500 border-0"
-              />
             </Button>
           </div>
         </PopoverContent>

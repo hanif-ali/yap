@@ -24,6 +24,7 @@ import { differenceInSeconds } from "date-fns";
 import { createDocument } from "@/lib/documents/create-document";
 import { RequestHints, systemPrompt } from "@/lib/models/prompts";
 import { updateDocument } from "@/lib/documents/update-document";
+import { webSearch } from "@/lib/models/web-search";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -154,18 +155,18 @@ export async function POST(request: Request) {
           messages,
           maxSteps: 5,
           // todo disable for reasoning models
-          experimental_activeTools: ["createDocument", "updateDocument"],
-          // Remove smoothStream to reduce buffering for real-time streaming
+          experimental_activeTools: ["createDocument", "updateDocument", "webSearch"],
           experimental_generateMessageId: generateUUID,
           // Add streaming optimizations
-          experimental_telemetry: {
-            isEnabled: false,
-          },
+          // experimental_telemetry: {
+          //   isEnabled: false,
+          // },
           // Optimize for real-time streaming
           temperature: 0.7,
           tools: {
             createDocument: createDocument({ session: authData, dataStream }),
             updateDocument: updateDocument({ session: authData, dataStream }),
+            webSearch,
           },
           onError: (error) => {
             console.log({ error });

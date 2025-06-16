@@ -18,6 +18,7 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { WebSearchCall } from "@/components/web-search/web-search-call";
 
 const PurePreviewMessage = ({
   message,
@@ -165,6 +166,8 @@ const PurePreviewMessage = ({
                         <DocumentPreview args={args} />
                       ) : toolName === "updateDocument" ? (
                         <DocumentToolCall type="update" args={args} />
+                      ) : toolName === "webSearch" ? (
+                        <WebSearchCall state={state} result={[]} />
                       ) : null}
                     </div>
                   );
@@ -183,6 +186,11 @@ const PurePreviewMessage = ({
                         result={result}
                         key={key}
                       />
+                    );
+                  }
+                  if (toolName === "webSearch") {
+                    return (
+                      <WebSearchCall key={key} state={state} result={result} />
                     );
                   }
 

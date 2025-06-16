@@ -189,33 +189,53 @@ function PureArtifact({
               }}
             >
               <div className="flex flex-col h-full justify-between items-center">
-                <ArtifactMessages
-                  chatId={chatId}
-                  status={status}
-                  messages={messages}
-                  setMessages={setMessages}
-                  reload={reload}
-                  artifactStatus={artifact.status}
-                />
-
-                <form className="flex flex-row gap-2 relative items-end w-full px-4 pb-4">
-                  <MultimodalInput
+                <div
+                  className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10"
+                  style={{
+                    paddingBottom: "144px",
+                    scrollbarGutter: "stable both-edges",
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "rgba(0,0,0,0.2) transparent",
+                  }}
+                >
+                  <ArtifactMessages
                     chatId={chatId}
-                    input={input}
-                    setInput={setInput}
-                    handleSubmit={handleSubmit}
                     status={status}
-                    stop={stop}
-                    attachments={attachments}
-                    setAttachments={setAttachments}
                     messages={messages}
-                    append={append}
-                    className="bg-background dark:bg-muted"
                     setMessages={setMessages}
-                    model={model}
-                    setModel={setModel}
+                    reload={reload}
+                    artifactStatus={artifact.status}
                   />
-                </form>
+                </div>
+
+                <div className="absolute w-full h-full pointer-events-none">
+                  <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none px-2">
+                    <div className="mx-auto flex w-full max-w-3xl flex-col text-center">
+                      <div className="pointer-events-none">
+                        <div className="pointer-events-auto">
+                          <MultimodalInput
+                            chatId={chatId}
+                            input={input}
+                            setInput={setInput}
+                            handleSubmit={handleSubmit}
+                            status={status}
+                            stop={stop}
+                            attachments={attachments}
+                            setAttachments={setAttachments}
+                            messages={messages}
+                            append={append}
+                            className="bg-background dark:bg-muted"
+                            setMessages={setMessages}
+                            model={model}
+                            setModel={setModel}
+                            searchEnabled={false}
+                            setSearchEnabled={() => {}}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
@@ -337,12 +357,13 @@ function PureArtifact({
                     : document?.content || ""
                 }
                 status={artifact.status}
-                // currentVersionIndex={currentVersionIndex}
+                mode="edit"
+                currentVersionIndex={0}
                 suggestions={[]}
                 onSaveContent={saveContent}
                 isInline={false}
                 isCurrentVersion={true}
-                getDocumentContentById={() => {}}
+                getDocumentContentById={() => ""}
                 isLoading={false}
                 metadata={metadata}
                 setMetadata={setMetadata}
@@ -358,8 +379,7 @@ function PureArtifact({
 export const Artifact = memo(PureArtifact, (prevProps, nextProps) => {
   if (prevProps.status !== nextProps.status) return false;
   if (prevProps.input !== nextProps.input) return false;
-  if (!equal(prevProps.messages, nextProps.messages.length)) return false;
-  return false;
-
+  if (!equal(prevProps.messages, nextProps.messages)) return false;
+  
   return true;
 });
