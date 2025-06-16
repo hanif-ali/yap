@@ -131,7 +131,6 @@
 
   --chat-background: hsl(270, 16.13%, 12.6%);
   --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
-  --chat-border: hsl(333.3 22% 16.1%);
   --vision-icon-color: hsl(168 54% 74%);
   --web-icon-color: hsl(208 56% 74%);
   --text-icon-color: hsl(237 75% 77%);
@@ -139,18 +138,17 @@
   --chat-input-gradient: hsl(289 23% 23%);
 
   --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
-  --chat-border: #322028;
   --vision-icon-color: #99e1d2;
   --web-icon-color: #98bfe2;
   --text-icon-color: #989df0;
   --reasoning-icon-color: #b79ae4;
   --chat-input-gradient: #432d48;
-  --gradient-noise-top: hsl(262.5 10% 15.7%);
+  --gradient-noise-top: 309 15% 9%;
   --chat-border: hsl(333.3 22% 16.1%);
 }
 
 .bg-gradient-noise-top {
-  background-color: var(--gradient-noise-top);
+  background-color: hsl(var(--gradient-noise-top) / 0.8);
 }
 
 button {
@@ -215,4 +213,10 @@ button {
   background-size: auto;
   background-repeat: repeat;
   background-size: 96px 96px;
+}
+
+.from-gradient-noise-top {
+  --tw-gradient-from: var(--gradient-noise-top);
+  --tw-gradient-to: var(--gradient-noise-top) / 0 var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }

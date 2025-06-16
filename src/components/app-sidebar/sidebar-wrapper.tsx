@@ -23,7 +23,7 @@ export function SidebarWrapper({
             className="absolute inset-0 opacity-40"
             style={{
               backgroundImage:
-                "radial-gradient(closest-corner at 120px 36px, rgba(255, 1, 111, 0.19), rgba(255, 1, 111, 0.08)), linear-gradient(rgb(63, 51, 69) 15%, rgb(7, 3, 9));",
+                "radial-gradient(closest-corner at 120px 36px, rgba(255, 1, 111, 0.19), rgba(255, 1, 111, 0.08)), linear-gradient(rgb(63, 51, 69) 15%, rgb(7, 3, 9))",
             }}
           ></div>
           <div className="absolute inset-0 bg-noise z-100"></div>

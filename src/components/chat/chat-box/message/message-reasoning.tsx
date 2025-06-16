@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Markdown } from "./markdown";
-import { ChevronDown, Loader } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, Loader } from "lucide-react";
 
 interface MessageReasoningProps {
   isLoading: boolean;
@@ -51,7 +51,7 @@ export function MessageReasoning({
               setIsExpanded(!isExpanded);
             }}
           >
-            <ChevronDown />
+            {isExpanded ? <ChevronUp /> : <ChevronRight />}
           </button>
         </div>
       )}
