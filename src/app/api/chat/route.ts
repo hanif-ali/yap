@@ -2,7 +2,6 @@ import {
   appendClientMessage,
   appendResponseMessages,
   createDataStream,
-  smoothStream,
   streamText,
 } from "ai";
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
@@ -158,6 +157,12 @@ export async function POST(request: Request) {
           experimental_activeTools: ["createDocument", "updateDocument"],
           // Remove smoothStream to reduce buffering for real-time streaming
           experimental_generateMessageId: generateUUID,
+          // Add streaming optimizations
+          experimental_telemetry: {
+            isEnabled: false,
+          },
+          // Optimize for real-time streaming
+          temperature: 0.7,
           tools: {
             createDocument: createDocument({ session: authData, dataStream }),
             updateDocument: updateDocument({ session: authData, dataStream }),
@@ -198,13 +203,10 @@ export async function POST(request: Request) {
             }
             // }
           },
-          // experimental_telemetry: {
-          //   isEnabled: isProductionEnvironment,
-          //   functionId: "stream-text",
-          // },
         });
 
-        result.consumeStream();
+        // Don't consume the stream - let it flow through naturally
+        // result.consumeStream();
 
         result.mergeIntoDataStream(dataStream, {
           sendReasoning: true,
@@ -217,20 +219,29 @@ export async function POST(request: Request) {
 
     const streamContext = getStreamContext();
 
-    // Create proper streaming headers
+    // Create proper streaming headers with additional optimizations
     const headers = new Headers({
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache, no-store, must-revalidate",
       "Connection": "keep-alive",
       "X-Accel-Buffering": "no", // Disable nginx buffering
+      "Transfer-Encoding": "chunked", // Enable chunked transfer encoding
     });
 
+    // Prefer direct streaming for better real-time performance
     if (streamContext) {
-      return new Response(
-        await streamContext.resumableStream(streamId, () => stream),
-        { headers }
-      );
+      try {
+        return new Response(
+          await streamContext.resumableStream(streamId, () => stream),
+          { headers }
+        );
+      } catch (error) {
+        console.warn("Resumable stream failed, falling back to direct stream:", error);
+        // Fall back to direct streaming
+        return new Response(stream, { headers });
+      }
     } else {
+      // Direct streaming when resumable context is not available
       return new Response(stream, { headers });
     }
   } catch (error) {
