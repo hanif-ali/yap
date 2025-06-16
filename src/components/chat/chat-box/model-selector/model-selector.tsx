@@ -6,6 +6,7 @@ import {
   ChevronUp,
   PinOff,
   Search,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ export function ModelSelector({
 }: ModelSelectorProps) {
   const [open, setOpen] = useState(false);
   const [showAll, setShowAll] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [favorites, setFavorites] = useLocalStorage<
     Array<ModelDefinition["key"]>
@@ -56,6 +58,20 @@ export function ModelSelector({
   const handleUnfavorite = (model: string) => {
     setFavorites(favorites.filter((m) => m !== model));
   };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
+
+  // Filter models based on search query
+  const filteredModels = models.filter((model) => {
+    if (!searchQuery.trim()) return true;
+    return model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           model.key.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+  const filteredFavorites = filteredModels.filter((model) => favorites.includes(model.key));
+  const filteredOthers = filteredModels.filter((model) => !favorites.includes(model.key));
 
   return (
     <>
@@ -79,10 +95,21 @@ export function ModelSelector({
             <Search className="mr-3 !size-4 text-muted-foreground" />
             <input
               role="searchbox"
-              aria-label="Search threads"
-              placeholder="Search your threads..."
+              aria-label="Search models"
+              placeholder="Search available models..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground/50 placeholder:select-none focus:outline-none"
             />
+            {searchQuery && (
+              <button
+                onClick={handleClearSearch}
+                className="ml-2 p-1 hover:bg-muted rounded-sm transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="size-3 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
           </div>
 
           <ScrollArea className="h-[400px]">
@@ -94,25 +121,23 @@ export function ModelSelector({
                     Favorites
                   </div>
                   <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
-                    {models
-                      .filter((model) => favorites.includes(model.key))
-                      .map((model: ModelDefinition) => (
-                        <GridModelItem
-                          key={model.key}
-                          name={model.name}
-                          icon={
-                            providerLogos[
-                              model.provider as keyof typeof providerLogos
-                            ]
-                          }
-                          capabilities={model.capabilities}
-                          onClick={() => handleModelSelect(model.key)}
-                          allowed={model.allowed}
-                          onFavorite={() => handleFavorite(model.key)}
-                          onUnfavorite={() => handleUnfavorite(model.key)}
-                          isFavorite={true}
-                        />
-                      ))}
+                    {filteredFavorites.map((model: ModelDefinition) => (
+                      <GridModelItem
+                        key={model.key}
+                        name={model.name}
+                        icon={
+                          providerLogos[
+                            model.provider as keyof typeof providerLogos
+                          ]
+                        }
+                        capabilities={model.capabilities}
+                        onClick={() => handleModelSelect(model.key)}
+                        allowed={model.allowed}
+                        onFavorite={() => handleFavorite(model.key)}
+                        onUnfavorite={() => handleUnfavorite(model.key)}
+                        isFavorite={true}
+                      />
+                    ))}
                   </div>
                 </div>
                 <div className="px-3">
@@ -120,46 +145,42 @@ export function ModelSelector({
                     Others
                   </div>
                   <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
-                    {models
-                      .filter((model) => !favorites.includes(model.key))
-                      .map((model: ModelDefinition) => (
-                        <GridModelItem
-                          key={model.key}
-                          name={model.name}
-                          icon={
-                            providerLogos[
-                              model.provider as keyof typeof providerLogos
-                            ]
-                          }
-                          capabilities={model.capabilities}
-                          onClick={() => handleModelSelect(model.key)}
-                          allowed={model.allowed}
-                          onFavorite={() => handleFavorite(model.key)}
-                          onUnfavorite={() => handleUnfavorite(model.key)}
-                          isFavorite={false}
-                        />
-                      ))}
+                    {filteredOthers.map((model: ModelDefinition) => (
+                      <GridModelItem
+                        key={model.key}
+                        name={model.name}
+                        icon={
+                          providerLogos[
+                            model.provider as keyof typeof providerLogos
+                          ]
+                        }
+                        capabilities={model.capabilities}
+                        onClick={() => handleModelSelect(model.key)}
+                        allowed={model.allowed}
+                        onFavorite={() => handleFavorite(model.key)}
+                        onUnfavorite={() => handleUnfavorite(model.key)}
+                        isFavorite={false}
+                      />
+                    ))}
                   </div>
                 </div>
               </>
             ) : (
               <div className="py-4">
-                {models
-                  .filter((model) => favorites.includes(model.key))
-                  .map((model: ModelDefinition) => (
-                    <ListModelItem
-                      key={model.key}
-                      name={model.name}
-                      icon={
-                        providerLogos[
-                          model.provider as keyof typeof providerLogos
-                        ]
-                      }
-                      capabilities={model.capabilities}
-                      onClick={() => handleModelSelect(model.key)}
-                      allowed={model.allowed}
-                    />
-                  ))}
+                {filteredFavorites.map((model: ModelDefinition) => (
+                  <ListModelItem
+                    key={model.key}
+                    name={model.name}
+                    icon={
+                      providerLogos[
+                        model.provider as keyof typeof providerLogos
+                      ]
+                    }
+                    capabilities={model.capabilities}
+                    onClick={() => handleModelSelect(model.key)}
+                    allowed={model.allowed}
+                  />
+                ))}
               </div>
             )}
           </ScrollArea>

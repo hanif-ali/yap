@@ -27,6 +27,7 @@ import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
 import { SuggestedActions } from "./suggested-actions";
+import { cn } from "@/lib/utils";
 
 function PureMultimodalInput({
   chatId,
@@ -43,6 +44,8 @@ function PureMultimodalInput({
   // className,
   model,
   setModel,
+  searchEnabled,
+  setSearchEnabled,
 }: {
   chatId: string;
   input: UseChatHelpers["input"];
@@ -58,6 +61,9 @@ function PureMultimodalInput({
   append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
+
+  searchEnabled: boolean;
+  setSearchEnabled: (value: boolean) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -239,7 +245,7 @@ function PureMultimodalInput({
         // }}
       >
         <div
-          className="pb-2 relative flex w-full flex-col items-stretch gap-2 rounded-t-xl border border-b-0 border-white/70 bg-[--chat-input-background] px-3 pt-2 text-secondary-foreground dark:border-[hsl(0,0%,83%)]/[0.04] dark:bg-secondary/[0.045]"
+          className="pb-3 relative flex w-full flex-col items-stretch gap-2 rounded-t-xl border border-b-0 border-white/70 bg-[--chat-input-background] px-3 pt-2 text-secondary-foreground dark:border-[hsl(0,0%,83%)]/[0.04] dark:bg-secondary/[0.045]"
           style={{
             boxShadow:
               "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
@@ -330,7 +336,15 @@ function PureMultimodalInput({
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center">
               <div className="ml-[-7px] flex items-center gap-1">
                 <ModelSelector onModelSelect={setModel} selectedModel={model} />
-                <button className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 text-xs -mb-1.5 h-auto gap-2 rounded-full border border-solid border-secondary-foreground/10 px-2 py-1.5 pr-2.5 text-muted-foreground max-sm:p-2">
+                <button
+                  onClick={() => setSearchEnabled(!searchEnabled)}
+                  className={cn(
+                    "inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 text-xs -mb-1.5 h-auto gap-2 rounded-full border border-solid border-secondary-foreground/10 px-2 py-1.5 pr-2.5 text-muted-foreground max-sm:p-2",
+                    {
+                      "border-reflect": searchEnabled,
+                    }
+                  )}
+                >
                   <Globe className="w-4 h-4" />
                   <span className="text-sm max-sm:sr-only">Web Search</span>
                 </button>

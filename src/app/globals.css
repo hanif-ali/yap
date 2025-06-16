@@ -138,13 +138,19 @@
   --reasoning-icon-color: hsl(263 58% 75%);
   --chat-input-gradient: hsl(289 23% 23%);
 
-  --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, .4));
+  --chat-input-background: hsla(270, 10%, 20%, var(--blur-fallback, 0.4));
   --chat-border: #322028;
   --vision-icon-color: #99e1d2;
   --web-icon-color: #98bfe2;
   --text-icon-color: #989df0;
   --reasoning-icon-color: #b79ae4;
   --chat-input-gradient: #432d48;
+  --gradient-noise-top: hsl(262.5 10% 15.7%);
+  --chat-border: hsl(333.3 22% 16.1%);
+}
+
+.bg-gradient-noise-top {
+  background-color: var(--gradient-noise-top);
 }
 
 button {
