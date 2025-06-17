@@ -10,9 +10,15 @@ def convert_open_router_object_to_model_definition(data: dict) -> dict:
         "byok": True,
     }
     endpoint = data.get("endpoint") or {}
-    model = endpoint.get("model") or {}
-    reasoning = model.get("supports_reasoning", False)
+    reasoning = endpoint.get("supports_reasoning", False)
+    tools = endpoint.get("supports_tool_parameters", False)
     model_def["reasoning"] = bool(reasoning)
+    model_def["tools"] = bool(tools)
+
+    # Mistral models require differnt format of tool ids, so we just disable tools entirely for them
+    if model_def["key"].startswith("mistral"):
+        model_def["tools"] = False
+
     return model_def
 
 

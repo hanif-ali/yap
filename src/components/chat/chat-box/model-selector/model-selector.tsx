@@ -22,6 +22,7 @@ import { ModelDefinition, modelDefinitions } from "@/lib/models/models";
 import { ListModelItem } from "./list-model-item";
 import { GridModelItem } from "./grid-model-item";
 import { useLocalStorage } from "usehooks-ts";
+import { useUserConfig } from "@/hooks/use-user-config";
 
 interface ModelSelectorProps {
   onModelSelect: (model: ModelDefinition["key"]) => void;
@@ -43,6 +44,8 @@ export function ModelSelector({
     "gemini-2.0-flash-lite",
     "gemini-2.0-flash",
   ]);
+
+  const { config } = useUserConfig();
 
   const handleModelSelect = useCallback(
     (model: string) => {
@@ -106,7 +109,7 @@ export function ModelSelector({
         <PopoverContent
           className={cn(
             "p-2 border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200",
-            showAll ? "w-[550px]" : "w-[425px]"
+            showAll ? "w-[580px]" : "w-[425px]"
           )}
           side="top"
           align="start"
@@ -137,7 +140,7 @@ export function ModelSelector({
             )}
           </div>
 
-          <ScrollArea className="h-[400px]">
+          <ScrollArea className="h-[550px]">
             {showAll ? (
               <>
                 <div className="px-3 pt-4">
@@ -154,6 +157,7 @@ export function ModelSelector({
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={true}
+                        isConfigured={Boolean(config?.openRouterKey)}
                       />
                     ))}
                   </div>
@@ -171,6 +175,7 @@ export function ModelSelector({
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={false}
+                        isConfigured={Boolean(config?.openRouterKey)}
                       />
                     ))}
                   </div>

@@ -1,5 +1,6 @@
-import type { ArtifactKind } from '@/components/artifact';
-import type { Geo } from '@vercel/functions';
+import type { ArtifactKind } from "@/components/artifact";
+import type { Geo } from "@vercel/functions";
+import type { ModelDefinition } from "./models";
 
 export const artifactsPrompt = `
 Artifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it appears alongside the conversation. Changes are reflected in real-time and visible to the user.
@@ -39,16 +40,16 @@ The tool returns a list of results, each with a title, url, and content.
 Never return the results from the tool directly to the user. Instead, use them to inform your response.
 
 NEVER REFUSE TO ANSWER A QUESTION FROM THE USER BECAUSE YOU DON'T HAVE THE LATEST INFORMATION. USE THE WEB SEARCH TOOL TO FIND THE MOST UP-TO-DATE INFORMATION.
-`
+`;
 
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  "You are a friendly assistant! Keep your responses concise and helpful.";
 
 export interface RequestHints {
-  latitude: Geo['latitude'];
-  longitude: Geo['longitude'];
-  city: Geo['city'];
-  country: Geo['country'];
+  latitude: Geo["latitude"];
+  longitude: Geo["longitude"];
+  city: Geo["city"];
+  country: Geo["country"];
 }
 
 export const getRequestPromptFromHints = (requestHints: RequestHints) => `\
@@ -60,19 +61,18 @@ About the origin of user's request:
 `;
 
 export const systemPrompt = ({
-  selectedChatModel,
+  modelDefinition,
   requestHints,
 }: {
-  selectedChatModel: string;
+  modelDefinition: ModelDefinition;
   requestHints: RequestHints;
 }) => {
   const requestPrompt = getRequestPromptFromHints(requestHints);
 
-  // tood fix this
-  if (selectedChatModel === 'chat-model-reasoning') {
-    return `${regularPrompt}\n\n${requestPrompt}`;
-  } else {
+  if (modelDefinition.tools) {
     return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}\n\n${webSearchPrompt}`;
+  } else {
+    return `${regularPrompt}\n\n${requestPrompt}`;
   }
 };
 
@@ -108,24 +108,24 @@ You are a spreadsheet creation assistant. Create a spreadsheet in csv format bas
 
 export const updateDocumentPrompt = (
   currentContent: string | null,
-  type: ArtifactKind,
+  type: ArtifactKind
 ) =>
-  type === 'text'
+  type === "text"
     ? `\
 Improve the following contents of the document based on the given prompt.
 
 ${currentContent}
 `
-    : type === 'code'
+    : type === "code"
       ? `\
 Improve the following code snippet based on the given prompt.
 
 ${currentContent}
 `
-      : type === 'sheet'
+      : type === "sheet"
         ? `\
 Improve the following spreadsheet based on the given prompt.
 
 ${currentContent}
 `
-        : '';
+        : "";

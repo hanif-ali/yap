@@ -17,7 +17,7 @@ import { api } from "../../../../convex/_generated/api";
 import { auth } from "@clerk/nextjs/server";
 import { generateTitleFromUserMessage } from "@/app/chat/actions";
 import { generateUUID, getTrailingMessageId } from "@/lib/utils";
-import { getModelInstance } from "@/lib/models/models";
+import { getModelDefinition, getModelInstance } from "@/lib/models/models";
 import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
@@ -57,6 +57,15 @@ export async function POST(request: Request) {
 
   if (!token) {
     return new Response("Unauthorized", { status: 401 });
+  }
+
+  const userConfig = await fetchQuery(
+    api.userConfigs.getUserConfig,
+    {},
+    { token: token }
+  );
+  if (!userConfig) {
+    return new Response("User config not found", { status: 401 });
   }
 
   try {
@@ -141,6 +150,16 @@ export async function POST(request: Request) {
       { token }
     );
 
+    const modelDefinition = getModelDefinition(selectedChatModel);
+    if (!modelDefinition) {
+      throw new Error(`Model ${selectedChatModel} not found`);
+    }
+
+    if (modelDefinition.byok && !userConfig.openRouterKey) {
+      // todo show on frontend
+      throw new Error("OpenRouter key not found");
+    }
+
     const streamId = generateUUID();
     await fetchMutation(api.streams.createStream, {
       id: streamId,
@@ -150,12 +169,14 @@ export async function POST(request: Request) {
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: getModelInstance(selectedChatModel),
-          system: systemPrompt({ selectedChatModel, requestHints }),
+          model: getModelInstance(modelDefinition, userConfig),
+          system: systemPrompt({ modelDefinition, requestHints }),
           messages,
           maxSteps: 5,
           // todo disable for reasoning models
-          experimental_activeTools: ["createDocument", "updateDocument", "webSearch"],
+          experimental_activeTools: modelDefinition.tools
+            ? ["createDocument", "updateDocument", "webSearch"]
+            : [],
           experimental_generateMessageId: generateUUID,
           maxTokens: 1000,
           // Add streaming optimizations
@@ -164,11 +185,19 @@ export async function POST(request: Request) {
           // },
           // Optimize for real-time streaming
           temperature: 0.7,
-          tools: {
-            createDocument: createDocument({ session: authData, dataStream }),
-            updateDocument: updateDocument({ session: authData, dataStream }),
-            webSearch,
-          },
+          tools: modelDefinition.tools
+            ? {
+                createDocument: createDocument({
+                  session: authData,
+                  dataStream,
+                }),
+                updateDocument: updateDocument({
+                  session: authData,
+                  dataStream,
+                }),
+                webSearch,
+              }
+            : undefined,
           onError: (error) => {
             console.log({ error });
           },
@@ -225,7 +254,7 @@ export async function POST(request: Request) {
     const headers = new Headers({
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache, no-store, must-revalidate",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
       "X-Accel-Buffering": "no", // Disable nginx buffering
       "Transfer-Encoding": "chunked", // Enable chunked transfer encoding
     });
@@ -238,7 +267,10 @@ export async function POST(request: Request) {
           { headers }
         );
       } catch (error) {
-        console.warn("Resumable stream failed, falling back to direct stream:", error);
+        console.warn(
+          "Resumable stream failed, falling back to direct stream:",
+          error
+        );
         // Fall back to direct streaming
         return new Response(stream, { headers });
       }

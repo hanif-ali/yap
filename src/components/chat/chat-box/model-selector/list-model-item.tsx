@@ -11,18 +11,26 @@ import { memo } from "react";
 interface ModelItemProps {
   model: ModelDefinition;
   onClick?: () => void;
+  isConfigured: boolean;
 }
 
-export const ListModelItem = memo(function ListModelItem({ model, onClick }: ModelItemProps) {
+export const ListModelItem = memo(function ListModelItem({ 
+  model, 
+  onClick,
+  isConfigured 
+}: ModelItemProps) {
+  const enabled = model.enabled && (isConfigured || !model.byok);
+
   return (
     <div
       className={cn(
-        "flex items-center justify-between py-3 cursor-pointer hover:bg-background rounded-md px-2",
+        "flex items-center justify-between py-3 rounded-md px-2",
         {
-          "opacity-50": !model.enabled,
+          "cursor-pointer hover:bg-background": enabled,
+          "opacity-50 cursor-not-allowed": !enabled,
         }
       )}
-      onClick={onClick}
+      onClick={enabled ? onClick : undefined}
     >
       <div className="flex items-center gap-2">
         <div className="w-6 h-6 flex items-center justify-center">
@@ -30,7 +38,16 @@ export const ListModelItem = memo(function ListModelItem({ model, onClick }: Mod
             providerLogos["default"]}
         </div>
         <span className="text-muted-foreground">{model.name}</span>
-        {/* {model.isPremium && <span className="text-yellow-500 text-xs">♦</span>} */}
+        <div
+          className={cn(
+            "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
+            model.byok
+              ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
+              : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+          )}
+        >
+          {model.byok ? "OpenRouter" : "Free"}
+        </div>
       </div>
       <div className="flex items-center gap-2">
         {model.inputCapabilities.includes("image") && <ImageCapabilityIcon />}

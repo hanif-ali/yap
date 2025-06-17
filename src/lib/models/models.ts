@@ -1,7 +1,7 @@
 import { google } from "@ai-sdk/google";
 import { xai } from "@ai-sdk/xai";
 import openRouterModels from "./open-router-models.json";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { createOpenRouter, openrouter } from "@openrouter/ai-sdk-provider";
 import { Doc } from "../../../convex/_generated/dataModel";
 
 export type ModelDefinition = {
@@ -12,7 +12,7 @@ export type ModelDefinition = {
   description: string;
   inputCapabilities: Array<"text" | "file" | "image">;
   reasoning: boolean;
-  getModelInstance: (userConfig: Doc<"userConfigs">) => any;
+  tools: boolean;
   enabled: boolean;
   byok: boolean;
 };
@@ -25,23 +25,23 @@ export const freeModelDefinitions: ModelDefinition[] = [
     shortName: "Gemini 2.5 Flash",
     description:
       "Gemini 2.5 Flash is a powerful model that can handle complex tasks and provide accurate results.",
-    getModelInstance: () => google("gemini-2.5-flash"),
     inputCapabilities: ["text", "image"],
     enabled: true,
     byok: false,
     reasoning: false,
+    tools: true,
   },
   {
     provider: "google",
-    key: "gemini-2.5-pro",
+    key: "gemini-2.5-pro-preview-03-25",
     name: "Gemini 2.5 Pro",
     shortName: "Gemini 2.5 Pro",
     description: "Gemini 2.5 Pro is a powerful model for advanced tasks.",
-    getModelInstance: () => google("gemini-2.5-pro"),
     inputCapabilities: ["text", "image"],
     enabled: true,
     byok: false,
     reasoning: false,
+    tools: true,
   },
   {
     provider: "google",
@@ -50,11 +50,11 @@ export const freeModelDefinitions: ModelDefinition[] = [
     shortName: "Gemini 2.0 Flash",
     description:
       "Gemini 2.0 Flash is a fast, efficient model for a variety of tasks.",
-    getModelInstance: () => google("gemini-2.0-flash"),
     inputCapabilities: ["text", "image"],
     enabled: true,
     byok: false,
     reasoning: false,
+    tools: true,
   },
   {
     provider: "google",
@@ -63,11 +63,11 @@ export const freeModelDefinitions: ModelDefinition[] = [
     shortName: "Gemini 2.0 Flash Lite",
     description:
       "Gemini 2.0 Flash Lite is a lightweight model for quick tasks.",
-    getModelInstance: () => google("gemini-2.0-flash-lite"),
     inputCapabilities: ["text", "image"],
     enabled: true,
     byok: false,
     reasoning: false,
+    tools: true,
   },
   {
     provider: "google",
@@ -76,11 +76,11 @@ export const freeModelDefinitions: ModelDefinition[] = [
     shortName: "Gemini 2.5 Flash (Thinking)",
     description:
       "Gemini 2.5 Flash (Thinking) is optimized for reasoning tasks.",
-    getModelInstance: () => google("gemini-2.5-flash-thinking"),
     inputCapabilities: ["text"],
     enabled: true,
     byok: false,
     reasoning: true,
+    tools: true,
   },
   {
     provider: "xai",
@@ -89,11 +89,11 @@ export const freeModelDefinitions: ModelDefinition[] = [
     shortName: "Grok 3",
     description:
       "Grok 3 is a model for advanced reasoning and text generation.",
-    getModelInstance: () => xai("grok-3"),
     inputCapabilities: ["text"],
     enabled: true,
     byok: false,
     reasoning: true,
+    tools: true,
   },
   {
     provider: "xai",
@@ -101,47 +101,51 @@ export const freeModelDefinitions: ModelDefinition[] = [
     name: "Grok 3 Mini",
     shortName: "Grok 3 Mini",
     description: "Grok 3 Mini is a compact version for quick tasks.",
-    getModelInstance: () => xai("grok-3-mini"),
     inputCapabilities: ["text"],
     enabled: true,
     byok: false,
     reasoning: false,
+    tools: true,
   },
 ];
 
 export const openRouterModelDefinitions: ModelDefinition[] =
-  openRouterModels.map((model) => {
-    return {
-      ...model,
-      inputCapabilities: model.inputCapabilities as Array<
-        "text" | "file" | "image"
-      >,
-      getModelInstance: (userConfig: Doc<"userConfigs">) => {
-        if (!userConfig.openRouterKey) {
-          throw new Error("OpenRouter key not found");
-        }
-        return createOpenRouter({ apiKey: userConfig.openRouterKey });
-      },
-    };
-  });
+  openRouterModels.map((model) => ({
+    ...model,
+    inputCapabilities: model.inputCapabilities as Array<
+      "text" | "file" | "image"
+    >,
+  }));
 
 export const modelDefinitions = freeModelDefinitions.concat(
   openRouterModelDefinitions
 );
 
+const modelProviders = {
+  google: (modelKey: string) => google(modelKey),
+  xai: (modelKey: string) => xai(modelKey),
+  openrouter: (apiKey: string) => createOpenRouter({ apiKey }),
+};
+
+export const getModelDefinition = (modelKey: string) => {
+  return modelDefinitions.find((model) => model.key === modelKey);
+};
+
 export const getModelInstance = (
-  modelKey: string,
+  modelDefinition: ModelDefinition,
   userConfig: Doc<"userConfigs">
 ) => {
-  const model =
-    freeModelDefinitions.find((model) => model.key === modelKey) ||
-    openRouterModelDefinitions.find((model) => model.key === modelKey);
-
-  if (!model) {
-    throw new Error(`Model ${modelKey} not found`);
+  if (modelDefinition.byok) {
+    if (!userConfig.openRouterKey) {
+      throw new Error("OpenRouter key not found");
+    }
+    const openrouter = createOpenRouter({ apiKey: userConfig.openRouterKey });
+    return openrouter(modelDefinition.key);
   }
 
-  return model.getModelInstance(userConfig);
+  return modelProviders[
+    modelDefinition.provider as keyof typeof modelProviders
+  ](modelDefinition.key);
 };
 
 export const modelKeys = freeModelDefinitions
