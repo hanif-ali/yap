@@ -157,6 +157,7 @@ export async function POST(request: Request) {
           // todo disable for reasoning models
           experimental_activeTools: ["createDocument", "updateDocument", "webSearch"],
           experimental_generateMessageId: generateUUID,
+          maxTokens: 1000,
           // Add streaming optimizations
           // experimental_telemetry: {
           //   isEnabled: false,

@@ -3,43 +3,32 @@ import {
   ImageCapabilityIcon,
   ReasoningCapabilityIcon,
   TextCapabilityIcon,
-  WebCapabilityIcon,
 } from "./capabilities-icons";
 import { Pin, PinOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { providerLogos } from "@/lib/models/provider-logos";
+import { memo } from "react";
 
 interface ModelItemProps {
-  name: string;
-  icon: React.ReactNode;
-  isPremium?: boolean;
-  capabilities?: ModelDefinition["capabilities"];
+  model: ModelDefinition;
   onClick?: () => void;
-  allowed: boolean;
   onFavorite: () => void;
   onUnfavorite: () => void;
   isFavorite: boolean;
 }
 
-export function GridModelItem({
-  name,
-  icon,
-  capabilities = [],
+export const GridModelItem = memo(function GridModelItem({
+  model,
   onClick,
-  allowed,
   onFavorite,
   onUnfavorite,
   isFavorite,
 }: ModelItemProps) {
-  const handlePin = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-  };
-
   const renderCapabilities = () => (
     <div className="absolute inset-x-0 bottom-3 flex w-full items-center justify-center gap-2">
-      {capabilities.includes("image") && <ImageCapabilityIcon />}
-      {capabilities.includes("web") && <WebCapabilityIcon />}
-      {capabilities.includes("text") && <TextCapabilityIcon />}
-      {capabilities.includes("reasoning") && <ReasoningCapabilityIcon />}
+      {model.inputCapabilities.includes("image") && <ImageCapabilityIcon />}
+      {model.inputCapabilities.includes("text") && <TextCapabilityIcon />}
+      {model.reasoning && <ReasoningCapabilityIcon />}
     </div>
   );
 
@@ -55,11 +44,11 @@ export function GridModelItem({
   return (
     <div
       className={cn("group relative", {
-        "cursor-pointer": allowed,
-        "opacity-50 cursor-not-allowed": !allowed,
+        "cursor-pointer": model.enabled,
+        "opacity-50 cursor-not-allowed": !model.enabled,
       })}
       data-state="closed"
-      onClick={allowed ? onClick : undefined}
+      onClick={model.enabled ? onClick : undefined}
     >
       <div className="absolute -left-1.5 -top-1.5 z-10 rounded-full bg-popover p-0.5" />
       <button
@@ -68,16 +57,21 @@ export function GridModelItem({
         )}
       >
         <div className="flex w-full flex-col items-center justify-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center">{icon}</div>
-          <div className="w-full text-center text-[--model-primary]">
-            <div className="text-sm font-medium leading-tight">{name}</div>
+          <div className="flex h-8 w-8 items-center justify-center">
+            {providerLogos[model.provider as keyof typeof providerLogos] ??
+              providerLogos["default"]}
+          </div>
+          <div className="w-full text-center text-[--model-primary] px-1">
+            <div className="text-sm font-medium leading-tight line-clamp-2 break-words hyphens-auto">
+              {model.name}
+            </div>
           </div>
         </div>
         {renderCapabilities()}
       </button>
-      <div className="absolute -right-1.5 -top-1.5 left-auto z-50 flex w-auto translate-y-2 scale-95 items-center rounded-[10px] border border-[var(--chat-border)]/40 bg-card p-1 text-xs text-muted-foreground opacity-0 transition-all group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
+      <div className="absolute -right-1.5 -top-1.5 left-auto z-50 flex w-auto translate-y-2 scale-95 items-center rounded-[10px] border border-[var(--chat-border)]/40 bg-sidebar/80 p-1 text-xs text-muted-foreground opacity-0 transition-all group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100">
         <button
-          className="cursor-pointer rounded-md bg-accent/30 p-1.5 hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-md bg-sidebar p-1.5 hover:bg-muted/50 disabled:cursor-not-allowed disabled:opacity-50"
           data-action="pin-thread"
           aria-label="Pin thread"
           onClick={handleFavoriteToggle}
@@ -91,4 +85,4 @@ export function GridModelItem({
       </div>
     </div>
   );
-}
+});

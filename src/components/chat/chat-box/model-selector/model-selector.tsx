@@ -8,7 +8,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 import {
@@ -17,10 +17,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ModelDefinition, models } from "@/lib/models/models";
-import { providerLogos } from "@/lib/models/provider-logos";
+import { ModelDefinition, modelDefinitions } from "@/lib/models/models";
 import { ListModelItem } from "./list-model-item";
 import { GridModelItem } from "./grid-model-item";
 import { useLocalStorage } from "usehooks-ts";
@@ -46,32 +44,55 @@ export function ModelSelector({
     "gemini-2.0-flash",
   ]);
 
-  const handleModelSelect = (model: string) => {
-    onModelSelect(model);
-    setOpen(false);
-  };
+  const handleModelSelect = useCallback(
+    (model: string) => {
+      onModelSelect(model);
+      setOpen(false);
+    },
+    [onModelSelect]
+  );
 
-  const handleFavorite = (model: string) => {
-    setFavorites([...favorites, model]);
-  };
+  const handleFavorite = useCallback(
+    (model: string) => {
+      setFavorites((prev) => [...prev, model]);
+    },
+    [setFavorites]
+  );
 
-  const handleUnfavorite = (model: string) => {
-    setFavorites(favorites.filter((m) => m !== model));
-  };
+  const handleUnfavorite = useCallback(
+    (model: string) => {
+      setFavorites((prev) => prev.filter((m) => m !== model));
+    },
+    [setFavorites]
+  );
 
-  const handleClearSearch = () => {
+  const handleClearSearch = useCallback(() => {
     setSearchQuery("");
-  };
+  }, []);
 
-  // Filter models based on search query
-  const filteredModels = models.filter((model) => {
-    if (!searchQuery.trim()) return true;
-    return model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           model.key.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  // Memoize filtered models to avoid recalculation on every render
+  const filteredModels = useMemo(() => {
+    if (!searchQuery.trim()) return modelDefinitions;
+    return modelDefinitions.filter(
+      (model) =>
+        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        model.key.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
 
-  const filteredFavorites = filteredModels.filter((model) => favorites.includes(model.key));
-  const filteredOthers = filteredModels.filter((model) => !favorites.includes(model.key));
+  const { filteredFavorites, filteredOthers } = useMemo(() => {
+    const favs = filteredModels.filter((model) =>
+      favorites.includes(model.key)
+    );
+    const others = filteredModels.filter(
+      (model) => !favorites.includes(model.key)
+    );
+
+    return {
+      filteredFavorites: favs,
+      filteredOthers: others,
+    };
+  }, [filteredModels, favorites]);
 
   return (
     <>
@@ -96,7 +117,11 @@ export function ModelSelector({
             <input
               role="searchbox"
               aria-label="Search models"
-              placeholder="Search available models..."
+              placeholder={
+                showAll
+                  ? `Search ${filteredModels.length} available models...`
+                  : `Search favorite models...`
+              }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground/50 placeholder:select-none focus:outline-none"
@@ -121,18 +146,11 @@ export function ModelSelector({
                     Favorites
                   </div>
                   <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
-                    {filteredFavorites.map((model: ModelDefinition) => (
+                    {filteredFavorites.map((model: ModelDefinition, index) => (
                       <GridModelItem
                         key={model.key}
-                        name={model.name}
-                        icon={
-                          providerLogos[
-                            model.provider as keyof typeof providerLogos
-                          ]
-                        }
-                        capabilities={model.capabilities}
+                        model={model}
                         onClick={() => handleModelSelect(model.key)}
-                        allowed={model.allowed}
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={true}
@@ -148,15 +166,8 @@ export function ModelSelector({
                     {filteredOthers.map((model: ModelDefinition) => (
                       <GridModelItem
                         key={model.key}
-                        name={model.name}
-                        icon={
-                          providerLogos[
-                            model.provider as keyof typeof providerLogos
-                          ]
-                        }
-                        capabilities={model.capabilities}
+                        model={model}
                         onClick={() => handleModelSelect(model.key)}
-                        allowed={model.allowed}
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={false}
@@ -170,15 +181,8 @@ export function ModelSelector({
                 {filteredFavorites.map((model: ModelDefinition) => (
                   <ListModelItem
                     key={model.key}
-                    name={model.name}
-                    icon={
-                      providerLogos[
-                        model.provider as keyof typeof providerLogos
-                      ]
-                    }
-                    capabilities={model.capabilities}
+                    model={model}
                     onClick={() => handleModelSelect(model.key)}
-                    allowed={model.allowed}
                   />
                 ))}
               </div>

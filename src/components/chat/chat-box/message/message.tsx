@@ -100,7 +100,7 @@ const PurePreviewMessage = ({
                     <div key={key} className="flex flex-row gap-2 items-start">
                       {message.role === "user" && (
                         <Tooltip>
-                          <TooltipTrigger asChild>
+                          <TooltipTrigger asChild side="bottom" >
                             <Button
                               data-testid="message-edit-button"
                               variant="ghost"

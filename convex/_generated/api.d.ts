@@ -18,6 +18,7 @@ import type * as documents from "../documents.js";
 import type * as messages from "../messages.js";
 import type * as streams from "../streams.js";
 import type * as threads from "../threads.js";
+import type * as userConfigs from "../userConfigs.js";
 import type * as utils from "../utils.js";
 
 /**
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   messages: typeof messages;
   streams: typeof streams;
   threads: typeof threads;
+  userConfigs: typeof userConfigs;
   utils: typeof utils;
 }>;
 export declare const api: FilterApi<

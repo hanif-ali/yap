@@ -86,4 +86,11 @@ export default defineSchema({
     userId: v.string(),
     updatedAt: v.number(),
   }).index("by_userId", ["userId"]),
+
+  userConfigs: defineTable({
+    userId: v.string(),
+    openRouterKey: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_userId", ["userId"]),
 });

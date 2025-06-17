@@ -16,6 +16,8 @@ import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import localFont from "next/font/local";
+import { UserConfigProvider } from "@/providers/user-config-provider";
+import { TopBar } from "@/components/top-bar";
 
 const proxima_var = localFont({
   src: "./proxima_vara.woff2",
@@ -44,9 +46,14 @@ export default async function RootLayout({
                 <SignUpButton />
               </SignedOut>
               <SignedIn>
-                <SidebarWrapper preloadedThreads={preloadedThreads}>
-                  {children}
-                </SidebarWrapper>
+                <UserConfigProvider>
+                  <SidebarWrapper preloadedThreads={preloadedThreads}>
+                    <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
+                      <TopBar />
+                      {children}
+                    </main>
+                  </SidebarWrapper>
+                </UserConfigProvider>
               </SignedIn>
               <ThemeToggle />
             </ThemeProvider>

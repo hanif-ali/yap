@@ -1,9 +1,11 @@
+import { MessageSquareText } from "lucide-react";
 import { ModelDefinition } from "./models";
 
 export const providerLogos: Record<
   ModelDefinition["provider"],
   React.ReactNode
 > = {
+  default: <MessageSquareText className="size-7 text-[var(--heading)]" />,
   google: (
     <svg
       className="size-7 text-[var(--heading)]"

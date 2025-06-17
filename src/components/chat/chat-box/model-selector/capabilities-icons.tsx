@@ -10,14 +10,6 @@ export function ImageCapabilityIcon() {
   );
 }
 
-export function WebCapabilityIcon() {
-  return (
-    <div className="rounded-md w-6 h-6 p-1 bg-[var(--web-icon-color)]/15">
-      <Globe className="h-4 w-4 stroke-[var(--web-icon-color)]" strokeWidth={2}/>
-    </div>
-  );
-}
-
 export function TextCapabilityIcon() {
   return (
     <div className="rounded-md w-6 h-6 p-1 bg-[var(--text-icon-color)]/15">

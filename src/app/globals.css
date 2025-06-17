@@ -51,10 +51,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* --color-sidebar: var(--sidebar-bg); */
 }
 
 :root {
   --radius: 0.625rem;
+
+  --card: oklch(1 0 0);
+  /* --accent: oklch(0.967 0.001 286.375); */
 }
 
 .dark {
