@@ -1,23 +1,19 @@
 import type { Metadata } from "next";
 
-import {
-  ClerkProvider,
-  SignedOut,
-  SignedIn,
-  SignInButton,
-  SignUpButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 // import { ThemeToggle } from "../components/ThemeToggle";
 import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
-import { preloadQuery } from "convex/nextjs";
+import { fetchMutation, preloadQuery } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import localFont from "next/font/local";
 import { UserConfigProvider } from "@/providers/user-config-provider";
 import { TopBar } from "@/components/top-bar";
+import { headers } from "next/headers";
+import { getAuthToken } from "@/lib/auth";
 
 const proxima_var = localFont({
   src: "./proxima_vara.woff2",
@@ -33,6 +29,21 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const token = await getAuthToken();
+
+  const anonId = (await headers()).get("x-anon-id");
+
+  console.log({ token });
+
+  const userConfig = await fetchMutation(
+    api.userConfigs.getOrCreateUserConfig,
+    {
+      // Always available as it is set in middleware
+      anonId: anonId!,
+    },
+    { token: token ?? undefined }
+  );
+
   const preloadedThreads = await preloadQuery(api.threads.getForCurrentUser);
 
   return (
@@ -41,20 +52,14 @@ export default async function RootLayout({
         <ClerkProvider>
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              <SignedOut>
-                <SignInButton />
-                <SignUpButton />
-              </SignedOut>
-              <SignedIn>
-                <UserConfigProvider>
-                  <SidebarWrapper preloadedThreads={preloadedThreads}>
-                    <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
-                      <TopBar />
-                      {children}
-                    </main>
-                  </SidebarWrapper>
-                </UserConfigProvider>
-              </SignedIn>
+              <UserConfigProvider userConfig={userConfig!}>
+                <SidebarWrapper preloadedThreads={preloadedThreads}>
+                  <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
+                    <TopBar />
+                    {children}
+                  </main>
+                </SidebarWrapper>
+              </UserConfigProvider>
               <ThemeToggle />
             </ThemeProvider>
           </ConvexClientProvider>

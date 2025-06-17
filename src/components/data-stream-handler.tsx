@@ -5,6 +5,18 @@ import { useEffect, useRef } from "react";
 import { artifactDefinitions, ArtifactKind } from "./artifact";
 import { initialArtifactData, useArtifact } from "@/hooks/use-artifact";
 
+const ARTIFACT_DELTA_TYPES = [
+  "text-delta",
+  "code-delta",
+  "sheet-delta",
+  "image-delta",
+  "title",
+  "id",
+  "clear",
+  "finish",
+  "kind",
+] as const;
+
 export type DataStreamDelta = {
   type:
     | "text-delta"
@@ -15,7 +27,8 @@ export type DataStreamDelta = {
     | "id"
     | "clear"
     | "finish"
-    | "kind";
+    | "kind"
+    | "remaining-tokens";
   content: string;
 };
 
@@ -23,7 +36,6 @@ export function DataStreamHandler({ id }: { id: string }) {
   const { data: dataStream } = useChat({ id });
   const { artifact, setArtifact, setMetadata } = useArtifact();
   const lastProcessedIndex = useRef(-1);
-  console.log({dataStream})
 
   useEffect(() => {
     if (!dataStream?.length) return;
@@ -32,6 +44,10 @@ export function DataStreamHandler({ id }: { id: string }) {
     lastProcessedIndex.current = dataStream.length - 1;
 
     (newDeltas as DataStreamDelta[]).forEach((delta: DataStreamDelta) => {
+      if (!ARTIFACT_DELTA_TYPES.includes(delta.type)) {
+        return;
+      }
+
       const artifactDefinition = artifactDefinitions.find(
         (artifactDefinition) => artifactDefinition.kind === artifact.kind
       );
@@ -46,7 +62,11 @@ export function DataStreamHandler({ id }: { id: string }) {
 
       setArtifact((draftArtifact) => {
         if (!draftArtifact) {
-          return { ...initialArtifactData, status: "streaming", isVisible: true };
+          return {
+            ...initialArtifactData,
+            status: "streaming",
+            isVisible: true,
+          };
         }
 
         switch (delta.type) {

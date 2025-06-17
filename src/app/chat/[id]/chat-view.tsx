@@ -93,7 +93,7 @@ export default function ChatView({
           ref={scrollContainerRef}
           className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-track]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30"
           style={{
-            paddingBottom: "144px",
+            paddingBottom: "200px",
             scrollbarGutter: "stable both-edges",
             scrollbarWidth: "thin",
             scrollbarColor: "rgba(0,0,0,0.2) transparent",

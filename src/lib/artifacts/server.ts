@@ -20,20 +20,23 @@ export interface CreateDocumentCallbackProps {
   id: string;
   title: string;
   dataStream: DataStreamWriter;
-  session: Session;
+  userConfig: Doc<"userConfigs">;
 }
 
 export interface UpdateDocumentCallbackProps {
   document: Doc<"documents">;
   description: string;
   dataStream: DataStreamWriter;
-  session: Session;
 }
 
 export interface DocumentHandler<T = ArtifactKind> {
   kind: T;
-  onCreateDocument: (args: CreateDocumentCallbackProps) => Promise<void>;
-  onUpdateDocument: (args: UpdateDocumentCallbackProps) => Promise<void>;
+  onCreateDocument: (
+    args: Exclude<CreateDocumentCallbackProps, "userConfig">
+  ) => Promise<void>;
+  onUpdateDocument: (
+    args: Exclude<UpdateDocumentCallbackProps, "userConfig">
+  ) => Promise<void>;
 }
 
 export function createDocumentHandler<T extends ArtifactKind>(config: {
@@ -48,7 +51,7 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         id: args.id,
         title: args.title,
         dataStream: args.dataStream,
-        session: args.session,
+        userConfig: args.userConfig,
       });
 
       // todo add auth
@@ -58,7 +61,7 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         title: args.title,
         content: draftContent,
         kind: config.kind,
-        userId: args.session.user?.id ?? "",
+        userId: args.userConfig.userId,
       });
       // }
 
@@ -69,7 +72,6 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
         document: args.document,
         description: args.description,
         dataStream: args.dataStream,
-        session: args.session,
       });
 
       await fetchMutation(api.documents.updateDocument, {

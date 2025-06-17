@@ -19,6 +19,9 @@ export const saveMessage = mutation({
   args: {
     message: v.object({
       id: v.string(),
+      // todo right now anyone can save messages for any user from the frontend
+      // validate anonymous and such
+      userId: v.string(),
       threadId: v.string(),
       role: v.union(
         v.literal("user"),
@@ -38,17 +41,8 @@ export const saveMessage = mutation({
     }),
   },
   handler: async (ctx, args) => {
-    // todo fix auth
-    // const identity = await ctx.auth.getUserIdentity();
-    // if (!identity) {
-    // todo: proper error handling
-    //   throw new Error("Unauthorized");
-    // }
-
     return await ctx.db.insert("messages", {
       ...args.message,
-      // userId: identity.subject,
-      userId: "user_2yHSwopd8ipZW4Ndz7g2zFeLKzi",
       createdAt: Date.now(),
       status: "done",
     });
@@ -88,5 +82,24 @@ export const getMessageById = query({
       .query("messages")
       .filter((q) => q.eq(q.field("id"), args.id))
       .first();
+  },
+});
+
+export const todaysMessagesCount = query({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // Count messages since 12AM for the given userId
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    return await ctx.db
+      .query("messages")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("role"), "user"))
+      .filter((q) => q.gte(q.field("_creationTime"), midnight.getTime()))
+      .collect()
+      .then((messages) => messages.length);
   },
 });

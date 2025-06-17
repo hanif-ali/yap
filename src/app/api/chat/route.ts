@@ -2,6 +2,7 @@ import {
   appendClientMessage,
   appendResponseMessages,
   createDataStream,
+  LanguageModel,
   streamText,
 } from "ai";
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
@@ -25,6 +26,8 @@ import { createDocument } from "@/lib/documents/create-document";
 import { RequestHints, systemPrompt } from "@/lib/models/prompts";
 import { updateDocument } from "@/lib/documents/update-document";
 import { webSearch } from "@/lib/models/web-search";
+import { getAuthToken, getCurrentUserConfig } from "@/lib/auth";
+import { MAX_MESSAGES_PER_DAY } from "@/lib/rate-limiting";
 
 let globalStreamContext: ResumableStreamContext | null = null;
 
@@ -51,22 +54,8 @@ function getStreamContext() {
 export async function POST(request: Request) {
   let requestBody: PostRequestBody;
 
-  // todo fix auth
-  const authData = await auth();
-  const token = await authData.getToken({ template: "convex" });
-
-  if (!token) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const userConfig = await fetchQuery(
-    api.userConfigs.getUserConfig,
-    {},
-    { token: token }
-  );
-  if (!userConfig) {
-    return new Response("User config not found", { status: 401 });
-  }
+  const token = await getAuthToken();
+  const userConfig = await getCurrentUserConfig();
 
   try {
     const json = await request.json();
@@ -76,36 +65,36 @@ export async function POST(request: Request) {
     throw error;
   }
 
+  const maxMessagesPerDay = userConfig.isAnonymous
+    ? MAX_MESSAGES_PER_DAY.anonymous
+    : MAX_MESSAGES_PER_DAY.signedIn;
+
+  const todaysMessagesCount = await fetchQuery(
+    api.messages.todaysMessagesCount,
+    {
+      userId: userConfig.userId,
+    }
+  );
+
+  if (todaysMessagesCount >= maxMessagesPerDay) {
+    return new ChatError("rate_limit:chat").toResponse();
+  }
+
   try {
     const { id, message, selectedChatModel } = requestBody;
 
-    // TODO: add auth, rate limiting
-
-    // const messageCount = await getMessageCountByUserId({
-    //   id: session.user.id,
-    //   differenceInHours: 24,
-    // });
-
-    // if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
-    //   return new ChatError("rate_limit:chat").toResponse();
-    // }
-
     const thread = await fetchQuery(api.threads.getThreadById, { id });
+
     if (!thread) {
-      // TODO: handle no chat case
       const title = await generateTitleFromUserMessage({
         message,
       });
-      // todo fix user id being passed as empty
+
       await fetchMutation(api.threads.createThread, {
         id: id,
         title,
-        userId: authData.userId ?? "",
+        userId: userConfig.userId,
       });
-      // } else {
-      //   if (chat.userId !== session.user.id) {
-      //     return new ChatError("forbidden:chat").toResponse();
-      //   }
     }
 
     const previousMessages = await fetchQuery(
@@ -135,6 +124,7 @@ export async function POST(request: Request) {
       {
         message: {
           id: message.id,
+          userId: userConfig.userId,
           threadId: id,
           role: "user",
           content: message.content,
@@ -166,10 +156,16 @@ export async function POST(request: Request) {
       threadId: id,
     });
 
+    console.log({
+      userId: userConfig.userId,
+      maxMessagesPerDay,
+      todaysMessagesCount,
+    });
+
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
-          model: getModelInstance(modelDefinition, userConfig),
+          model: getModelInstance(modelDefinition, userConfig) as LanguageModel,
           system: systemPrompt({ modelDefinition, requestHints }),
           messages,
           maxSteps: 5,
@@ -184,15 +180,14 @@ export async function POST(request: Request) {
           //   isEnabled: false,
           // },
           // Optimize for real-time streaming
-          temperature: 0.7,
+          temperature: 0.6,
           tools: modelDefinition.tools
             ? {
                 createDocument: createDocument({
-                  session: authData,
+                  userConfig,
                   dataStream,
                 }),
                 updateDocument: updateDocument({
-                  session: authData,
                   dataStream,
                 }),
                 webSearch,
@@ -221,12 +216,18 @@ export async function POST(request: Request) {
               await fetchMutation(api.messages.saveMessage, {
                 message: {
                   id: assistantId,
+                  userId: userConfig.userId,
                   threadId: id,
                   role: "assistant",
                   content: assistantMessage.content,
                   attachments: [],
                   parts: assistantMessage.parts ?? [],
                 },
+              });
+
+              dataStream.writeData({
+                type: "remaining-tokens",
+                content: maxMessagesPerDay - todaysMessagesCount - 1,
               });
             } catch (error) {
               console.log({ error });
@@ -285,6 +286,8 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  // todo ensure that user can only resume their own streams
+  // todo auth basically
   const streamContext = getStreamContext();
   const resumeRequestedAt = new Date();
 
@@ -298,12 +301,6 @@ export async function GET(request: Request) {
   if (!threadId) {
     return new ChatError("bad_request:api").toResponse();
   }
-
-  // const session = await auth();
-
-  // if (!session?.user) {
-  //   return new ChatError("unauthorized:chat").toResponse();
-  // }
 
   let thread: Doc<"threads"> | null;
 

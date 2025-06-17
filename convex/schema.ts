@@ -88,7 +88,9 @@ export default defineSchema({
   }).index("by_userId", ["userId"]),
 
   userConfigs: defineTable({
+    // This is either clerk ID or anonymous ID (ehhhhhh, don't feel too good about this as it risks getting inconsistent with isAnonymous)
     userId: v.string(),
+    isAnonymous: v.boolean(),
     openRouterKey: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),

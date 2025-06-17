@@ -18,34 +18,6 @@ export const getUserConfig = query({
   },
 });
 
-export const createUserConfig = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    // Check if config already exists
-    const existingConfig = await ctx.db
-      .query("userConfigs")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
-      .first();
-
-    if (existingConfig) {
-      return existingConfig;
-    }
-
-    const configId = await ctx.db.insert("userConfigs", {
-      userId: identity.subject,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-
-    return await ctx.db.get(configId);
-  },
-});
-
 export const updateUserConfig = mutation({
   args: {
     openRouterKey: v.optional(v.string()),
@@ -61,40 +33,61 @@ export const updateUserConfig = mutation({
       .filter((q) => q.eq(q.field("userId"), identity.subject))
       .first();
 
-    if (existingConfig) {
-      return await ctx.db.patch(existingConfig._id, {
-        ...args,
-        updatedAt: Date.now(),
-      });
-    } else {
-      return await ctx.db.insert("userConfigs", {
-        userId: identity.subject,
-        ...args,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+    if (!existingConfig) {
+      throw new Error("User config not found");
     }
+
+    return await ctx.db.patch(existingConfig._id, {
+      ...args,
+      updatedAt: Date.now(),
+    });
   },
 });
 
-export const deleteOpenRouterKey = mutation({
-  args: {},
-  handler: async (ctx) => {
+export const getOrCreateUserConfig = mutation({
+  args: {
+    anonId: v.string(),
+  },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
+
+    if (identity) {
+      const existingConfig = await ctx.db
+        .query("userConfigs")
+        .filter((q) => q.eq(q.field("userId"), identity.subject))
+        .first();
+      console.log({ existingConfig });
+
+      if (existingConfig) {
+        return existingConfig;
+      }
+
+      const newUserConfig = await ctx.db.insert("userConfigs", {
+        userId: identity.subject,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        isAnonymous: false,
+      });
+
+      return await ctx.db.get(newUserConfig);
     }
 
     const existingConfig = await ctx.db
       .query("userConfigs")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .filter((q) => q.eq(q.field("userId"), args.anonId))
       .first();
 
     if (existingConfig) {
-      return await ctx.db.patch(existingConfig._id, {
-        openRouterKey: undefined,
-        updatedAt: Date.now(),
-      });
+      return existingConfig;
     }
+
+    const newAnonUserConfig = await ctx.db.insert("userConfigs", {
+      userId: args.anonId,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      isAnonymous: true,
+    });
+
+    return await ctx.db.get(newAnonUserConfig);
   },
-}); 
+});

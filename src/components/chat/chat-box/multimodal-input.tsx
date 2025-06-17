@@ -28,6 +28,8 @@ import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
 import { SuggestedActions } from "./suggested-actions";
 import { cn } from "@/lib/utils";
+import { WebSearchButton } from "./web-search-button";
+import { TokensWarning } from "./tokens-warning";
 
 function PureMultimodalInput({
   chatId,
@@ -235,6 +237,8 @@ function PureMultimodalInput({
           <SuggestedActions append={append} chatId={chatId} />
         )}
 
+      {messages.length !== 0 && <TokensWarning chatId={chatId} />}
+
       <div
         className="mt-2 border-reflect rounded-t-[20px] bg-[var(--chat-input-background)] p-2 pb-0 backdrop-blur-lg"
         style={{
@@ -249,8 +253,8 @@ function PureMultimodalInput({
           style={{
             boxShadow:
               "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
-              // @ts-ignore
-              "--opacity": "1"
+            // @ts-ignore
+            "--opacity": "1",
           }}
         >
           <input
@@ -338,18 +342,11 @@ function PureMultimodalInput({
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center">
               <div className="ml-[-7px] flex items-center gap-1">
                 <ModelSelector onModelSelect={setModel} selectedModel={model} />
-                <button
-                  onClick={() => setSearchEnabled(!searchEnabled)}
-                  className={cn(
-                    "inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 text-xs -mb-1.5 h-auto gap-2 rounded-full border border-solid border-secondary-foreground/10 px-2 py-1.5 pr-2.5 text-muted-foreground max-sm:p-2",
-                    {
-                      "border-reflect": searchEnabled,
-                    }
-                  )}
-                >
-                  <Globe className="w-4 h-4" />
-                  <span className="text-sm max-sm:sr-only">Web Search</span>
-                </button>
+                <WebSearchButton
+                  selectedModel={model}
+                  searchEnabled={searchEnabled}
+                  setSearchEnabled={setSearchEnabled}
+                />
                 <AttachmentsButton
                   fileInputRef={fileInputRef}
                   status={status}

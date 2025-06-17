@@ -22,7 +22,7 @@ export const textDocumentHandler = createDocumentHandler<"text">({
       if (type === "text-delta") {
         const { textDelta } = delta;
 
-        if (textDelta && typeof textDelta === 'string') {
+        if (textDelta && typeof textDelta === "string") {
           draftContent += textDelta;
 
           dataStream.writeData({
@@ -40,16 +40,17 @@ export const textDocumentHandler = createDocumentHandler<"text">({
 
     const { fullStream } = streamText({
       model: google("gemini-2.0-flash-lite"),
-      system: updateDocumentPrompt(document.content, "text"),
+      system: updateDocumentPrompt(document.content ?? "", "text"),
       prompt: description,
-      experimental_providerMetadata: {
-        openai: {
-          prediction: {
-            type: "content",
-            content: document.content,
-          },
-        },
-      },
+      // experimental_providerMetadata: {
+      //   // todo what is openai doing here?
+      //   openai: {
+      //     prediction: {
+      //       type: "content",
+      //       content: document.content,
+      //     },
+      //   },
+      // },
     });
 
     for await (const delta of fullStream) {
@@ -58,7 +59,7 @@ export const textDocumentHandler = createDocumentHandler<"text">({
       if (type === "text-delta") {
         const { textDelta } = delta;
 
-        if (textDelta && typeof textDelta === 'string') {
+        if (textDelta && typeof textDelta === "string") {
           draftContent += textDelta;
           dataStream.writeData({
             type: "text-delta",
