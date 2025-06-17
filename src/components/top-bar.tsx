@@ -5,8 +5,6 @@ import { useSidebar } from "./ui/sidebar";
 export const TopBar = () => {
   const { state: sidebarState } = useSidebar();
 
-  console.log("sidebar state", sidebarState);
-
   return (
     <>
       <div

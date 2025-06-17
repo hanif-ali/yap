@@ -1,32 +1,35 @@
-import { usePreloadedQuery, Preloaded } from "convex/react";
-import { ScrollArea } from "../ui/scroll-area";
+"use client";
+
 import { api } from "../../../convex/_generated/api";
 import { categorizeThreads } from "./utils";
 import { HistoricalChatButton } from "./historical-chat-button";
-import { Search } from "lucide-react";
-import Link from "next/link";
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
 } from "../ui/sidebar";
+import { useQueryWithLocalStorageCache } from "@/hooks/use-query-with-local-storage-cache";
+import { useMemo } from "react";
+import { Doc } from "../../../convex/_generated/dataModel";
 
 interface ThreadHistoryProps {
-  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
   searchQuery: string;
 }
 
-export function ThreadHistory({
-  preloadedThreads,
-  searchQuery,
-}: ThreadHistoryProps) {
-  const chats = usePreloadedQuery(preloadedThreads);
+export function ThreadHistory({ searchQuery }: ThreadHistoryProps) {
+  const chats = useQueryWithLocalStorageCache<Doc<"threads">[]>(
+    "chats",
+    api.threads.getForCurrentUser
+  );
 
   // Filter chats based on search query
-  const filteredChats = chats?.filter((chat) => {
-    if (!searchQuery.trim()) return true;
-    return chat.title.toLowerCase().includes(searchQuery.toLowerCase());
-  }) || [];
+  const filteredChats = useMemo(() => {
+    if (!chats) return [];
+    return chats.filter((chat) => {
+      if (!searchQuery.trim()) return true;
+      return chat.title.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  }, [chats, searchQuery]);
 
   const categorizedChats = categorizeThreads(filteredChats);
 

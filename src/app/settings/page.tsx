@@ -1,7 +1,15 @@
 import { TopBar } from "@/components/top-bar";
 import { SettingsForm } from "@/components/settings/settings-form";
+import { getCurrentUserConfig } from "@/lib/auth";
+import { RedirectToSignIn } from "@clerk/nextjs";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const userConfig = await getCurrentUserConfig();
+
+  if (userConfig.isAnonymous) {
+    return <RedirectToSignIn redirectUrl={"/settings"} />;
+  }
+
   return (
     <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
       <TopBar />
@@ -13,4 +21,4 @@ export default function SettingsPage() {
       </div>
     </main>
   );
-} 
+}

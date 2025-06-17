@@ -33,8 +33,6 @@ export default async function RootLayout({
 
   const anonId = (await headers()).get("x-anon-id");
 
-  console.log({ token });
-
   const userConfig = await fetchMutation(
     api.userConfigs.getOrCreateUserConfig,
     {
@@ -44,8 +42,6 @@ export default async function RootLayout({
     { token: token ?? undefined }
   );
 
-  const preloadedThreads = await preloadQuery(api.threads.getForCurrentUser);
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${proxima_var.className} antialiased`}>
@@ -53,7 +49,7 @@ export default async function RootLayout({
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
               <UserConfigProvider userConfig={userConfig!}>
-                <SidebarWrapper preloadedThreads={preloadedThreads}>
+                <SidebarWrapper>
                   <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
                     <TopBar />
                     {children}

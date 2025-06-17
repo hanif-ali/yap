@@ -2,9 +2,9 @@ import { DataStreamDelta } from "@/components/data-stream-handler";
 import { useChat } from "@ai-sdk/react";
 import { SignedOut, SignInButton } from "@clerk/nextjs";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
-export const TokensWarning = ({ chatId }: { chatId: string }) => {
+export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
   const { data: dataStream } = useChat({ id: chatId });
 
   const [remainingTokens, setRemainingTokens] = useState<number | null>(null);
@@ -21,7 +21,6 @@ export const TokensWarning = ({ chatId }: { chatId: string }) => {
     setRemainingTokens(parseInt(latestDataStreamElement.content));
   }, [dataStream]);
 
-  console.log({ dataStream, remainingTokens });
 
   const isOutOfMessages = remainingTokens === 0;
 
@@ -71,4 +70,4 @@ export const TokensWarning = ({ chatId }: { chatId: string }) => {
       )}
     </>
   );
-};
+});

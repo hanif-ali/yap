@@ -62,8 +62,6 @@ export const ThemeSelector = () => {
 
   const handleThemeSelect = (theme: string) => {
     setSelectedTheme(theme);
-    // Here you would typically apply the theme to your app
-    console.log("Selected theme:", theme);
   };
 
   return (

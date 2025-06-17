@@ -56,7 +56,6 @@ export const getOrCreateUserConfig = mutation({
         .query("userConfigs")
         .filter((q) => q.eq(q.field("userId"), identity.subject))
         .first();
-      console.log({ existingConfig });
 
       if (existingConfig) {
         return existingConfig;
@@ -64,6 +63,7 @@ export const getOrCreateUserConfig = mutation({
 
       const newUserConfig = await ctx.db.insert("userConfigs", {
         userId: identity.subject,
+        fullName: identity.name ?? "New User",
         createdAt: Date.now(),
         updatedAt: Date.now(),
         isAnonymous: false,
@@ -86,6 +86,7 @@ export const getOrCreateUserConfig = mutation({
       createdAt: Date.now(),
       updatedAt: Date.now(),
       isAnonymous: true,
+      fullName: "Anonymous User",
     });
 
     return await ctx.db.get(newAnonUserConfig);

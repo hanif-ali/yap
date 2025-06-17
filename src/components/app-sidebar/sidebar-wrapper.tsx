@@ -8,10 +8,8 @@ import { api } from "../../../convex/_generated/api";
 
 export function SidebarWrapper({
   children,
-  preloadedThreads,
 }: {
   children: React.ReactNode;
-  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
 }) {
   return (
     <div className="flex h-screen text-white">
@@ -22,7 +20,7 @@ export function SidebarWrapper({
           <div className="absolute inset-0 bg-noise z-100"></div>
           <div className="absolute inset-0 bg-black/40"></div>
         </div>
-        <AppSidebar preloadedThreads={preloadedThreads} />
+        <AppSidebar />
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
     </div>

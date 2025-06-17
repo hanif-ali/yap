@@ -131,6 +131,9 @@ dependencies:
   framer-motion:
     specifier: ^12.16.0
     version: 12.17.3(react-dom@19.1.0)(react@19.1.0)
+  idb-keyval:
+    specifier: ^6.2.2
+    version: 6.2.2
   lucide-react:
     specifier: ^0.513.0
     version: 0.513.0(react@19.1.0)
@@ -4107,6 +4110,10 @@ packages:
 
   /html-url-attributes@3.0.1:
     resolution: {integrity: sha512-ol6UPyBWqsrO6EJySPz2O7ZSr856WDrEzM5zMqp+FJJLGMW35cLYmmZnl0vztAZxRUoNZJFTCohfjuIJ8I4QBQ==}
+    dev: false
+
+  /idb-keyval@6.2.2:
+    resolution: {integrity: sha512-yjD9nARJ/jb1g+CvD0tlhUHOrJ9Sy0P8T9MF3YaLlHnSRpwPfpTX0XIvpmw3gAJUmEu3FiICLBDPXVwyEvrleg==}
     dev: false
 
   /ignore@5.3.2:

@@ -16,21 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ThreadHistory } from "./thread-history";
-import { Preloaded } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import Link from "next/link";
 import { SidebarControls } from "./sidebar-controls";
 import { YapIcon, MenuIcon } from "../icons";
-import { SignOutButton, SignInButton, useUser } from "@clerk/nextjs";
+import { SignOutButton, SignInButton } from "@clerk/nextjs";
 import { useUserConfig } from "@/hooks/use-user-config";
 
-export function AppSidebar({
-  preloadedThreads,
-}: {
-  preloadedThreads: Preloaded<typeof api.threads.getForCurrentUser>;
-}) {
+export function AppSidebar() {
   const [searchQuery, setSearchQuery] = useState("");
-  const { user } = useUser();
   const { userConfig } = useUserConfig();
 
   return (
@@ -55,13 +48,12 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
         <ThreadHistory
-          preloadedThreads={preloadedThreads}
           searchQuery={searchQuery}
         />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4">
-          {userConfig?.isAnonymous || !user ? (
+          {userConfig?.isAnonymous || false ? (
             // Show login button for anonymous users or when user is not signed in
             <div className="flex items-center justify-center">
               <SignInButton>
@@ -75,15 +67,11 @@ export function AppSidebar({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-sm font-medium">
-                  {user?.firstName?.[0]?.toUpperCase() ||
-                    user?.emailAddresses?.[0]?.emailAddress?.[0]?.toUpperCase() ||
-                    "U"}
+                  {userConfig.fullName[0].toUpperCase() || "U"}
                 </div>
                 <div>
                   <div className="text-sm font-medium">
-                    {user?.fullName ||
-                      user?.emailAddresses?.[0]?.emailAddress ||
-                      "User"}
+                    {userConfig.fullName}
                   </div>
                 </div>
               </div>
@@ -99,11 +87,22 @@ export function AppSidebar({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem className="cursor-pointer">
-                    <Link href="/settings">Settings</Link>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full"
+                      asChild
+                    >
+                      <Link href="/settings">Settings</Link>
+                    </Button>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="cursor-pointer">
-                    <SignOutButton>Sign Out</SignOutButton>
+                    <SignOutButton>
+                      <Button variant="ghost" size="sm" className="w-full">
+                        Sign Out
+                      </Button>
+                    </SignOutButton>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

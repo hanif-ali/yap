@@ -45,7 +45,6 @@ export const GridModelItem = memo(function GridModelItem({
   };
 
   const enabled = model.enabled && (isConfigured || !model.byok);
-  console.log({ enabled, isConfigured, model });
 
   return (
     <Tooltip>

@@ -34,7 +34,7 @@ export function ModelSelector({
   selectedModel,
 }: ModelSelectorProps) {
   const [open, setOpen] = useState(false);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [favorites, setFavorites] = useLocalStorage<
