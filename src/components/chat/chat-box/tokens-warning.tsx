@@ -21,7 +21,6 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
     setRemainingTokens(parseInt(latestDataStreamElement.content));
   }, [dataStream]);
 
-
   const isOutOfMessages = remainingTokens === 0;
 
   return (
@@ -37,8 +36,8 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
           >
             <div className="pr-4">
               {isOutOfMessages
-                ? "You have run out of messages"
-                : `You only have ${remainingTokens} messages left. `}
+                ? "You have run out of messages. You can still use OpenRouter models with your own key."
+                : `You only have ${remainingTokens} free messages left.`}
               <SignedOut>
                 <SignInButton>
                   <button

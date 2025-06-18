@@ -119,6 +119,11 @@ export async function POST(request: Request) {
       message,
     });
 
+    const modelDefinition = getModelDefinition(selectedChatModel);
+    if (!modelDefinition) {
+      throw new Error(`Model ${selectedChatModel} not found`);
+    }
+
     await fetchMutation(
       api.messages.saveMessage,
       {
@@ -135,15 +140,11 @@ export async function POST(request: Request) {
               contentType: attachment.contentType,
             })) ?? [],
           parts: message.parts,
+          free: !modelDefinition?.byok,
         },
       },
       { token }
     );
-
-    const modelDefinition = getModelDefinition(selectedChatModel);
-    if (!modelDefinition) {
-      throw new Error(`Model ${selectedChatModel} not found`);
-    }
 
     if (modelDefinition.byok && !userConfig.openRouterKey) {
       // todo show on frontend
@@ -225,6 +226,7 @@ export async function POST(request: Request) {
                     content: assistantMessage.content,
                     attachments: [],
                     parts: assistantMessage.parts ?? [],
+                    free: !modelDefinition.byok,
                   },
                 },
                 { token }

@@ -40,7 +40,9 @@ This is a guide for using canvas artifacts tools: \`createCanvasArtifact\` and \
 Do not update a canvas artifact right after creating it. Wait for user feedback or request to update it.
 `;
 
-const nonCanvasPrompt = `If the user asks you to generate an image, tell the user that they need to enable "Canvas" in order to generate images.
+const nonCanvasPrompt = `
+If the user asks you to generate an image, logo, or any visual graphic, tell the user that they need to enable "Canvas" in order to generate images.\n\n
+
 You can write code for the user.  When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
 `;
 

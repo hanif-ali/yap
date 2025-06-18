@@ -50,6 +50,7 @@ export default defineSchema({
       })
     ),
     parts: v.array(v.any()),
+    free: v.boolean(),
   })
     .index("by_message_id", ["id"])
     .index("by_threadId", ["threadId"])

@@ -50,21 +50,20 @@ export async function fetchWithErrorHandlers(
   input: RequestInfo | URL,
   init?: RequestInit
 ) {
+  let response: Response;
   try {
-    const response = await fetch(input, init);
+    response = await fetch(input, init);
 
     if (response.status === 429) {
       toast.error(
         "You have reached the maximum number of messages you can send. Please try again later."
       );
-      return;
     }
 
     if (!response.ok) {
       const { code, cause } = await response.json();
       toast.error(cause);
       console.error({ code, cause });
-      return;
     }
 
     return response;
@@ -77,4 +76,6 @@ export async function fetchWithErrorHandlers(
 
     throw error;
   }
+
+  return response;
 }

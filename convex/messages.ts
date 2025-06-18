@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { generateMessageId } from "./utils";
 
 export const getMessagesForThread = query({
   args: {
@@ -47,6 +46,7 @@ export const saveMessage = mutation({
         })
       ),
       parts: v.array(v.any()),
+      free: v.boolean(),
     }),
   },
   handler: async (ctx, args) => {
@@ -119,6 +119,7 @@ export const todaysMessagesCount = query({
       .filter((q) => q.eq(q.field("userId"), args.userId))
       .filter((q) => q.eq(q.field("role"), "user"))
       .filter((q) => q.gte(q.field("_creationTime"), midnight.getTime()))
+      .filter((q) => q.eq(q.field("free"), true))
       .collect()
       .then((messages) => messages.length);
   },
