@@ -13,11 +13,13 @@ import { toast } from "sonner";
 import { useUserConfig } from "@/providers/user-config-provider";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export const ChatVisibility = ({ threadId }: { threadId: string }) => {
   const [open, setOpen] = useState(false);
   const { userConfig } = useUserConfig();
   const thread = useQuery(api.threads.getThreadById, { id: threadId });
+  const { state: sidebarState } = useSidebar();
 
   const setThreadVisibility = useMutation(api.threads.setThreadVisibility);
 
@@ -49,6 +51,7 @@ export const ChatVisibility = ({ threadId }: { threadId: string }) => {
   );
 
   if (!thread) return null;
+  if (sidebarState === "collapsed") return null;
 
   return (
     <div className="absolute top-7 left-4 right-0 bottom-0 z-10 h-10 w-fit rounded-md flex hover:bg-[hsl(var(--gradient-noise-top))] transition-all ease-snappy">

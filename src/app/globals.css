@@ -63,7 +63,7 @@
   /* --accent: oklch(0.967 0.001 286.375); */
 }
 
-.dark {
+.t3-dark, .dark {
   /*  this is only used in the little icon and focus sidebar */
   --background: rgb(35, 27, 39);
 
@@ -178,7 +178,7 @@ button {
   opacity: var(--opacity, 1);
 }
 
-.dark .border-reflect {
+.t3-dark .border-reflect, .dark .border-reflect {
   --gradientBorder-gradient:
     linear-gradient(180deg, #93335b00, #93335bbd, #93335b17),
     linear-gradient(15deg, #93335b1f 50%, #93335bbd);
@@ -225,7 +225,7 @@ button {
   transition-timing-function: cubic-bezier(0.2, 0.4, 0.1, 0.95);
 }
 
-.dark .background-gradient-overlay {
+.t3-dark .background-gradient-overlay, .dark .background-gradient-overlay {
   background-image:
     radial-gradient(
       closest-corner at 120px 36px,
