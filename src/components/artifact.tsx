@@ -222,7 +222,6 @@ function PureArtifact({
                             setModel={setModel}
                             searchEnabled={false}
                             setSearchEnabled={() => {}}
-                            disableScrollToBottom={true}
                           />
                         </div>
                       </div>

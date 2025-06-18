@@ -4,17 +4,16 @@ import ChatView from "./chat-view";
 import { convertToUIMessages } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
 
-export default async function ChatPage({ params }: { params: { id: string } }) {
-  // const { getToken } = await auth();
-  // const token = await getToken();
+export default async function ChatPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const threadId = (await params).id;
 
-  const messages = await fetchQuery(
-    api.messages.getMessagesForThread,
-    {
-      threadId: params.id,
-    }
-    // { token: token ?? undefined }
-  );
+  const messages = await fetchQuery(api.messages.getMessagesForThread, {
+    threadId,
+  });
 
   const uiMessages = convertToUIMessages(messages);
 
@@ -22,10 +21,10 @@ export default async function ChatPage({ params }: { params: { id: string } }) {
     <>
       <ChatView
         preloadedMessages={uiMessages}
-        id={params.id}
+        id={threadId}
         autoResume={true}
       />
-      <DataStreamHandler id={params.id} />
+      <DataStreamHandler id={threadId} />
     </>
   );
 }
