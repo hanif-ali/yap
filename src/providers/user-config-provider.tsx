@@ -9,14 +9,11 @@ import { toast } from "sonner";
 interface UserConfigContextType {
   userConfig: Doc<"userConfigs">;
   updateUserConfig: (userConfig: Partial<Doc<"userConfigs">>) => Promise<void>;
-  isLoading: boolean;
 }
 
 const UserConfigContext = createContext<UserConfigContextType | undefined>(
   undefined
 );
-
-let isCreatingGlobally = false;
 
 export function UserConfigProvider({
   children,
@@ -40,8 +37,6 @@ export function UserConfigProvider({
   const contextValue: UserConfigContextType = {
     userConfig,
     updateUserConfig,
-    isLoading:
-      userConfig === undefined || (userConfig === null && isCreatingGlobally),
   };
 
   return (

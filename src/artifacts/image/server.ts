@@ -1,6 +1,6 @@
 import { createDocumentHandler } from "@/lib/artifacts/server";
 import { xai } from "@ai-sdk/xai";
-import { customProvider, experimental_generateImage } from "ai";
+import { experimental_generateImage } from "ai";
 
 export const imageDocumentHandler = createDocumentHandler<"image">({
   kind: "image",

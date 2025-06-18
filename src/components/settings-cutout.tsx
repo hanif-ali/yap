@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ThemeSelector } from "./themes/theme-selector";
 import { Settings2 } from "lucide-react";
 import { Button } from "./ui/button";

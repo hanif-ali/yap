@@ -34,7 +34,7 @@ export function useQueryWithLocalStorageCache<T extends any[]>(
         localStorage.setItem(key, JSON.stringify(fresh));
       } catch {}
     }
-  }, [fresh, key]);
+  }, [fresh, key, data]);
 
   return data;
 }

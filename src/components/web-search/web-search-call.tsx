@@ -1,4 +1,4 @@
-import { FileIcon, LoaderIcon, MessageIcon, PencilEditIcon } from "../icons";
+import { FileIcon, LoaderIcon } from "../icons";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { useState } from "react";
 

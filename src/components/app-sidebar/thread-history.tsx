@@ -54,4 +54,6 @@ export const ThreadHistory = memo(({ searchQuery }: ThreadHistoryProps) => {
   );
 });
 
+ThreadHistory.displayName = "ThreadHistory";
+
 export default ThreadHistory;

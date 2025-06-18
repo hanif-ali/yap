@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Markdown } from "./markdown";
-import { ChevronDown, ChevronRight, ChevronUp, Loader } from "lucide-react";
+import { ChevronRight, ChevronUp, Loader } from "lucide-react";
 
 interface MessageReasoningProps {
   isLoading: boolean;

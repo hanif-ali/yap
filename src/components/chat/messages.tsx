@@ -26,7 +26,6 @@ function PureMessages({
   messages,
   setMessages,
   reload,
-  isReadonly,
   endRef: messagesEndRef,
   onViewportEnter,
   onViewportLeave,

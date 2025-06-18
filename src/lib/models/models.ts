@@ -1,7 +1,7 @@
 import { google } from "@ai-sdk/google";
 import { xai } from "@ai-sdk/xai";
 import openRouterModels from "./open-router-models.json";
-import { createOpenRouter, openrouter } from "@openrouter/ai-sdk-provider";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { Doc } from "../../../convex/_generated/dataModel";
 
 export type ModelDefinition = {

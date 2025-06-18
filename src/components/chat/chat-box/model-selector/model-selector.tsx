@@ -149,7 +149,7 @@ export function ModelSelector({
                     Favorites
                   </div>
                   <div className="flex w-full flex-wrap justify-start gap-3.5 pb-4">
-                    {filteredFavorites.map((model: ModelDefinition, index) => (
+                    {filteredFavorites.map((model: ModelDefinition) => (
                       <GridModelItem
                         key={model.key}
                         model={model}

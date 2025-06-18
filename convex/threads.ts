@@ -46,55 +46,6 @@ export const getThreadById = query({
   },
 });
 
-export const deleteThreadsOlderThan = mutation({
-  args: {
-    days: v.number(),
-  },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (identity === null) {
-      throw new Error("Not authenticated");
-    }
-
-    const cutoffTime = Date.now() - (args.days * 24 * 60 * 60 * 1000);
-    
-    const threadsToDelete = await ctx.db
-      .query("threads")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
-      .filter((q) => q.lt(q.field("createdAt"), cutoffTime))
-      .collect();
-
-    // Delete associated messages first
-    for (const thread of threadsToDelete) {
-      const messages = await ctx.db
-        .query("messages")
-        .filter((q) => q.eq(q.field("threadId"), thread.id))
-        .collect();
-      
-      for (const message of messages) {
-        await ctx.db.delete(message._id);
-      }
-
-      // Delete associated streams
-      const streams = await ctx.db
-        .query("streams")
-        .filter((q) => q.eq(q.field("threadId"), thread.id))
-        .collect();
-      
-      for (const stream of streams) {
-        await ctx.db.delete(stream._id);
-      }
-    }
-
-    // Delete threads
-    for (const thread of threadsToDelete) {
-      await ctx.db.delete(thread._id);
-    }
-
-    return threadsToDelete.length;
-  },
-});
-
 export const deleteAllThreadsForUser = mutation({
   args: {},
   handler: async (ctx) => {

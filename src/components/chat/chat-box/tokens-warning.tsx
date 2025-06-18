@@ -71,3 +71,5 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
     </>
   );
 });
+
+TokensWarning.displayName = "TokensWarning";

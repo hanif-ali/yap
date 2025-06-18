@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import equal from "fast-deep-equal";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowDown, Globe } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
@@ -98,7 +98,7 @@ function PureMultimodalInput({
       const finalValue = domValue || localStorageInput || "";
       setInput(finalValue);
     }
-  }, []);
+  }, [textareaRef, localStorageInput, setInput]);
 
   useEffect(() => {
     setLocalStorageInput(input);
@@ -229,9 +229,8 @@ function PureMultimodalInput({
       <div
         className="mt-2 border-reflect rounded-t-[20px] bg-[var(--chat-input-background)] p-2 pb-0 backdrop-blur-lg"
         style={{
-          // @ts-ignore
+          // @ts-expect-error CSS variables cause TS errors for some reason idkr
           "--start": "#000000e0",
-          // @ts-ignore
           "--opacity": "0.2",
         }}
       >
@@ -240,7 +239,7 @@ function PureMultimodalInput({
           style={{
             boxShadow:
               "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
-            // @ts-ignore
+            // @ts-expect-error CSS variables cause TS errors for some reason idk 
             "--opacity": "1",
           }}
         >

@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
-// import { ThemeToggle } from "../components/ThemeToggle";
 import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { fetchMutation } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import localFont from "next/font/local";
@@ -50,7 +48,6 @@ export default async function RootLayout({
               <UserConfigProvider userConfig={userConfig!}>
                 {children}
               </UserConfigProvider>
-              <ThemeToggle />
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>

@@ -33,9 +33,6 @@ import { useUserConfig } from "@/providers/user-config-provider";
 export function HistoryTab() {
   const { userConfig, updateUserConfig } = useUserConfig();
   const threads = useQuery(api.threads.getForCurrentUser);
-  const deleteThreadsOlderThan = useMutation(
-    api.threads.deleteThreadsOlderThan
-  );
   const deleteAllThreads = useMutation(api.threads.deleteAllThreadsForUser);
 
   const [isDeleteAllOpen, setIsDeleteAllOpen] = useState(false);
@@ -59,6 +56,7 @@ export function HistoryTab() {
       setIsDeleteAllOpen(false);
     } catch (error) {
       toast.error("Failed to delete all threads");
+      console.error(error);
     } finally {
       setIsDeleting(false);
     }

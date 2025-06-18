@@ -1,4 +1,5 @@
-import { smoothStream, streamText } from "ai";
+// import { smoothStream, streamText } from "ai";
+import { streamText } from "ai";
 import { createDocumentHandler } from "@/lib/artifacts/server";
 import { google } from "@ai-sdk/google";
 import { updateDocumentPrompt } from "@/lib/models/prompts";

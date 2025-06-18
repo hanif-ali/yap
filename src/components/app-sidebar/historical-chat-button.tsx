@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Doc } from "../../../convex/_generated/dataModel";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 
 export function HistoricalChatButton({ chat }: { chat: Doc<"threads"> }) {
   return (

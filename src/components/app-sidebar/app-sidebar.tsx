@@ -20,8 +20,6 @@ import { SidebarControls } from "./sidebar-controls";
 import { YapIcon, MenuIcon } from "../icons";
 import { SignOutButton, SignInButton } from "@clerk/nextjs";
 import { useUserConfig } from "@/hooks/use-user-config";
-// import { ThreadHistory } from "./thread-history";
-import { SafeHydrate } from "../safe-hydrate";
 
 import dynamic from "next/dynamic";
 
