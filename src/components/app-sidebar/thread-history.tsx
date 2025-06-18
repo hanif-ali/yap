@@ -18,7 +18,7 @@ interface ThreadHistoryProps {
 }
 
 export const ThreadHistory = memo(({ searchQuery }: ThreadHistoryProps) => {
-  const chats = useQueryWithLocalStorageCache<Doc<"threads">[]>(
+  const chats = useQueryWithLocalStorageCache<Doc<"threads">>(
     "chats",
     api.threads.getForCurrentUser,
     { anonId: Cookies.get("anonId") ?? "" }
