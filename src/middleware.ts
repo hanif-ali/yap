@@ -11,11 +11,12 @@ export default clerkMiddleware((auth, request) => {
     shouldSetCookie = true;
   }
 
-  request.headers.set("x-anon-id", anonId);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-anon-id", anonId);
 
   const response = NextResponse.next({
     request: {
-      headers: request.headers,
+      headers: requestHeaders,
     },
   });
 
