@@ -305,7 +305,11 @@ export async function GET(request: Request) {
   let thread: Doc<"threads"> | null;
 
   try {
-    thread = await fetchQuery(api.threads.getThreadById, { id: threadId });
+    thread = await fetchQuery(
+      api.threads.getThreadById,
+      { id: threadId },
+      { token }
+    );
   } catch {
     return new ChatError("not_found:chat").toResponse();
   }
@@ -314,9 +318,13 @@ export async function GET(request: Request) {
     return new ChatError("not_found:chat").toResponse();
   }
 
-  const streamIds = await fetchQuery(api.streams.getStreamIdsByThreadId, {
-    threadId,
-  });
+  const streamIds = await fetchQuery(
+    api.streams.getStreamIdsByThreadId,
+    {
+      threadId,
+    },
+    { token }
+  );
 
   if (!streamIds.length) {
     return new ChatError("not_found:stream").toResponse();

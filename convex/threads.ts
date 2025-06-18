@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { generateThreadId } from "./utils";
 
 export const createThread = mutation({
   args: {
@@ -35,8 +34,12 @@ export const createThread = mutation({
 });
 
 export const getForCurrentUser = query({
-  args: { anonId: v.string() },
+  args: { anonId: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    if (!args.anonId) {
+      return [];
+    }
+
     const identity = await ctx.auth.getUserIdentity();
 
     // for signed out users
