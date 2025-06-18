@@ -10,6 +10,7 @@ export const getAuthToken = async () => {
   try {
     return (await authData.getToken({ template: "convex" })) ?? undefined;
   } catch (error) {
+    console.error({ error });
     return undefined;
   }
 };

@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/tooltip";
 import { getModelDefinition, ModelDefinition } from "@/lib/models/models";
 import { cn } from "@/lib/utils";
-import { PencilRuler, Globe } from "lucide-react";
+import { PencilRuler } from "lucide-react";
 import { useMemo, memo } from "react";
 
 function CanvasButtonComponent({
@@ -46,7 +46,7 @@ function CanvasButtonComponent({
           sideOffset={8}
           className="text-sm bg-[var(--sidebar-bg)] px-2 py-1 rounded-md text-popover-foreground border border-[var(--chat-border)]/50 max-w-[20rem] text-center"
         >
-          This model does not support tool calling
+          The selected model does not support tool calling
         </TooltipContent>
       )}
     </Tooltip>

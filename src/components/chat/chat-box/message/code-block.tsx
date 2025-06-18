@@ -1,4 +1,3 @@
-/* eslint-disable */
 "use client";
 
 import hljs from "highlight.js";

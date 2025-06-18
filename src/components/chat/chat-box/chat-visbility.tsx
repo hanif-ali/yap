@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Copy, Lock, Unlock, Link } from "lucide-react";
+import { ExternalLink, Copy, Lock, Unlock } from "lucide-react";
 import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -10,7 +10,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { toast } from "sonner";
-import { Doc } from "../../../../convex/_generated/dataModel";
 import { useUserConfig } from "@/providers/user-config-provider";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
@@ -29,20 +28,25 @@ export const ChatVisibility = ({ threadId }: { threadId: string }) => {
       toast.success("Link copied to clipboard");
     } catch (error) {
       toast.error("Failed to copy link");
+      console.error({ error });
     }
   }, []);
 
-  const handleSetThreadVisibility = useCallback(async (value: boolean) => {
-    try {
-      await setThreadVisibility({
-        id: threadId as any,
-        public: value,
-      });
-      toast.success(`Chat is now ${value ? "public" : "private"}`);
-    } catch (error) {
-      toast.error("Failed to set chat visibility");
-    }
-  }, []);
+  const handleSetThreadVisibility = useCallback(
+    async (value: boolean) => {
+      try {
+        await setThreadVisibility({
+          id: threadId as any,
+          public: value,
+        });
+        toast.success(`Chat is now ${value ? "public" : "private"}`);
+      } catch (error) {
+        toast.error("Failed to set chat visibility");
+        console.error({ error });
+      }
+    },
+    [threadId, setThreadVisibility]
+  );
 
   if (!thread) return null;
 

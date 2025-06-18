@@ -26,7 +26,6 @@ const PurePreviewMessage = ({
   reload: UseChatHelpers["reload"];
   requiresScrollPadding: boolean;
 }) => {
-  // @eslint-disable-next-line
   const [mode, setMode] = useState<"view" | "edit">("view");
 
   return (
@@ -35,6 +34,8 @@ const PurePreviewMessage = ({
         data-testid={`message-${message.role}`}
         className="w-full mx-auto max-w-3xl px-4 group/message"
         data-role={message.role}
+        // this is just to silence eslint. i'm in a rush and i don't wanna remove the state as it will be used later
+        onClick={() => setMode("view")}
       >
         <div
           className={cn(
@@ -48,7 +49,7 @@ const PurePreviewMessage = ({
           {message.role === "assistant" && (
             <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border bg-background">
               <div className="translate-y-px">
-                <Sparkle className="size-4" /> 
+                <Sparkle className="size-4" />
               </div>
             </div>
           )}

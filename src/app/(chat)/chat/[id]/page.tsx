@@ -35,6 +35,7 @@ export default async function ChatPage({
       </>
     );
   } catch (error) {
+    console.error(error);
     return notFound();
   }
 }
