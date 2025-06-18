@@ -26,7 +26,7 @@ export function useQueryWithLocalStorageCache<T extends any[]>(
 
   // 3. Whenever `fresh` comes in from the server, replace and re-cache.
   useEffect(() => {
-    if (fresh === undefined) return;
+    if (fresh === undefined || fresh === null) return;
     // if it’s actually different, update state + localStorage
     if (!data || !dataEqual(fresh, data)) {
       setData(fresh);
