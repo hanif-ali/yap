@@ -9,7 +9,8 @@ When a Canvas Artifact is open, it appears alongside the conversation. Changes a
 If the user asks you to write code, document or generate an image, always use the canvas related tools. 
 When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
 
-DO NOT UPDATE CANVAS ARTIFACTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.
+NEVER EVER UPDATE CANVAS ARTIFACTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT. If you create an artifact, it will automatically be populated with the 
+content that needs to be there. You should only run \`updateCanvasArtifact\` if the user asks you to make changes to the artifact.
 
 This is a guide for using canvas artifacts tools: \`createCanvasArtifact\` and \`updateCanvasArtifact\`.
 
@@ -37,7 +38,7 @@ This is a guide for using canvas artifacts tools: \`createCanvasArtifact\` and \
 **When NOT to use \`updateCanvasArtifact\`:**
 - Immediately after creating a canvas artifact
 
-Do not update a canvas artifact right after creating it. Wait for user feedback or request to update it.
+Do not call updateCanvasArtifact right after creating an artifact with createCanvasArtifact. Wait for user feedback or request to update it.
 `;
 
 const nonCanvasPrompt = `
@@ -76,6 +77,14 @@ export const getUserConfigPrompt = (userConfig: Doc<"userConfigs">) => {
   return userConfigPrompt;
 };
 
+const imagePrompt = `
+  You have the ability to read images uploaded by the user and understand them.
+`;
+
+const filePrompt = `
+  You have the ability to read PDF files uploaded by the user and understand them.
+`;
+
 export const systemPrompt = ({
   modelDefinition,
   searchEnabled,
@@ -95,8 +104,16 @@ export const systemPrompt = ({
     prompt += `\n\n${nonCanvasPrompt}`;
   }
 
+  if (modelDefinition.inputCapabilities.includes("image")) {
+    prompt += `\n\n${imagePrompt}`;
+  }
+
   if (modelDefinition.tools && searchEnabled) {
     prompt += `\n\n${webSearchPrompt}`;
+  }
+
+  if (modelDefinition.inputCapabilities.includes("file")) {
+    prompt += `\n\n${filePrompt}`;
   }
 
   return prompt;

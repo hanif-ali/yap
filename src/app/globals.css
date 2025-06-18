@@ -103,6 +103,7 @@
 }
 
 .forest {
+  --background: rgb(15, 26, 19);
   --popover: hsl(140 25% 4%);
   --popover-foreground: hsl(146 70% 85%);
   --primary: hsl(152 80% 28%);
@@ -254,6 +255,7 @@ button {
 }
 
 .ocean {
+  --background: rgb(15, 24, 32);
   --popover: hsl(200 35% 4%);
   --popover-foreground: hsl(195 85% 85%);
   --primary: hsl(195 85% 32%);
@@ -304,6 +306,7 @@ button {
 }
 
 .sunset {
+  --background: rgb(26, 15, 13);
   --popover: hsl(15 40% 5%);
   --popover-foreground: hsl(25 80% 85%);
   --primary: hsl(20 90% 45%);

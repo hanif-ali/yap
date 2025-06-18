@@ -3,6 +3,7 @@ import {
   appendResponseMessages,
   createDataStream,
   LanguageModel,
+  smoothStream,
   streamText,
 } from "ai";
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
@@ -183,7 +184,8 @@ export async function POST(request: Request) {
           experimental_activeTools: activeTools as any,
           experimental_generateMessageId: generateUUID,
           maxTokens: 1000,
-          temperature: 0.6,
+          temperature: 0.7,
+          experimental_transform: smoothStream(),
           tools: modelDefinition.tools
             ? {
                 createCanvasArtifact: createDocument({
