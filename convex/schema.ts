@@ -96,5 +96,11 @@ export default defineSchema({
     openRouterKey: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
+
+    profession: v.string(),
+    userContext: v.string(),
+    traits: v.array(v.string()),
+
+    deletionSchedule: v.string(),
   }).index("by_userId", ["userId"]),
 });

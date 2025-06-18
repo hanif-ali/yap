@@ -35,7 +35,7 @@ export const SettingsTopBar = () => {
         <Button
           variant="ghost"
           className="text-md"
-          onClick={() => router.back()}
+          onClick={() => router.push("/")}
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Chat
@@ -56,7 +56,7 @@ export const SettingsTopBar = () => {
 export function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState("customization");
+  const [activeTab, setActiveTab] = useState("account");
 
   // Get tab from URL query parameter on component mount
   useEffect(() => {

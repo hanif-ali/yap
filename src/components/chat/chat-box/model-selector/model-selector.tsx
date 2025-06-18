@@ -45,7 +45,7 @@ export function ModelSelector({
     "gemini-2.0-flash",
   ]);
 
-  const { config } = useUserConfig();
+  const { userConfig } = useUserConfig();
 
   const handleModelSelect = useCallback(
     (model: string) => {
@@ -157,7 +157,7 @@ export function ModelSelector({
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={true}
-                        isConfigured={Boolean(config?.openRouterKey)}
+                        isConfigured={Boolean(userConfig?.openRouterKey)}
                       />
                     ))}
                   </div>
@@ -175,7 +175,7 @@ export function ModelSelector({
                         onFavorite={() => handleFavorite(model.key)}
                         onUnfavorite={() => handleUnfavorite(model.key)}
                         isFavorite={false}
-                        isConfigured={Boolean(config?.openRouterKey)}
+                        isConfigured={Boolean(userConfig?.openRouterKey)}
                       />
                     ))}
                   </div>
@@ -188,6 +188,7 @@ export function ModelSelector({
                     key={model.key}
                     model={model}
                     onClick={() => handleModelSelect(model.key)}
+                    isConfigured={Boolean(userConfig?.openRouterKey)}
                   />
                 ))}
               </div>

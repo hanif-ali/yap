@@ -12,6 +12,7 @@ import localFont from "next/font/local";
 import { UserConfigProvider } from "@/providers/user-config-provider";
 import { headers } from "next/headers";
 import { getAuthToken } from "@/lib/auth";
+import { Toaster } from "sonner";
 
 const proxima_var = localFont({
   src: "./proxima_vara.woff2",
@@ -47,12 +48,13 @@ export default async function RootLayout({
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
               <UserConfigProvider userConfig={userConfig!}>
-                  {children}
+                {children}
               </UserConfigProvider>
               <ThemeToggle />
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>
+        <Toaster />
       </body>
     </html>
   );

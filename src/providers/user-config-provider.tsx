@@ -4,10 +4,11 @@ import React, { createContext, useContext } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Doc } from "../../convex/_generated/dataModel";
+import { toast } from "sonner";
 
 interface UserConfigContextType {
   userConfig: Doc<"userConfigs">;
-  updateOpenRouterKey: (key: string) => Promise<void>;
+  updateUserConfig: (userConfig: Partial<Doc<"userConfigs">>) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -26,18 +27,19 @@ export function UserConfigProvider({
 }) {
   const updateConfig = useMutation(api.userConfigs.updateUserConfig);
 
-  const updateOpenRouterKey = async (openRouterKey: string) => {
+  const updateUserConfig = async (userConfig: Partial<Doc<"userConfigs">>) => {
     try {
-      await updateConfig({ openRouterKey });
+      await updateConfig(userConfig);
+      toast.success("User preferences updated successfully");
     } catch (error) {
-      console.error("Failed to update config:", error);
+      toast.error("Failed to update user preferences");
       throw error;
     }
   };
 
   const contextValue: UserConfigContextType = {
     userConfig,
-    updateOpenRouterKey,
+    updateUserConfig,
     isLoading:
       userConfig === undefined || (userConfig === null && isCreatingGlobally),
   };

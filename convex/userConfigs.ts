@@ -20,7 +20,13 @@ export const getUserConfig = query({
 
 export const updateUserConfig = mutation({
   args: {
+    fullName: v.optional(v.string()),
+    email: v.optional(v.string()),
     openRouterKey: v.optional(v.string()),
+    profession: v.optional(v.string()),
+    userContext: v.optional(v.string()),
+    traits: v.optional(v.array(v.string())),
+    deletionSchedule: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -64,9 +70,15 @@ export const getOrCreateUserConfig = mutation({
       const newUserConfig = await ctx.db.insert("userConfigs", {
         userId: identity.subject,
         fullName: identity.name ?? "New User",
+        // Always available since we use Gmail Sign In only for now
+        email: identity.email!,
         createdAt: Date.now(),
         updatedAt: Date.now(),
         isAnonymous: false,
+        profession: "",
+        userContext: "",
+        traits: [],
+        deletionSchedule: "never",
       });
 
       return await ctx.db.get(newUserConfig);
@@ -87,6 +99,11 @@ export const getOrCreateUserConfig = mutation({
       updatedAt: Date.now(),
       isAnonymous: true,
       fullName: "Anonymous User",
+      email: "",
+      profession: "",
+      userContext: "",
+      traits: [],
+      deletionSchedule: "never",
     });
 
     return await ctx.db.get(newAnonUserConfig);

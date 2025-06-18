@@ -51,6 +51,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --destructive: hsl(332 100% 32%);
 }
 
 :root {
