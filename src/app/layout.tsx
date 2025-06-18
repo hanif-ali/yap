@@ -55,7 +55,7 @@ export default async function RootLayout({
             </ThemeProvider>
           </ConvexClientProvider>
         </ClerkProvider>
-        <Toaster />
+        <Toaster richColors theme="dark" />
       </body>
     </html>
   );

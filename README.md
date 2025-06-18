@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Yap 
 
-## Getting Started
+An open-source clone of [t3.chat](https://t3.chat), built by [Theo Browne](https://t3.gg)
+Yap is a feature-rich AI chat application that supports multimodal conversations, document creation, and web search capabilities.
 
-First, run the development server:
+![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛠️ Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Next.js 15** - React framework with App Router
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **ShadCN UI** - Accessible components
+- **Framer Motion** - Animations
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Backend & Database
 
-## Learn More
+- **Convex** - Backend-as-a-Service with real-time database
+- **Clerk Auth** - Authentication and user management
+- **Vercel AI SDK** - AI integration
+- **Vercel Blob** - File storage
 
-To learn more about Next.js, take a look at the following resources:
+### AI & Tools
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **OpenRouter** - Multi-model AI provider
+- **Exa** - Web search capabilities
+- **CodeMirror** - Code editing
+- **ProseMirror** - Rich text editing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Getting Started
 
-## Deploy on Vercel
+1. **Clone the repository**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   git clone https://github.com/hanif-ali/yap.git
+   cd yap
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+
+   run `cp .env.example .env.local` and popular `.env.local` with your environment variables
+
+4. **Set up Convex**
+
+   ```bash
+   npx convex dev
+   ```
+
+5. **Run the development server**
+   ```bash
+   pnpm dev
+   ```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+| Variable                             | Required | Description                              |
+| ------------------------------------ | -------- | ---------------------------------------- |
+| `NEXT_PUBLIC_CONVEX_URL`             | ✅       | Your Convex deployment URL               |
+| `CONVEX_URL`                         | ✅       | Your Convex deployment URL (server-side) |
+| `NEXT_PUBLIC_CLERK_FRONTEND_API_URL` | ✅       | Clerk frontend API URL                   |
+| `CLERK_SECRET_KEY`                   | ✅       | Clerk secret key                         |
+| `EXA_API_KEY`                        | ❌       | Exa API key for web search               |
+| `REDIS_URL`                          | ❌       | Redis URL for resumable streams          |
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+### Development
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

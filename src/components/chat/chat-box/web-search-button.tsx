@@ -21,7 +21,6 @@ function WebSearchButtonComponent({
     () => getModelDefinition(selectedModel),
     [selectedModel]
   );
-  console.log({ searchEnabled });
 
   return (
     <Tooltip>

@@ -80,7 +80,6 @@ export const systemPrompt = ({
   if (searchEnabled) {
     prompt += `\n\n${webSearchPrompt}`;
   }
-  console.log(prompt)
 
   return prompt;
 };
