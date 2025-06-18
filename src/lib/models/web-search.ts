@@ -3,7 +3,9 @@ import { z } from "zod";
 
 import Exa from "exa-js";
 
-const exa = new Exa(process.env.EXA_API_KEY);
+// little hacky but it's fine
+const SEARCH_ENABLED = Boolean(process.env.EXA_API_KEY);
+const exa = SEARCH_ENABLED ? new Exa(process.env.EXA_API_KEY) : null;
 
 export const webSearch = tool({
   description: "Search the web for up-to-date information",
@@ -11,6 +13,10 @@ export const webSearch = tool({
     query: z.string().min(1).max(100).describe("The search query"),
   }),
   execute: async ({ query }) => {
+    if (!exa) {
+      return [];
+    }
+
     const { results } = await exa.searchAndContents(query, {
       livecrawl: "always",
       numResults: 10,
