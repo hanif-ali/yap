@@ -15,12 +15,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ThreadHistory } from "./thread-history";
 import Link from "next/link";
 import { SidebarControls } from "./sidebar-controls";
 import { YapIcon, MenuIcon } from "../icons";
 import { SignOutButton, SignInButton } from "@clerk/nextjs";
 import { useUserConfig } from "@/hooks/use-user-config";
+// import { ThreadHistory } from "./thread-history";
+import { SafeHydrate } from "../safe-hydrate";
+
+import dynamic from "next/dynamic";
+
+const ThreadHistory = dynamic(() => import("./thread-history"), {
+  ssr: false,
+});
 
 export function AppSidebar() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,9 +54,7 @@ export function AppSidebar() {
         />
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
-        <ThreadHistory
-          searchQuery={searchQuery}
-        />
+        <ThreadHistory searchQuery={searchQuery} />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-4">

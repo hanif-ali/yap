@@ -63,17 +63,25 @@ About the origin of user's request:
 export const systemPrompt = ({
   modelDefinition,
   requestHints,
+  searchEnabled,
 }: {
   modelDefinition: ModelDefinition;
   requestHints: RequestHints;
+  searchEnabled: boolean;
 }) => {
   const requestPrompt = getRequestPromptFromHints(requestHints);
 
+  let prompt = `${regularPrompt}\n\n${requestPrompt}`;
+
   if (modelDefinition.tools) {
-    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}\n\n${webSearchPrompt}`;
-  } else {
-    return `${regularPrompt}\n\n${requestPrompt}`;
+    prompt += `\n\n${artifactsPrompt}`;
   }
+
+  if (searchEnabled) {
+    prompt += `\n\n${webSearchPrompt}`;
+  }
+
+  return prompt;
 };
 
 export const codePrompt = `

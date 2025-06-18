@@ -26,8 +26,6 @@ import { ArrowDown, Globe } from "lucide-react";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
 import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
-import { SuggestedActions } from "./suggested-actions";
-import { cn } from "@/lib/utils";
 import { WebSearchButton } from "./web-search-button";
 import { TokensWarning } from "./tokens-warning";
 
@@ -41,7 +39,6 @@ function PureMultimodalInput({
   setAttachments,
   messages,
   setMessages,
-  append,
   handleSubmit,
   // className,
   model,
@@ -60,7 +57,6 @@ function PureMultimodalInput({
   setModel: Dispatch<SetStateAction<ModelDefinition["key"]>>;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers["setMessages"];
-  append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
 
@@ -99,13 +95,9 @@ function PureMultimodalInput({
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
-      // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || "";
       setInput(finalValue);
-      adjustHeight();
     }
-    // Only run once after hydration
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -231,11 +223,6 @@ function PureMultimodalInput({
           </motion.div>
         )}
       </AnimatePresence>
-      {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions append={append} chatId={chatId} />
-        )}
 
       {messages.length !== 0 && <TokensWarning chatId={chatId} />}
 

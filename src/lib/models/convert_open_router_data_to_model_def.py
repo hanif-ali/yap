@@ -1,3 +1,5 @@
+ACCEPTED_PROVIDERS = ["google", "mistralai", "meta", "openai", "anthropic", "x-ai"]
+
 def convert_open_router_object_to_model_definition(data: dict) -> dict:
     model_def = {
         "provider": data["author"],
@@ -27,7 +29,7 @@ def convert_open_router_data_to_model_definition(models: list[dict]) -> list[dic
     model_defs = []
     # Some models have the same slug, so we need to remove duplicates
     for model in models:
-        if model["slug"] in keys:
+        if model["slug"] in keys or model["author"] not in ACCEPTED_PROVIDERS:
             continue
         model_defs.append(convert_open_router_object_to_model_definition(model))
         keys.append(model["slug"])

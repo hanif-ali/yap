@@ -9,14 +9,14 @@ import {
   SidebarGroupLabel,
 } from "../ui/sidebar";
 import { useQueryWithLocalStorageCache } from "@/hooks/use-query-with-local-storage-cache";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Doc } from "../../../convex/_generated/dataModel";
 
 interface ThreadHistoryProps {
   searchQuery: string;
 }
 
-export function ThreadHistory({ searchQuery }: ThreadHistoryProps) {
+export const ThreadHistory = memo(({ searchQuery }: ThreadHistoryProps) => {
   const chats = useQueryWithLocalStorageCache<Doc<"threads">[]>(
     "chats",
     api.threads.getForCurrentUser
@@ -52,4 +52,6 @@ export function ThreadHistory({ searchQuery }: ThreadHistoryProps) {
         ))}
     </div>
   );
-}
+});
+
+export default ThreadHistory;

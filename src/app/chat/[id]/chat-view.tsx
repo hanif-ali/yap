@@ -52,6 +52,7 @@ export default function ChatView({
       id,
       message: body.messages.at(-1),
       selectedChatModel: model,
+      searchEnabled,
     }),
     onError: () => {
       // TODO: Error handling
@@ -112,6 +113,7 @@ export default function ChatView({
             onViewportEnter={onViewportEnter}
             onViewportLeave={onViewportLeave}
             hasSentMessage={hasSentMessage}
+            append={append}
           />
           <SettingsCutout />
         </div>
@@ -136,7 +138,6 @@ export default function ChatView({
                   setAttachments={setAttachments}
                   messages={messages}
                   setMessages={setMessages}
-                  append={append}
                   model={model}
                   setModel={setModel}
                   searchEnabled={searchEnabled}

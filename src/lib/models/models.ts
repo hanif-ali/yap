@@ -83,7 +83,7 @@ export const freeModelDefinitions: ModelDefinition[] = [
     tools: true,
   },
   {
-    provider: "xai",
+    provider: "x-ai",
     key: "grok-3",
     name: "Grok 3",
     shortName: "Grok 3",
@@ -96,7 +96,7 @@ export const freeModelDefinitions: ModelDefinition[] = [
     tools: true,
   },
   {
-    provider: "xai",
+    provider: "x-ai",
     key: "grok-3-mini",
     name: "Grok 3 Mini",
     shortName: "Grok 3 Mini",

@@ -81,7 +81,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedChatModel } = requestBody;
+    const { id, message, selectedChatModel, searchEnabled } = requestBody;
 
     const thread = await fetchQuery(api.threads.getThreadById, { id });
 
@@ -156,23 +156,26 @@ export async function POST(request: Request) {
       threadId: id,
     });
 
-    console.log({
-      userId: userConfig.userId,
-      maxMessagesPerDay,
-      todaysMessagesCount,
-    });
+    const activeTools = modelDefinition.tools
+      ? ["createDocument", "updateDocument"]
+      : [];
+    if (searchEnabled) {
+      activeTools.push("webSearch");
+    }
 
     const stream = createDataStream({
       execute: (dataStream) => {
         const result = streamText({
           model: getModelInstance(modelDefinition, userConfig) as LanguageModel,
-          system: systemPrompt({ modelDefinition, requestHints }),
+          system: systemPrompt({
+            modelDefinition,
+            requestHints,
+            searchEnabled,
+          }),
           messages,
           maxSteps: 5,
           // todo disable for reasoning models
-          experimental_activeTools: modelDefinition.tools
-            ? ["createDocument", "updateDocument", "webSearch"]
-            : [],
+          experimental_activeTools: activeTools as any,
           experimental_generateMessageId: generateUUID,
           maxTokens: 1000,
           // Add streaming optimizations

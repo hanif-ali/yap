@@ -17,6 +17,7 @@ interface MessagesProps {
   onViewportEnter: () => void;
   onViewportLeave: () => void;
   hasSentMessage: boolean;
+  append: UseChatHelpers["append"];
 }
 
 function PureMessages({
@@ -30,10 +31,11 @@ function PureMessages({
   onViewportEnter,
   onViewportLeave,
   hasSentMessage,
+  append,
 }: MessagesProps) {
   return (
     <div className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-auto pt-4 relative">
-      {messages.length === 0 && <Greeting />}
+      {messages.length === 0 && <Greeting append={append} />}
 
       {messages.map((message, index) => (
         <PreviewMessage

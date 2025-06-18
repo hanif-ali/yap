@@ -21,16 +21,15 @@ export const createThread = mutation({
 export const getForCurrentUser = query({
   args: {},
   handler: async (ctx) => {
-    // todo fix auth
     const identity = await ctx.auth.getUserIdentity();
 
     if (identity === null) {
-      return [];
+      return null;
     }
 
     return await ctx.db
       .query("threads")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .filter((q) => q.eq(q.field("userId"), identity?.subject))
       .collect();
   },
 });
