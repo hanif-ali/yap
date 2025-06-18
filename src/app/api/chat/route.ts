@@ -6,7 +6,6 @@ import {
   streamText,
 } from "ai";
 import { postRequestBodySchema, type PostRequestBody } from "./schema";
-import { geolocation } from "@vercel/functions";
 import {
   createResumableStreamContext,
   type ResumableStreamContext,
@@ -22,7 +21,7 @@ import { ChatError } from "@/lib/errors";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { differenceInSeconds } from "date-fns";
 import { createDocument } from "@/lib/documents/create-document";
-import { RequestHints, systemPrompt } from "@/lib/models/prompts";
+import { systemPrompt } from "@/lib/models/prompts";
 import { updateDocument } from "@/lib/documents/update-document";
 import { webSearch } from "@/lib/models/web-search";
 import { getAuthToken, getCurrentUserConfig } from "@/lib/auth";
@@ -109,15 +108,6 @@ export async function POST(request: Request) {
       message,
     });
 
-    const { longitude, latitude, city, country } = geolocation(request);
-
-    const requestHints: RequestHints = {
-      longitude,
-      latitude,
-      city,
-      country,
-    };
-
     await fetchMutation(
       api.messages.saveMessage,
       {
@@ -168,20 +158,14 @@ export async function POST(request: Request) {
           model: getModelInstance(modelDefinition, userConfig) as LanguageModel,
           system: systemPrompt({
             modelDefinition,
-            requestHints,
             searchEnabled,
+            userConfig,
           }),
           messages,
           maxSteps: 5,
-          // todo disable for reasoning models
           experimental_activeTools: activeTools as any,
           experimental_generateMessageId: generateUUID,
           maxTokens: 1000,
-          // Add streaming optimizations
-          // experimental_telemetry: {
-          //   isEnabled: false,
-          // },
-          // Optimize for real-time streaming
           temperature: 0.6,
           tools: modelDefinition.tools
             ? {
@@ -199,7 +183,6 @@ export async function POST(request: Request) {
             console.log({ error });
           },
           onFinish: async ({ response }) => {
-            // if (session.user?.id) {
             try {
               const assistantId = getTrailingMessageId({
                 messages: response.messages.filter(
@@ -239,9 +222,6 @@ export async function POST(request: Request) {
           },
         });
 
-        // Don't consume the stream - let it flow through naturally
-        // result.consumeStream();
-
         result.mergeIntoDataStream(dataStream, {
           sendReasoning: true,
         });
@@ -253,16 +233,14 @@ export async function POST(request: Request) {
 
     const streamContext = getStreamContext();
 
-    // Create proper streaming headers with additional optimizations
     const headers = new Headers({
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache, no-store, must-revalidate",
       Connection: "keep-alive",
-      "X-Accel-Buffering": "no", // Disable nginx buffering
-      "Transfer-Encoding": "chunked", // Enable chunked transfer encoding
+      "X-Accel-Buffering": "no",
+      "Transfer-Encoding": "chunked",
     });
 
-    // Prefer direct streaming for better real-time performance
     if (streamContext) {
       try {
         return new Response(
@@ -274,11 +252,9 @@ export async function POST(request: Request) {
           "Resumable stream failed, falling back to direct stream:",
           error
         );
-        // Fall back to direct streaming
         return new Response(stream, { headers });
       }
     } else {
-      // Direct streaming when resumable context is not available
       return new Response(stream, { headers });
     }
   } catch (error) {
@@ -288,8 +264,6 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  // todo ensure that user can only resume their own streams
-  // todo auth basically
   const streamContext = getStreamContext();
   const resumeRequestedAt = new Date();
 

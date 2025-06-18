@@ -1,6 +1,6 @@
 import type { ArtifactKind } from "@/components/artifact";
-import type { Geo } from "@vercel/functions";
 import type { ModelDefinition } from "./models";
+import { Doc } from "../../../convex/_generated/dataModel";
 
 export const artifactsPrompt = `
 Artifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it appears alongside the conversation. Changes are reflected in real-time and visible to the user.
@@ -45,33 +45,33 @@ NEVER REFUSE TO ANSWER A QUESTION FROM THE USER BECAUSE YOU DON'T HAVE THE LATES
 export const regularPrompt =
   "You are a friendly assistant! Keep your responses concise and helpful.";
 
-export interface RequestHints {
-  latitude: Geo["latitude"];
-  longitude: Geo["longitude"];
-  city: Geo["city"];
-  country: Geo["country"];
-}
+export const getUserConfigPrompt = (userConfig: Doc<"userConfigs">) => {
+  let userConfigPrompt = "";
+  if (userConfig.profession) {
+    userConfigPrompt += `According to the user's profile, their profession is ${userConfig.profession}.\n`;
+  }
 
-export const getRequestPromptFromHints = (requestHints: RequestHints) => `\
-About the origin of user's request:
-- lat: ${requestHints.latitude}
-- lon: ${requestHints.longitude}
-- city: ${requestHints.city}
-- country: ${requestHints.country}
-`;
+  if (userConfig.userContext) {
+    userConfigPrompt += `User's preference for your responses: ${userConfig.userContext}.\n`;
+  }
+
+  if (userConfig.traits) {
+    userConfigPrompt += `Preferred traits for the AI assistant from user's profile: ${userConfig.traits.join(", ")}.\n`;
+  }
+
+  return userConfigPrompt;
+};
 
 export const systemPrompt = ({
   modelDefinition,
-  requestHints,
   searchEnabled,
+  userConfig,
 }: {
   modelDefinition: ModelDefinition;
-  requestHints: RequestHints;
   searchEnabled: boolean;
+  userConfig: Doc<"userConfigs">;
 }) => {
-  const requestPrompt = getRequestPromptFromHints(requestHints);
-
-  let prompt = `${regularPrompt}\n\n${requestPrompt}`;
+  let prompt = `${regularPrompt}\n\n${getUserConfigPrompt(userConfig)}`;
 
   if (modelDefinition.tools) {
     prompt += `\n\n${artifactsPrompt}`;
@@ -80,6 +80,7 @@ export const systemPrompt = ({
   if (searchEnabled) {
     prompt += `\n\n${webSearchPrompt}`;
   }
+  console.log(prompt)
 
   return prompt;
 };
