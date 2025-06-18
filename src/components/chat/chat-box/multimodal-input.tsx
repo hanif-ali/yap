@@ -346,6 +346,7 @@ function PureMultimodalInput({
   );
 }
 
+// todo fix memoization here
 export const MultimodalInput = memo(
   PureMultimodalInput,
   (prevProps, nextProps) => {

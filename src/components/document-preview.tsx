@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  memo,
-  MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
+import { memo, MouseEvent, useCallback, useEffect, useRef } from "react";
 import { ArtifactKind, UIArtifact } from "./artifact";
 import { FileIcon, FullscreenIcon, ImageIcon, LoaderIcon } from "./icons";
 import { cn } from "@/lib/utils";
@@ -27,10 +21,7 @@ interface DocumentPreviewProps {
   args?: any;
 }
 
-export function DocumentPreview({
-  result,
-  args,
-}: DocumentPreviewProps) {
+export function DocumentPreview({ result, args }: DocumentPreviewProps) {
   const { artifact, setArtifact } = useArtifact();
 
   const previewDocument = useQuery(api.documents.getDocumentById, {
@@ -66,12 +57,7 @@ export function DocumentPreview({
     }
 
     if (args) {
-      return (
-        <DocumentToolCall
-          type="create"
-          args={{ title: args.title }}
-        />
-      );
+      return <DocumentToolCall type="create" args={{ title: args.title }} />;
     }
   }
 
@@ -79,17 +65,19 @@ export function DocumentPreview({
     return <LoadingSkeleton artifactKind={artifact.kind} />;
   }
 
-  // todo fix id
+  // @ts-expect-error The ID is not a valid document id but it's fine since it is only used on the frontend when the document
+  // has not been created yet
   const document: Doc<"documents"> | null = previewDocument
     ? previewDocument
     : artifact.status === "streaming"
       ? {
-          _id: "1",
+          _id: "dummy-doc-id",
           title: artifact.title,
           kind: artifact.kind,
           content: artifact.content,
           id: artifact.documentId,
           _creationTime: new Date(),
+          updatedAt: new Date(),
           userId: "noop",
         }
       : null;
@@ -143,7 +131,7 @@ const PureHitboxLayer = ({
   result,
   setArtifact,
 }: {
-  hitboxRef: React.RefObject<HTMLDivElement>;
+  hitboxRef: React.RefObject<HTMLDivElement | null>;
   result: any;
   setArtifact: (
     updaterFn: UIArtifact | ((currentArtifact: UIArtifact) => UIArtifact)

@@ -15,7 +15,7 @@ const ARTIFACT_DELTA_TYPES = [
   "clear",
   "finish",
   "kind",
-] as const;
+];
 
 export type DataStreamDelta = {
   type:

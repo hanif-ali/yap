@@ -223,7 +223,6 @@ function PureArtifact({
                             attachments={attachments}
                             setAttachments={setAttachments}
                             messages={messages}
-                            append={append}
                             className="bg-background dark:bg-muted"
                             setMessages={setMessages}
                             model={model}
@@ -359,13 +358,12 @@ function PureArtifact({
                 status={artifact.status}
                 mode="edit"
                 currentVersionIndex={0}
-                suggestions={[]}
                 onSaveContent={saveContent}
                 isInline={false}
                 isCurrentVersion={true}
                 getDocumentContentById={() => ""}
                 isLoading={false}
-                metadata={metadata}
+                metadata={metadata as any}
                 setMetadata={setMetadata}
               />
             </div>
@@ -380,6 +378,6 @@ export const Artifact = memo(PureArtifact, (prevProps, nextProps) => {
   if (prevProps.status !== nextProps.status) return false;
   if (prevProps.input !== nextProps.input) return false;
   if (!equal(prevProps.messages, nextProps.messages)) return false;
-  
+
   return true;
 });

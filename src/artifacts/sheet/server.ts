@@ -49,7 +49,7 @@ export const sheetDocumentHandler = createDocumentHandler<"sheet">({
 
     const { fullStream } = streamObject({
       model: google("gemini-2.0-flash-lite"),
-      system: updateDocumentPrompt(document.content, "sheet"),
+      system: updateDocumentPrompt(document.content ?? "", "sheet"),
       prompt: description,
       schema: z.object({
         csv: z.string(),
