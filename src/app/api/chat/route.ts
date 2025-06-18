@@ -15,8 +15,7 @@ import { after } from "next/server";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "../../../../convex/_generated/api";
 
-import { auth } from "@clerk/nextjs/server";
-import { generateTitleFromUserMessage } from "@/app/chat/actions";
+import { generateTitleFromUserMessage } from "@/app/(chat)/chat/actions";
 import { generateUUID, getTrailingMessageId } from "@/lib/utils";
 import { getModelDefinition, getModelInstance } from "@/lib/models/models";
 import { ChatError } from "@/lib/errors";

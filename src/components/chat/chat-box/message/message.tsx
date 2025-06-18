@@ -100,7 +100,7 @@ const PurePreviewMessage = ({
                     <div key={key} className="flex flex-row gap-2 items-start">
                       {message.role === "user" && (
                         <Tooltip>
-                          <TooltipTrigger asChild side="bottom" >
+                          <TooltipTrigger asChild>
                             <Button
                               data-testid="message-edit-button"
                               variant="ghost"
@@ -112,7 +112,7 @@ const PurePreviewMessage = ({
                               <PencilEditIcon />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Edit message</TooltipContent>
+                          <TooltipContent side="bottom">Edit message</TooltipContent>
                         </Tooltip>
                       )}
                       <div
@@ -229,7 +229,6 @@ export const ThinkingMessage = () => {
 
   return (
     <motion.div
-      data-testid="message-assistant-loading"
       className="w-full mx-auto max-w-3xl px-4 group/message min-h-96"
       data-role={role}
     >
@@ -246,8 +245,37 @@ export const ThinkingMessage = () => {
         </div>
 
         <div className="flex flex-col gap-2 w-full">
-          <div className="flex flex-col gap-4 text-muted-foreground">
-            Hmm...
+          <div className="flex items-end gap-1 text-muted-foreground mb-2 mt-auto">
+            <motion.div
+              className="w-2 h-2 bg-current rounded-full"
+              animate={{ y: [0, -3, 0] }}
+              transition={{
+                duration: 0.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0,
+              }}
+            />
+            <motion.div
+              className="w-2 h-2 bg-current rounded-full"
+              animate={{ y: [0, -5, 0] }}
+              transition={{
+                duration: 0.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.15,
+              }}
+            />
+            <motion.div
+              className="w-2 h-2 bg-current rounded-full"
+              animate={{ y: [0, -4, 0] }}
+              transition={{
+                duration: 0.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.3,
+              }}
+            />
           </div>
         </div>
       </div>

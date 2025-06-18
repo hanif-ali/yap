@@ -1,4 +1,4 @@
-import { api } from "../../../../convex/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
 import ChatView from "./chat-view";
 import { convertToUIMessages } from "@/lib/utils";

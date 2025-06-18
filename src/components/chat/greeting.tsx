@@ -110,7 +110,7 @@ export const Greeting = ({ append }: { append: UseChatHelpers["append"] }) => {
 
         {/* Fixed height container to prevent text shifting */}
         <div className="min-h-[300px]">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {!selectedCategory ? (
               <motion.div
                 key="main-buttons"
@@ -118,13 +118,17 @@ export const Greeting = ({ append }: { append: UseChatHelpers["append"] }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 className="flex flex-wrap gap-3"
+                transition={{
+                  duration: 0.2,
+                  ease: "linear",
+                }}
               >
                 {mainButtons.map((button) => {
                   const IconComponent = button.icon;
                   return (
                     <motion.button
                       key={button.id}
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: 0 }}
                       animate={{ opacity: 1, y: 0 }}
                       onClick={() => handleButtonClick(button.id)}
                       className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 hover:border-white/20 transition-all duration-200 group"

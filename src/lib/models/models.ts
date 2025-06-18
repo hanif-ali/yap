@@ -70,19 +70,6 @@ export const freeModelDefinitions: ModelDefinition[] = [
     tools: true,
   },
   {
-    provider: "google",
-    key: "gemini-2.5-flash-thinking",
-    name: "Gemini 2.5 Flash (Thinking)",
-    shortName: "Gemini 2.5 Flash (Thinking)",
-    description:
-      "Gemini 2.5 Flash (Thinking) is optimized for reasoning tasks.",
-    inputCapabilities: ["text"],
-    enabled: true,
-    byok: false,
-    reasoning: true,
-    tools: true,
-  },
-  {
     provider: "x-ai",
     key: "grok-3",
     name: "Grok 3",

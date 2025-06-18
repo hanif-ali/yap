@@ -50,10 +50,7 @@ export default async function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
               <UserConfigProvider userConfig={userConfig!}>
                 <SidebarWrapper>
-                  <main className="firefox-scrollbar-margin-fix min-h-pwa relative flex w-full flex-1 flex-col overflow-hidden transition-[width,height]">
-                    <TopBar />
-                    {children}
-                  </main>
+                  {children}
                 </SidebarWrapper>
               </UserConfigProvider>
               <ThemeToggle />

@@ -224,3 +224,10 @@ button {
 .forest .background-gradient-overlay{
   background-image: radial-gradient(closest-corner at 120px 36px, rgba(1, 255, 111, 0.19), rgba(1, 255, 111, 0.08)), linear-gradient(#0f1a13 15%, rgb(3, 9, 5));
 }
+
+.scrollbar-thin{
+  padding-bottom: 200px;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
