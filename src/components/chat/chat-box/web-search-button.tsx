@@ -6,9 +6,9 @@ import {
 import { getModelDefinition, ModelDefinition } from "@/lib/models/models";
 import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
-export function WebSearchButton({
+function WebSearchButtonComponent({
   selectedModel,
   searchEnabled,
   setSearchEnabled,
@@ -53,3 +53,5 @@ export function WebSearchButton({
     </Tooltip>
   );
 }
+
+export const WebSearchButton = memo(WebSearchButtonComponent);

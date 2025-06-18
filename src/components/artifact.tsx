@@ -56,7 +56,6 @@ function PureArtifact({
   stop,
   attachments,
   setAttachments,
-  append,
   messages,
   setMessages,
   reload,

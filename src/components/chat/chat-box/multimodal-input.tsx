@@ -346,7 +346,6 @@ function PureMultimodalInput({
   );
 }
 
-// todo fix memoization here
 export const MultimodalInput = memo(
   PureMultimodalInput,
   (prevProps, nextProps) => {
@@ -354,6 +353,8 @@ export const MultimodalInput = memo(
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
     if (prevProps.model !== nextProps.model) return false;
+    if (prevProps.searchEnabled !== nextProps.searchEnabled) return false;
+    if (prevProps.setSearchEnabled !== nextProps.setSearchEnabled) return false;
 
     return true;
   }
