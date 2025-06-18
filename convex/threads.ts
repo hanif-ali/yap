@@ -9,11 +9,27 @@ export const createThread = mutation({
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    const user = await ctx.db
+      .query("userConfigs")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (identity && !user.isAnonymous) {
+      throw new Error("Unauthorized");
+    }
+
     return await ctx.db.insert("threads", {
       ...args,
       createdAt: Date.now(),
       updatedAt: Date.now(),
       pinned: false,
+      public: user.isAnonymous,
     });
   },
 });
@@ -39,10 +55,19 @@ export const getThreadById = query({
     id: v.string(),
   },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const identity = await ctx.auth.getUserIdentity();
+
+    const thread = await ctx.db
       .query("threads")
       .filter((q) => q.eq(q.field("id"), args.id))
       .first();
+
+    // Private threads can only be accessed by the user who creted them
+    if (thread && !thread.public && thread.userId !== identity?.subject) {
+      return null;
+    }
+
+    return thread;
   },
 });
 
@@ -65,7 +90,7 @@ export const deleteAllThreadsForUser = mutation({
         .query("messages")
         .filter((q) => q.eq(q.field("threadId"), thread.id))
         .collect();
-      
+
       for (const message of messages) {
         await ctx.db.delete(message._id);
       }
@@ -75,7 +100,7 @@ export const deleteAllThreadsForUser = mutation({
         .query("streams")
         .filter((q) => q.eq(q.field("threadId"), thread.id))
         .collect();
-      
+
       for (const stream of streams) {
         await ctx.db.delete(stream._id);
       }
@@ -87,5 +112,29 @@ export const deleteAllThreadsForUser = mutation({
     }
 
     return threadsToDelete.length;
+  },
+});
+
+export const setThreadVisibility = mutation({
+  args: {
+    id: v.string(),
+    public: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const thread = await ctx.db
+      .query("threads")
+      .filter((q) => q.eq(q.field("id"), args.id))
+      .first();
+
+    if (!thread || !identity || thread.userId !== identity.subject) {
+      throw new Error("Unauthorized");
+    }
+
+    await ctx.db.patch(thread._id, {
+      public: args.public,
+    });
+
+    return thread;
   },
 });

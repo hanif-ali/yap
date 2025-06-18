@@ -12,6 +12,10 @@ import { Artifact } from "@/components/artifact";
 import { useMessages } from "@/hooks/use-messages";
 import { Cutout } from "@/components/cutout";
 import { SettingsCutout } from "@/components/settings-cutout";
+import { ChatVisibility } from "@/components/chat/chat-box/chat-visbility";
+import { useUserConfig } from "@/providers/user-config-provider";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
 
 export default function ChatView({
   preloadedMessages,
@@ -25,6 +29,10 @@ export default function ChatView({
   const [model, setModel] = useState<ModelDefinition["key"]>(
     "gemini-2.0-flash-lite"
   );
+  const { userConfig } = useUserConfig();
+  const thread = useQuery(api.threads.getThreadById, { id });
+
+  const readOnly = userConfig.userId !== thread?.userId;
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const [searchEnabled, setSearchEnabled] = useState(false);
@@ -114,32 +122,34 @@ export default function ChatView({
 
         <Cutout />
       </div>
-      <div className="absolute w-full h-full pointer-events-none">
-        <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none px-2">
-          <div className="mx-auto flex w-full max-w-3xl flex-col text-center">
-            <div className="pointer-events-none">
-              <div className="pointer-events-auto">
-                <MultimodalInput
-                  chatId={id}
-                  input={input}
-                  setInput={setInput}
-                  handleSubmit={handleSubmit}
-                  status={status}
-                  stop={stop}
-                  attachments={attachments}
-                  setAttachments={setAttachments}
-                  messages={messages}
-                  setMessages={setMessages}
-                  model={model}
-                  setModel={setModel}
-                  searchEnabled={searchEnabled}
-                  setSearchEnabled={setSearchEnabled}
-                />
+      {!readOnly && (
+        <div className="absolute w-full h-full pointer-events-none">
+          <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none px-2">
+            <div className="mx-auto flex w-full max-w-3xl flex-col text-center">
+              <div className="pointer-events-none">
+                <div className="pointer-events-auto">
+                  <MultimodalInput
+                    chatId={id}
+                    input={input}
+                    setInput={setInput}
+                    handleSubmit={handleSubmit}
+                    status={status}
+                    stop={stop}
+                    attachments={attachments}
+                    setAttachments={setAttachments}
+                    messages={messages}
+                    setMessages={setMessages}
+                    model={model}
+                    setModel={setModel}
+                    searchEnabled={searchEnabled}
+                    setSearchEnabled={setSearchEnabled}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <Artifact
         chatId={id}
@@ -157,6 +167,7 @@ export default function ChatView({
         model={model}
         setModel={setModel}
       />
+      <ChatVisibility threadId={id} />
     </>
   );
 }

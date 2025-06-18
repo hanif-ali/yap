@@ -31,8 +31,8 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
           <div
             className={`relative mx-auto my-4 rounded-xl border px-5 py-3 shadow-lg backdrop-blur-md blur-fallback:bg-secondary ${
               isOutOfMessages
-                ? "border-red-400/20 bg-red-300/50 text-red-900 border-red-800/20 bg-red-800/30 text-red-100/90"
-                : "border-yellow-400/20 bg-yellow-300/50 text-yellow-800 border-yellow-800/20 bg-yellow-800/30 text-yellow-100/90"
+                ? "border-red-800/20 bg-red-800/30 text-red-100/90"
+                : "border-yellow-800/20 bg-yellow-800/30 text-yellow-100/90"
             }`}
           >
             <div className="pr-4">
@@ -44,8 +44,8 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
                   <button
                     className={`h-auto ml-2 p-0 pb-0.5 underline ${
                       isOutOfMessages
-                        ? "text-red-700 hover:text-red-950 text-red-300/80 hover:text-red-100"
-                        : "text-yellow-600 hover:text-yellow-950 text-yellow-300/80 hover:text-yellow-100"
+                        ? "hover:text-red-100"
+                        : "hover:text-yellow-100"
                     }`}
                   >
                     Sign in to reset your limits
@@ -56,8 +56,8 @@ export const TokensWarning = memo(({ chatId }: { chatId: string }) => {
             <button
               className={`absolute right-2 top-1/2 -translate-y-1/2 ${
                 isOutOfMessages
-                  ? "text-red-900 hover:text-red-950 text-red-100/90 hover:text-red-100"
-                  : "text-yellow-800 hover:text-yellow-950 text-yellow-100/90 hover:text-yellow-100"
+                  ? " text-red-100/90 hover:text-red-100"
+                  : " text-yellow-100/90 hover:text-yellow-100"
               }`}
               onClick={() => {
                 setRemainingTokens(null);

@@ -7,6 +7,18 @@ export const getMessagesForThread = query({
     threadId: v.string(),
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    const thread = await ctx.db
+      .query("threads")
+      .filter((q) => q.eq(q.field("id"), args.threadId))
+      .first();
+
+    // not a new thread, not public, and not the owner
+    if (thread && !thread.public && thread.userId !== identity?.subject) {
+      throw new Error("Unauthorized");
+    }
+
     return await ctx.db
       .query("messages")
       .filter((q) => q.eq(q.field("threadId"), args.threadId))
@@ -19,8 +31,6 @@ export const saveMessage = mutation({
   args: {
     message: v.object({
       id: v.string(),
-      // todo right now anyone can save messages for any user from the frontend
-      // validate anonymous and such
       userId: v.string(),
       threadId: v.string(),
       role: v.union(
@@ -36,11 +46,21 @@ export const saveMessage = mutation({
           contentType: v.string(),
         })
       ),
-      // better validation needed here
       parts: v.array(v.any()),
     }),
   },
   handler: async (ctx, args) => {
+    const thread = await ctx.db
+      .query("threads")
+      .filter((q) => q.eq(q.field("id"), args.message.threadId))
+      .first();
+
+    if (!thread || thread.userId !== args.message.userId) {
+      throw new Error("Unauthorized");
+    }
+
+    // TODO don't allow saving messages to other users' threads
+
     return await ctx.db.insert("messages", {
       ...args.message,
       createdAt: Date.now(),

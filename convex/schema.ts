@@ -19,6 +19,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
     pinned: v.boolean(),
+    public: v.boolean(),
   })
     .index("by_thread_id", ["id"])
     .index("by_user", ["userId"])
