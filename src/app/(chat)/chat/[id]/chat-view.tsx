@@ -92,7 +92,7 @@ export default function ChatView({
         {/* Messages Scroll Container - ensure it doesn't interfere with page-level top bar */}
         <div
           ref={scrollContainerRef}
-          className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-track]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 scrollbar-thin"
+          className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-muted-foreground/20 [&::-webkit-scrollbar-track]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 messages-scroll-gutter"
         >
           {/* Messages Container */}
           <Messages

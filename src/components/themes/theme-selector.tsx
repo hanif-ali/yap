@@ -9,15 +9,27 @@ import { useTheme } from "next-themes";
 const themes = [
   {
     key: "dark",
-    name: "Dark",
-    description: "T3 Chat Dark",
-    color: "#000",
+    name: "T3 Dark",
+    description: "Original t3.chat Dark Theme",
+    color: "#391626",
   },
   {
     key: "forest",
     name: "Forest",
-    description: "Forest",
-    color: "#0d1b2a",
+    description: "A nature-inspired theme with deep forest greens",
+    color: "#0F1611",
+  },
+  {
+    key: "ocean",
+    name: "Ocean",
+    description: "Deep blues and teals inspired by the sea",
+    color: "#0A192F",
+  },
+  {
+    key: "sunset",
+    name: "Sunset",
+    description: "A warm, cozy theme inspired by golden hour",
+    color: "#1A0F0F",
   },
 ];
 
@@ -41,7 +53,7 @@ const ThemeItem = ({
       onClick={onClick}
       className={cn(
         "flex items-center gap-3 rounded-md border p-3 text-left transition-colors hover:bg-muted/40 w-full",
-        isSelected ? "border-muted-foreground/30 bg-muted/20" : "border-border"
+        isSelected ? "border-[var(--chat-border)] bg-muted/20" : "border-border"
       )}
     >
       <div
@@ -68,7 +80,7 @@ export const ThemeSelector = () => {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 group relative size-8"
+          className="w-9 h-9 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/40 hover:text-foreground disabled:hover:bg-transparent disabled:hover:text-foreground/50 group relative size-8"
           aria-label="Toggle theme"
         >
           <Paintbrush />
@@ -76,7 +88,7 @@ export const ThemeSelector = () => {
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[300px] p-2 text-white animate-in slide-in-from-bottom-2 duration-200 border-gray-800"
+        className="w-[300px] p-2 text-white animate-in slide-in-from-bottom-2 duration-200 border-[var(--chat-border)]"
         side="top"
         align="start"
         alignOffset={-20}

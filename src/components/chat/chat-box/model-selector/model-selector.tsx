@@ -3,7 +3,7 @@
 import {
   ChevronDown,
   ChevronLeft,
-  ChevronUp,
+  ChevronRight,
   PinOff,
   Search,
   X,
@@ -204,11 +204,11 @@ export function ModelSelector({
               {showAll ? (
                 <>
                   <ChevronLeft className="h-4 w-4" />
-                  Favorites
+                  Show Favorites Only
                 </>
               ) : (
                 <>
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4" />
                   Show all
                 </>
               )}

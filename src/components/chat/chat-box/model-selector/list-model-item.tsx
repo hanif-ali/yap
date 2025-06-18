@@ -42,8 +42,8 @@ export const ListModelItem = memo(function ListModelItem({
           className={cn(
             "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
             model.byok
-              ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
-              : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+              ? "bg-orange-100 text-orange-800 bg-orange-900/30 text-orange-300"
+              : "bg-green-100 text-green-800 bg-green-900/30 text-green-300"
           )}
         >
           {model.byok ? "OpenRouter" : "Free"}

@@ -168,7 +168,7 @@ function PureArtifact({
 
           {!isMobile && (
             <motion.div
-              className="relative w-[400px] bg-muted dark:bg-background h-dvh shrink-0"
+              className="relative w-[400px] bg-muted bg-background h-dvh shrink-0"
               initial={{ opacity: 0, x: 10, scale: 1 }}
               animate={{
                 opacity: 1,
@@ -190,13 +190,7 @@ function PureArtifact({
             >
               <div className="flex flex-col h-full justify-between items-center">
                 <div
-                  className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10"
-                  style={{
-                    paddingBottom: "200px",
-                    scrollbarGutter: "stable both-edges",
-                    scrollbarWidth: "thin",
-                    scrollbarColor: "rgba(0,0,0,0.2) transparent",
-                  }}
+                  className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 messages-scroll-gutter"
                 >
                   <ArtifactMessages
                     chatId={chatId}
@@ -223,12 +217,13 @@ function PureArtifact({
                             attachments={attachments}
                             setAttachments={setAttachments}
                             messages={messages}
-                            className="bg-background dark:bg-muted"
+                            className="bg-muted"
                             setMessages={setMessages}
                             model={model}
                             setModel={setModel}
                             searchEnabled={false}
                             setSearchEnabled={() => {}}
+                            disableScrollToBottom={true}
                           />
                         </div>
                       </div>
@@ -240,7 +235,7 @@ function PureArtifact({
           )}
 
           <motion.div
-            className="fixed dark:bg-muted bg-background h-dvh flex flex-col overflow-y-scroll md:border-l dark:border-zinc-700 border-zinc-200"
+            className="fixed bg-background h-dvh flex flex-col overflow-y-scroll md:border-l border-zinc-200"
             initial={
               isMobile
                 ? {
@@ -344,7 +339,7 @@ function PureArtifact({
               /> */}
             </div>
 
-            <div className="dark:bg-muted bg-background h-full overflow-y-scroll !max-w-full items-center">
+            <div className="bg-muted bg-background h-full overflow-y-scroll !max-w-full items-center">
               <artifactDefinition.content
                 title={artifact.title}
                 content={

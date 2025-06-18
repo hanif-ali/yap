@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "check": "next lint && tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.19",

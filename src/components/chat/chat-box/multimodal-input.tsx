@@ -235,11 +235,11 @@ function PureMultimodalInput({
         }}
       >
         <div
-          className="pb-3 relative flex w-full flex-col items-stretch gap-2 rounded-t-xl border border-b-0 border-white/70 bg-[--chat-input-background] px-3 pt-2 text-secondary-foreground dark:border-[hsl(0,0%,83%)]/[0.04] dark:bg-secondary/[0.045]"
+          className="pb-3 relative flex w-full flex-col items-stretch gap-2 rounded-t-xl border border-b-0 bg-[var(--chat-input-background)] px-3 pt-2 text-secondary-foreground border-[hsl(0,0%,83%)]/[0.04]"
           style={{
             boxShadow:
               "rgba(0, 0, 0, 0.1) 0px 80px 50px 0px, rgba(0, 0, 0, 0.07) 0px 50px 30px 0px, rgba(0, 0, 0, 0.06) 0px 30px 15px 0px, rgba(0, 0, 0, 0.04) 0px 15px 8px, rgba(0, 0, 0, 0.04) 0px 6px 4px, rgba(0, 0, 0, 0.02) 0px 2px 2px",
-            // @ts-expect-error CSS variables cause TS errors for some reason idk 
+            // @ts-expect-error CSS variables cause TS errors for some reason idk
             "--opacity": "1",
           }}
         >
@@ -353,7 +353,6 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    return false;
     if (prevProps.model !== nextProps.model) return false;
 
     return true;
@@ -395,7 +394,7 @@ function PureStopButton({
   return (
     <Button
       data-testid="stop-button"
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      className="rounded-full p-1.5 h-fit border border-zinc-600"
       onClick={(event) => {
         event.preventDefault();
         stop();
@@ -421,7 +420,7 @@ function PureSendButton({
   return (
     <Button
       data-testid="send-button"
-      className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-reflect button-reflect bg-[rgb(162,59,103)] font-semibold shadow hover:bg-[#d56698] active:bg-[rgb(162,59,103)] disabled:hover:bg-[rgb(162,59,103)] disabled:active:bg-[rgb(162,59,103)] dark:bg-primary/20 dark:hover:bg-pink-800/70 dark:active:bg-pink-800/40 disabled:dark:hover:bg-primary/20 disabled:dark:active:bg-primary/20 h-9 w-9 relative rounded-lg p-2 text-pink-50"
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border-reflect button-reflect font-semibold shadow bg-primary/20 hover:bg-main-button-hover/70 h-9 w-9 relative rounded-lg p-2"
       onClick={(event) => {
         event.preventDefault();
         submitForm();

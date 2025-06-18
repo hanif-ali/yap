@@ -123,7 +123,7 @@ function PureEditor({
   }, [content]);
 
   return (
-    <div className="relative prose dark:prose-invert" ref={containerRef} />
+    <div className="relative prose prose-invert" ref={containerRef} />
   );
 }
 

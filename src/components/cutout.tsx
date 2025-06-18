@@ -17,7 +17,7 @@ export const Cutout = () => {
         )}
         style={{
           boxShadow: "10px -10px 8px 2px hsl(var(--gradient-noise-top))",
-          transform: "scale(1.09)",
+          transform: "scaleY(1.3) scaleX(1.2)",
         }}
       >
         <svg

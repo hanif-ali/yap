@@ -63,15 +63,15 @@ export const GridModelItem = memo(function GridModelItem({
               className={cn(
                 "rounded-md px-1.5 py-0.5 text-[10px] font-medium",
                 model.byok
-                  ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300"
-                  : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                  ? "bg-orange-100 text-orange-800 bg-orange-900/30 text-orange-300"
+                  : "bg-green-100 text-green-800 bg-green-900/30 text-green-300"
               )}
             >
               {model.byok ? "OpenRouter" : "Free"}
             </div>
           </div>
           <button
-            className={`pt-8 group relative flex h-[10rem] w-[7.4rem] flex-col items-center justify-between overflow-hidden rounded-xl border border-[var(--chat-border)]/50 bg-sidebar/20 px-2 py-4 text-color-heading [--model-muted:hsl(var(--muted-foreground)/0.9)] [--model-primary:hsl(var(--color-heading))] hover:bg-accent/30 hover:text-color-heading dark:border-[var(--chat-border)] dark:bg-[hsl(320,20%,2.9%)] dark:[--model-muted:hsl(var(--color-heading))] dark:[--model-primary:hsl(var(--muted-foreground)/0.9)] dark:hover:bg-accent/30 ${!enabled ? "pointer-events-none" : ""}`}
+            className={`pt-8 group relative flex h-[10rem] w-[7.4rem] flex-col items-center justify-between overflow-hidden rounded-xl border border-[var(--chat-border)]/50 bg-sidebar/20 px-2 py-4 text-color-heading [--model-muted:hsl(var(--muted-foreground)/0.9)] [--model-primary:hsl(var(--color-heading))] hover:bg-accent/30 hover:text-color-heading border-[var(--chat-border)] bg-[hsl(320,20%,2.9%)] [--model-muted:hsl(var(--color-heading))] [--model-primary:hsl(var(--muted-foreground)/0.9)] hover:bg-accent/30 ${!enabled ? "pointer-events-none" : ""}`}
           >
             <div className="flex w-full flex-col items-center justify-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center">

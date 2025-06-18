@@ -77,7 +77,7 @@ export function SettingsContent() {
   return (
     <div className="min-h-screen p-3 z-1">
       {/* Main Content */}
-      <div className="container mx-auto max-w-4xl py-8 px-6 scrollbar-thin overflow-y-auto">
+      <div className="container mx-auto max-w-4xl py-8 px-6 overflow-y-auto">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="account">Account</TabsTrigger>

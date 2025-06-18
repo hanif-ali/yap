@@ -53,6 +53,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --destructive: hsl(332 100% 32%);
+  --color-main-button-hover: var(--main-button-hover);
 }
 
 :root {
@@ -75,7 +76,7 @@
   --muted: hsl(270, 16.13%, 12.6%);
   --muted-foreground: hsl(320 35% 86%);
   --border: hsl(0 0% 100% / 10%);
-  --input: hsl(0 0% 100% / 15%); 
+  --input: hsl(0 0% 100% / 15%);
 
   --sidebar-bg: hsl(240 2.6% 7.6%);
   --sidebar-accent: hsl(318.5 20.6% 12.4%);
@@ -97,6 +98,8 @@
   --reasoning-icon-color: #b79ae4;
   --gradient-noise-top: 309 15% 9%;
   --chat-border: hsl(333.3 22% 16.1%);
+
+  --main-button-hover: hsl(322 81% 35%);
 }
 
 .forest {
@@ -109,7 +112,7 @@
   --muted: hsl(148, 20%, 8%);
   --muted-foreground: hsl(140 25% 75%);
   --border: hsl(140 15% 15% / 60%);
-  --input: hsl(140 10% 18% / 80%); 
+  --input: hsl(140 10% 18% / 80%);
 
   --sidebar-bg: hsl(145 8% 6%);
   --sidebar-accent: hsl(148 25% 10%);
@@ -128,6 +131,8 @@
 
   --gradient-noise-top: 148 25% 6%;
   --chat-border: hsl(148 30% 12%);
+
+  --main-button-hover: hsl(152 81% 35%);
 }
 
 .bg-gradient-noise-top {
@@ -219,17 +224,131 @@ button {
   transition-timing-function: cubic-bezier(0.2, 0.4, 0.1, 0.95);
 }
 
-.dark .background-gradient-overlay{
-  background-image: radial-gradient(closest-corner at 120px 36px, rgba(255, 1, 111, 0.19), rgba(255, 1, 111, 0.08)), linear-gradient(rgb(63, 51, 69) 15%, rgb(7, 3, 9));
+.dark .background-gradient-overlay {
+  background-image:
+    radial-gradient(
+      closest-corner at 120px 36px,
+      rgba(255, 1, 111, 0.19),
+      rgba(255, 1, 111, 0.08)
+    ),
+    linear-gradient(rgb(63, 51, 69) 15%, rgb(7, 3, 9));
 }
 
-.forest .background-gradient-overlay{
-  background-image: radial-gradient(closest-corner at 120px 36px, rgba(1, 255, 111, 0.19), rgba(1, 255, 111, 0.08)), linear-gradient(#0f1a13 15%, rgb(3, 9, 5));
+.forest .background-gradient-overlay {
+  background-image:
+    radial-gradient(
+      closest-corner at 120px 36px,
+      rgba(1, 255, 111, 0.19),
+      rgba(1, 255, 111, 0.08)
+    ),
+    linear-gradient(#0f1a13 15%, rgb(3, 9, 5));
 }
 
-.scrollbar-thin{
-  padding-bottom: 200px;
-  scrollbar-gutter: stable both-edges;
+* {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+.messages-scroll-gutter {
+  padding-bottom: 210px;
+  scrollbar-gutter: stable both-edges;
+}
+
+.ocean {
+  --popover: hsl(200 35% 4%);
+  --popover-foreground: hsl(195 85% 85%);
+  --primary: hsl(195 85% 32%);
+  --primary-foreground: hsl(195 85% 85%);
+  --secondary: hsl(210 20% 18%);
+  --secondary-foreground: hsl(0 0% 96%);
+  --muted: hsl(205, 25%, 10%);
+  --muted-foreground: hsl(200 30% 75%);
+  --border: hsl(200 20% 20% / 60%);
+  --input: hsl(200 15% 22% / 80%);
+
+  --sidebar-bg: hsl(210 15% 7%);
+  --sidebar-accent: hsl(205 30% 12%);
+  --sidebar-accent-foreground: hsl(200 10% 92%);
+
+  --wordmark-color: #7db8d4;
+  --heading: #4a9dc9;
+
+  --chat-background: hsl(205, 25%, 10%);
+  --chat-input-background: hsla(205, 20%, 15%, var(--blur-fallback, 0.6));
+  --vision-icon-color: hsl(185 50% 70%);
+  --web-icon-color: hsl(200 55% 72%);
+  --text-icon-color: hsl(210 60% 75%);
+  --reasoning-icon-color: hsl(195 55% 73%);
+  --chat-input-gradient: hsl(205 25% 20%);
+
+  --gradient-noise-top: 205 30% 8%;
+  --chat-border: hsl(200 35% 15%);
+
+  --main-button-hover: hsl(195 81% 35%);
+}
+
+.ocean .border-reflect {
+  --gradientBorder-gradient:
+    linear-gradient(180deg, #33809300, #338093bd, #33809317),
+    linear-gradient(15deg, #3380931f 50%, #338093bd);
+  --start: rgba(0, 0, 0, 0.92);
+}
+
+.ocean .background-gradient-overlay {
+  background-image:
+    radial-gradient(
+      closest-corner at 120px 36px,
+      rgba(1, 170, 255, 0.19),
+      rgba(1, 170, 255, 0.08)
+    ),
+    linear-gradient(#0f1820 15%, rgb(3, 7, 9));
+}
+
+.sunset {
+  --popover: hsl(15 40% 5%);
+  --popover-foreground: hsl(25 80% 85%);
+  --primary: hsl(20 90% 45%);
+  --primary-foreground: hsl(25 80% 85%);
+  --secondary: hsl(25 25% 20%);
+  --secondary-foreground: hsl(0 0% 96%);
+  --muted: hsl(18, 30%, 12%);
+  --muted-foreground: hsl(30 35% 75%);
+  --border: hsl(25 20% 25% / 60%);
+  --input: hsl(20 15% 28% / 80%);
+
+  --sidebar-bg: hsl(15 20% 8%);
+  --sidebar-accent: hsl(20 35% 15%);
+  --sidebar-accent-foreground: hsl(30 15% 92%);
+
+  --wordmark-color: #d4a17d;
+  --heading: #c97d4a;
+
+  --chat-background: hsl(18, 30%, 12%);
+  --chat-input-background: hsla(20, 25%, 18%, var(--blur-fallback, 0.6));
+  --vision-icon-color: hsl(35 60% 70%);
+  --web-icon-color: hsl(15 65% 72%);
+  --text-icon-color: hsl(25 70% 75%);
+  --reasoning-icon-color: hsl(40 65% 73%);
+  --chat-input-gradient: hsl(20 30% 22%);
+
+  --gradient-noise-top: 20 35% 10%;
+  --chat-border: hsl(25 40% 18%);
+
+  --main-button-hover: hsl(20 91% 35%);
+}
+
+.sunset .border-reflect {
+  --gradientBorder-gradient:
+    linear-gradient(180deg, #d4681800, #d46818bd, #d4681817),
+    linear-gradient(15deg, #d468181f 50%, #d46818bd);
+  --start: rgba(0, 0, 0, 0.92);
+}
+
+.sunset .background-gradient-overlay {
+  background-image:
+    radial-gradient(
+      closest-corner at 120px 36px,
+      rgba(255, 120, 50, 0.19),
+      rgba(255, 120, 50, 0.08)
+    ),
+    linear-gradient(#1a0f0d 15%, rgb(9, 5, 3));
 }

@@ -44,7 +44,11 @@ export default async function RootLayout({
       <body className={`${proxima_var.className} antialiased`}>
         <ClerkProvider>
           <ConvexClientProvider>
-            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="t3-dark"
+              themes={["t3-dark", "forest", "ocean", "sunset"]}
+            >
               <UserConfigProvider userConfig={userConfig!}>
                 {children}
               </UserConfigProvider>

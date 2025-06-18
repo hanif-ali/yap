@@ -43,7 +43,7 @@ export const WebSearchCall = ({
         >
           <div className="space-y-2">
             <h3 className="font-medium text-sm mb-3 text-[var(--heading)]">Search Results</h3>
-            <div className="max-h-80 overflow-y-auto space-y-2 scrollbar-thin">
+            <div className="max-h-80 overflow-y-auto space-y-2">
               {result.map((item, index) => (
               <div key={index} className="border-b last:border-b-0 pb-2 last:pb-0">
                 <a 

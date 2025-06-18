@@ -17,7 +17,7 @@ export function SidebarControls({ searchQuery, setSearchQuery }: SidebarControls
     <div className="flex flex-col gap-4 mt-2 px-1">
       <div>
         <Link
-          className="border-reflect inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 button-reflect rounded-lg bg-[rgb(162,59,103)] p-2 font-semibold text-primary-foreground shadow hover:bg-[#d56698] active:bg-[rgb(162,59,103)] disabled:hover:bg-[rgb(162,59,103)] disabled:active:bg-[rgb(162,59,103)] dark:bg-primary/20 dark:hover:bg-pink-800/70 dark:active:bg-pink-800/40 disabled:dark:hover:bg-primary/20 disabled:dark:active:bg-primary/20 h-9 px-4 py-2 w-full select-none text-sm color-primary-foreground"
+          className="border-reflect inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 button-reflect rounded-lg p-2 font-semibold text-primary-foreground shadow bg-primary/20 hover:bg-main-button-hover/70 disabled:active:bg-primary/20 h-9 px-4 py-2 w-full select-none text-sm"
           data-discover="true"
           href="/"
         >
