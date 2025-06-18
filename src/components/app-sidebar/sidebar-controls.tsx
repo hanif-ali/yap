@@ -31,6 +31,7 @@ export function SidebarControls({ searchQuery, setSearchQuery }: SidebarControls
             role="searchbox"
             aria-label="Search threads"
             placeholder="Search your threads..."
+            id="thread-search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground/50 placeholder:select-none focus:outline-none"

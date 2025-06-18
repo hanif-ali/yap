@@ -112,9 +112,7 @@ export default function ChatView({
           <SettingsCutout />
         </div>
 
-        <div className="fixed right-0 top-0 max-sm:hidden z-40">
-          <Cutout />
-        </div>
+        <Cutout />
       </div>
       <div className="absolute w-full h-full pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 z-50 pointer-events-none px-2">
