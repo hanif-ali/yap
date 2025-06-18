@@ -6,12 +6,10 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import ConvexClientProvider from "./ConvexClientProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { SidebarWrapper } from "@/components/app-sidebar/sidebar-wrapper";
-import { fetchMutation, preloadQuery } from "convex/nextjs";
+import { fetchMutation } from "convex/nextjs";
 import { api } from "../../convex/_generated/api";
 import localFont from "next/font/local";
 import { UserConfigProvider } from "@/providers/user-config-provider";
-import { TopBar } from "@/components/top-bar";
 import { headers } from "next/headers";
 import { getAuthToken } from "@/lib/auth";
 
@@ -49,9 +47,7 @@ export default async function RootLayout({
           <ConvexClientProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
               <UserConfigProvider userConfig={userConfig!}>
-                <SidebarWrapper>
                   {children}
-                </SidebarWrapper>
               </UserConfigProvider>
               <ThemeToggle />
             </ThemeProvider>

@@ -1,4 +1,4 @@
-import ChatView from "./(chat)/chat/[id]/chat-view";
+import ChatView from "./chat/[id]/chat-view";
 import { generateUUID } from "@/lib/utils";
 import { DataStreamHandler } from "@/components/data-stream-handler";
 

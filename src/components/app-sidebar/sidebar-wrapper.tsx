@@ -3,23 +3,14 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
 import { FloatingButtons } from "@/components/floating-buttons";
-import { Preloaded } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { NoisyBackground } from "../backgrounds";
 
-export function SidebarWrapper({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function SidebarWrapper({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen text-white">
+      <NoisyBackground />
       <SidebarProvider>
         <FloatingButtons />
-        <div className="inset-0 dark:bg-[var(--sidebar-bg)] z-0 !fixed">
-          <div className="absolute inset-0 opacity-40 background-gradient-overlay"></div>
-          <div className="absolute inset-0 bg-noise z-100"></div>
-          <div className="absolute inset-0 bg-black/40"></div>
-        </div>
         <AppSidebar />
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>

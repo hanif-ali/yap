@@ -91,6 +91,7 @@ export default defineSchema({
     // This is either clerk ID or anonymous ID (ehhhhhh, don't feel too good about this as it risks getting inconsistent with isAnonymous)
     userId: v.string(),
     fullName: v.string(),
+    email: v.string(),
     isAnonymous: v.boolean(),
     openRouterKey: v.optional(v.string()),
     createdAt: v.number(),
