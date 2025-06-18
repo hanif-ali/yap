@@ -110,7 +110,7 @@ export const modelDefinitions = freeModelDefinitions.concat(
 
 const modelProviders = {
   google: (modelKey: string) => google(modelKey),
-  xai: (modelKey: string) => xai(modelKey),
+  "x-ai": (modelKey: string) => xai(modelKey),
   openrouter: (apiKey: string) => createOpenRouter({ apiKey }),
 };
 

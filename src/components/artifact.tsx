@@ -61,6 +61,10 @@ function PureArtifact({
   reload,
   model,
   setModel,
+  searchEnabled,
+  setSearchEnabled,
+  canvasEnabled,
+  setCanvasEnabled,
 }: {
   chatId: string;
   input: string;
@@ -76,6 +80,10 @@ function PureArtifact({
   reload: UseChatHelpers["reload"];
   model: string;
   setModel: Dispatch<SetStateAction<string>>;
+  searchEnabled: boolean;
+  setSearchEnabled: Dispatch<SetStateAction<boolean>>;
+  canvasEnabled: boolean;
+  setCanvasEnabled: Dispatch<SetStateAction<boolean>>;
 }) {
   const { artifact, metadata, setMetadata } = useArtifact();
 
@@ -188,9 +196,7 @@ function PureArtifact({
               }}
             >
               <div className="flex flex-col h-full justify-between items-center">
-                <div
-                  className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 messages-scroll-gutter"
-                >
+                <div className="absolute inset-0 overflow-y-scroll sm:top-3.5 py-10 messages-scroll-gutter">
                   <ArtifactMessages
                     chatId={chatId}
                     status={status}
@@ -220,8 +226,11 @@ function PureArtifact({
                             setMessages={setMessages}
                             model={model}
                             setModel={setModel}
-                            searchEnabled={false}
-                            setSearchEnabled={() => {}}
+                            searchEnabled={searchEnabled}
+                            setSearchEnabled={setSearchEnabled}
+                            canvasEnabled={canvasEnabled}
+                            setCanvasEnabled={setCanvasEnabled}
+                            hideModelSelector={true}
                           />
                         </div>
                       </div>

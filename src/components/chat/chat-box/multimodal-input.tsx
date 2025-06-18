@@ -28,6 +28,7 @@ import { ModelSelector } from "./model-selector/model-selector";
 import { ModelDefinition } from "@/lib/models/models";
 import { WebSearchButton } from "./web-search-button";
 import { TokensWarning } from "./tokens-warning";
+import { CanvasButton } from "./canvas-button";
 
 function PureMultimodalInput({
   chatId,
@@ -45,6 +46,9 @@ function PureMultimodalInput({
   setModel,
   searchEnabled,
   setSearchEnabled,
+  canvasEnabled,
+  setCanvasEnabled,
+  hideModelSelector,
 }: {
   chatId: string;
   input: UseChatHelpers["input"];
@@ -62,6 +66,9 @@ function PureMultimodalInput({
 
   searchEnabled: boolean;
   setSearchEnabled: (value: boolean) => void;
+  canvasEnabled: boolean;
+  setCanvasEnabled: (value: boolean) => void;
+  hideModelSelector: boolean;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -327,11 +334,21 @@ function PureMultimodalInput({
             </div>
             <div className="flex flex-col gap-2 pr-2 sm:flex-row sm:items-center">
               <div className="ml-[-7px] flex items-center gap-1">
-                <ModelSelector onModelSelect={setModel} selectedModel={model} />
+                {!hideModelSelector && (
+                  <ModelSelector
+                    onModelSelect={setModel}
+                    selectedModel={model}
+                  />
+                )}
                 <WebSearchButton
                   selectedModel={model}
                   searchEnabled={searchEnabled}
                   setSearchEnabled={setSearchEnabled}
+                />
+                <CanvasButton
+                  selectedModel={model}
+                  canvasEnabled={canvasEnabled}
+                  setCanvasEnabled={setCanvasEnabled}
                 />
                 <AttachmentsButton
                   fileInputRef={fileInputRef}
@@ -355,6 +372,8 @@ export const MultimodalInput = memo(
     if (prevProps.model !== nextProps.model) return false;
     if (prevProps.searchEnabled !== nextProps.searchEnabled) return false;
     if (prevProps.setSearchEnabled !== nextProps.setSearchEnabled) return false;
+    if (prevProps.canvasEnabled !== nextProps.canvasEnabled) return false;
+    if (prevProps.setCanvasEnabled !== nextProps.setCanvasEnabled) return false;
 
     return true;
   }

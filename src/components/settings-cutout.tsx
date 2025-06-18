@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const SettingsCutout = () => {
   return (
-    <div className="fixed right-3 top-3 z-50 pointer-events-auto">
+    <div className="fixed right-3 top-3 z-20 pointer-events-auto">
       <div className="flex flex-row items-center bg-gradient-noise-top text-muted-foreground gap-0.5 rounded-md p-1 transition-all">
         <Button
           asChild

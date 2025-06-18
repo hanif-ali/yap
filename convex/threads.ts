@@ -20,7 +20,7 @@ export const createThread = mutation({
       throw new Error("User not found");
     }
 
-    if (identity && !user.isAnonymous) {
+    if (identity && user.isAnonymous) {
       throw new Error("Unauthorized");
     }
 
@@ -35,14 +35,20 @@ export const createThread = mutation({
 });
 
 export const getForCurrentUser = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { anonId: v.string() },
+  handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
+    // for signed out users
     if (identity === null) {
-      return null;
+      return await ctx.db
+        .query("threads")
+        .filter((q) => q.eq(q.field("userId"), args.anonId))
+        .filter((q) => q.eq(q.field("public"), true))
+        .collect();
     }
 
+    // for signed in users
     return await ctx.db
       .query("threads")
       .filter((q) => q.eq(q.field("userId"), identity?.subject))

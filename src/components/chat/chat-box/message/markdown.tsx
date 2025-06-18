@@ -14,7 +14,7 @@ const components: Partial<Components> = {
       <div className="not-prose flex flex-col">
         <pre
           {...props}
-          className="text-sm w-full overflow-x-auto bg-zinc-900 p-4 border border-zinc-200 border-zinc-700 rounded-xl text-zinc-50 text-zinc-900"
+          className="text-sm w-full overflow-x-auto bg-zinc-900 p-4 border border-zinc-700 rounded-xl text-zinc-900"
         >
           {children}
         </pre>

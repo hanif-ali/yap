@@ -352,3 +352,12 @@ button {
     ),
     linear-gradient(#1a0f0d 15%, rgb(9, 5, 3));
 }
+
+
+.hljs {
+  background-color: transparent !important; 
+}
+
+.ProseMirror-focused {
+  outline: none !important;
+}

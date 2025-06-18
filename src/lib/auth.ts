@@ -7,13 +7,16 @@ import { fetchMutation } from "convex/nextjs";
 
 export const getAuthToken = async () => {
   const authData = await auth();
-  return (await authData.getToken({ template: "convex" })) ?? undefined;
+  try {
+    return (await authData.getToken({ template: "convex" })) ?? undefined;
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export const getCurrentUserConfig = async () => {
   const token = await getAuthToken();
 
-  // always available as it is set in middleware
   const anonId = (await headers()).get("x-anon-id");
 
   return (await fetchMutation(

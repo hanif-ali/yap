@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import { Messages } from "@/components/chat/messages";
 import { MultimodalInput } from "@/components/chat/chat-box/multimodal-input";
-import { generateUUID } from "@/lib/utils";
+import { fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 import { useState } from "react";
 import { ModelDefinition } from "@/lib/models/models";
 import { useAutoResume } from "@/hooks/use-auto-resume";
@@ -32,10 +32,11 @@ export default function ChatView({
   const { userConfig } = useUserConfig();
   const thread = useQuery(api.threads.getThreadById, { id });
 
-  const readOnly = userConfig.userId !== thread?.userId;
+  const readOnly = thread && userConfig.userId !== thread?.userId;
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const [searchEnabled, setSearchEnabled] = useState(false);
+  const [canvasEnabled, setCanvasEnabled] = useState(false);
 
   const {
     messages,
@@ -55,12 +56,13 @@ export default function ChatView({
     experimental_throttle: 50,
     sendExtraMessageFields: true,
     generateId: generateUUID,
-    // fetch: fetchWithErrorHandlers,
+    fetch: fetchWithErrorHandlers,
     experimental_prepareRequestBody: (body) => ({
       id,
       message: body.messages.at(-1),
       selectedChatModel: model,
       searchEnabled,
+      canvasEnabled,
     }),
     onError: () => {
       // TODO: Error handling
@@ -143,6 +145,9 @@ export default function ChatView({
                     setModel={setModel}
                     searchEnabled={searchEnabled}
                     setSearchEnabled={setSearchEnabled}
+                    canvasEnabled={canvasEnabled}
+                    setCanvasEnabled={setCanvasEnabled}
+                    hideModelSelector={false}
                   />
                 </div>
               </div>
@@ -166,6 +171,10 @@ export default function ChatView({
         reload={reload}
         model={model}
         setModel={setModel}
+        searchEnabled={searchEnabled}
+        setSearchEnabled={setSearchEnabled}
+        canvasEnabled={canvasEnabled}
+        setCanvasEnabled={setCanvasEnabled}
       />
       <ChatVisibility threadId={id} />
     </>

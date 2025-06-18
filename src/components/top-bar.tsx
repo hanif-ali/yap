@@ -19,7 +19,7 @@ export const TopBar = () => {
       </div>
       <div
         className={cn(
-          "absolute inset-x-3 top-0 z-10 box-content overflow-hidden border-0 bg-gradient-noise-top backdrop-blur-md transition-all ease-snappy blur-fallback:bg-gradient-noise-top max-sm:hidden sm:h-3.5",
+          "absolute inset-x-3 top-0 z-9 box-content overflow-hidden border-0 bg-gradient-noise-top backdrop-blur-md transition-all ease-snappy blur-fallback:bg-gradient-noise-top max-sm:hidden sm:h-3.5",
           {
             "sm:translate-y-[-15px] sm:rounded-tl-xl": sidebarState === "collapsed",
           }

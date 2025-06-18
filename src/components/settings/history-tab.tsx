@@ -1,5 +1,6 @@
 "use client";
 
+import Cookies from "js-cookie";
 import { Loader2, Trash2, AlertTriangle } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
 import {
@@ -32,7 +33,9 @@ import { useUserConfig } from "@/providers/user-config-provider";
 
 export function HistoryTab() {
   const { userConfig, updateUserConfig } = useUserConfig();
-  const threads = useQuery(api.threads.getForCurrentUser);
+  const threads = useQuery(api.threads.getForCurrentUser, {
+    anonId: Cookies.get("anonId") ?? "",
+  });
   const deleteAllThreads = useMutation(api.threads.deleteAllThreadsForUser);
 
   const [isDeleteAllOpen, setIsDeleteAllOpen] = useState(false);
@@ -41,9 +44,9 @@ export function HistoryTab() {
   const updateDeletionSchedule = async (
     schedule: "daily" | "monthly" | "yearly" | "never"
   ) => {
-      await updateUserConfig({
-        deletionSchedule: schedule,
-      });
+    await updateUserConfig({
+      deletionSchedule: schedule,
+    });
   };
 
   const handleDeleteAll = async () => {
@@ -177,7 +180,10 @@ export function HistoryTab() {
         <CardContent>
           <Dialog open={isDeleteAllOpen} onOpenChange={setIsDeleteAllOpen}>
             <DialogTrigger asChild>
-              <Button variant="destructive" disabled={isDeleting || threads.length === 0}>
+              <Button
+                variant="destructive"
+                disabled={isDeleting || threads.length === 0}
+              >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete All Chats
               </Button>

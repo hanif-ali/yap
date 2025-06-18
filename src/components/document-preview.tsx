@@ -15,6 +15,7 @@ import { ImageEditor } from "./image-editor";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Doc } from "../../convex/_generated/dataModel";
+import { Button } from "./ui/button";
 
 interface DocumentPreviewProps {
   result?: any;
@@ -171,9 +172,12 @@ const PureHitboxLayer = ({
       aria-hidden="true"
     >
       <div className="w-full p-4 flex justify-end items-center">
-        <div className="absolute right-[9px] top-[13px] p-2 hover:bg-zinc-700 rounded-md hover:bg-zinc-100">
-          <FullscreenIcon />
-        </div>
+        <Button
+          variant="ghost"
+          className="absolute right-[9px] top-[13px] p-2 hover:bg-[hsl(var(--gradient-noise-top))] rounded-md "
+        >
+        Focus Canvas
+        </Button>
       </div>
     </div>
   );

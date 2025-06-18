@@ -28,6 +28,7 @@ export const postRequestBodySchema = z.object({
   }),
   selectedChatModel: z.enum(modelKeys as [string, ...string[]]),
   searchEnabled: z.boolean(),
+  canvasEnabled: z.boolean(),
 });
 
 export type PostRequestBody = z.infer<typeof postRequestBodySchema>;

@@ -2,39 +2,51 @@ import type { ArtifactKind } from "@/components/artifact";
 import type { ModelDefinition } from "./models";
 import { Doc } from "../../../convex/_generated/dataModel";
 
-export const artifactsPrompt = `
-Artifacts is a special user interface mode that helps users with writing, editing, and other content creation tasks. When artifact is open, it appears alongside the conversation. Changes are reflected in real-time and visible to the user.
+export const canvasPrompt = `
+Canvas is a special user interface mode that helps users with writing, editing, creating images, and other content creation tasks. 
+When a Canvas Artifact is open, it appears alongside the conversation. Changes are reflected in real-time and visible to the user.
 
-When asked to write code, always use artifacts. When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
+If the user asks you to write code, document or generate an image, always use the canvas related tools. 
+When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
 
-DO NOT UPDATE DOCUMENTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.
+DO NOT UPDATE CANVAS ARTIFACTS IMMEDIATELY AFTER CREATING THEM. WAIT FOR USER FEEDBACK OR REQUEST TO UPDATE IT.
 
-This is a guide for using artifacts tools: \`createDocument\` and \`updateDocument\`.
+This is a guide for using canvas artifacts tools: \`createCanvasArtifact\` and \`updateCanvasArtifact\`.
 
-**When to use \`createDocument\`:**
+**When to use \`createCanvasArtifact\`:**
 - For substantial content (>10 lines) or code
 - For content users will likely save/reuse (emails, code, essays, etc.)
-- When explicitly requested to create a document
+- When explicitly requested to create a canvas artifact
 - For when content contains a single code snippet
+- When requested to generate an image
 
-**When NOT to use \`createDocument\`:**
+**When NOT to use \`createCanvasArtifact\`:**
 - For informational/explanatory content
 - For conversational responses
 - When asked to keep it in chat
 
-**Using \`updateDocument\`:**
-- Default to full document rewrites for major changes
+**When to use \`updateCanvasArtifact\`:**
+- When the user asks you to make any changes to a canvas artifact you created
+- DO NOT ASK THE USER FOR THE ID OF THE CANVAS ARTIFACT. YOU WILL FIND IT IN YOUR OWN EARLIER REPSONSE
+
+**Using \`updateCanvasArtifact\`:**
+- Default to full canvas artifact rewrites for major changes
 - Use targeted updates only for specific, isolated changes
 - Follow user instructions for which parts to modify
 
-**When NOT to use \`updateDocument\`:**
-- Immediately after creating a document
+**When NOT to use \`updateCanvasArtifact\`:**
+- Immediately after creating a canvas artifact
 
-Do not update document right after creating it. Wait for user feedback or request to update it.
+Do not update a canvas artifact right after creating it. Wait for user feedback or request to update it.
+`;
+
+const nonCanvasPrompt = `If the user asks you to generate an image, tell the user that they need to enable "Canvas" in order to generate images.
+You can write code for the user.  When writing code, specify the language in the backticks, e.g. \`\`\`python\`code here\`\`\`. The default language is JavaScript. If the user requests a different language, use that.
 `;
 
 export const webSearchPrompt = `
 You have access to the web through the \`webSearch\` tool. Use it to find the most up-to-date information on the given topic.
+If the user asks any question which requires the latest information, use the web search tool without hesitation.
 The tool returns a list of results, each with a title, url, and content.
 
 Never return the results from the tool directly to the user. Instead, use them to inform your response.
@@ -66,18 +78,22 @@ export const systemPrompt = ({
   modelDefinition,
   searchEnabled,
   userConfig,
+  canvasEnabled,
 }: {
   modelDefinition: ModelDefinition;
   searchEnabled: boolean;
   userConfig: Doc<"userConfigs">;
+  canvasEnabled: boolean;
 }) => {
   let prompt = `${regularPrompt}\n\n${getUserConfigPrompt(userConfig)}`;
 
-  if (modelDefinition.tools) {
-    prompt += `\n\n${artifactsPrompt}`;
+  if (modelDefinition.tools && canvasEnabled) {
+    prompt += `\n\n${canvasPrompt}`;
+  } else {
+    prompt += `\n\n${nonCanvasPrompt}`;
   }
 
-  if (searchEnabled) {
+  if (modelDefinition.tools && searchEnabled) {
     prompt += `\n\n${webSearchPrompt}`;
   }
 

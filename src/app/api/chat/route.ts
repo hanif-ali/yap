@@ -71,7 +71,8 @@ export async function POST(request: Request) {
     api.messages.todaysMessagesCount,
     {
       userId: userConfig.userId,
-    }
+    },
+    { token }
   );
 
   if (todaysMessagesCount >= maxMessagesPerDay) {
@@ -79,27 +80,37 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { id, message, selectedChatModel, searchEnabled } = requestBody;
+    const { id, message, selectedChatModel, searchEnabled, canvasEnabled } =
+      requestBody;
 
-    const thread = await fetchQuery(api.threads.getThreadById, { id });
+    const thread = await fetchQuery(
+      api.threads.getThreadById,
+      { id },
+      { token }
+    );
 
     if (!thread) {
       const title = await generateTitleFromUserMessage({
         message,
       });
 
-      await fetchMutation(api.threads.createThread, {
-        id: id,
-        title,
-        userId: userConfig.userId,
-      });
+      await fetchMutation(
+        api.threads.createThread,
+        {
+          id: id,
+          title,
+          userId: userConfig.userId,
+        },
+        { token }
+      );
     }
 
     const previousMessages = await fetchQuery(
       api.messages.getMessagesForThread,
       {
         threadId: id,
-      }
+      },
+      { token }
     );
 
     const messages = appendClientMessage({
@@ -140,13 +151,17 @@ export async function POST(request: Request) {
     }
 
     const streamId = generateUUID();
-    await fetchMutation(api.streams.createStream, {
-      id: streamId,
-      threadId: id,
-    });
+    await fetchMutation(
+      api.streams.createStream,
+      {
+        id: streamId,
+        threadId: id,
+      },
+      { token }
+    );
 
     const activeTools = modelDefinition.tools
-      ? ["createDocument", "updateDocument"]
+      ? ["createCanvasArtifact", "updateCanvasArtifact"]
       : [];
     if (searchEnabled) {
       activeTools.push("webSearch");
@@ -160,6 +175,7 @@ export async function POST(request: Request) {
             modelDefinition,
             searchEnabled,
             userConfig,
+            canvasEnabled,
           }),
           messages,
           maxSteps: 5,
@@ -169,11 +185,11 @@ export async function POST(request: Request) {
           temperature: 0.6,
           tools: modelDefinition.tools
             ? {
-                createDocument: createDocument({
+                createCanvasArtifact: createDocument({
                   userConfig,
                   dataStream,
                 }),
-                updateDocument: updateDocument({
+                updateCanvasArtifact: updateDocument({
                   dataStream,
                 }),
                 webSearch,
@@ -198,17 +214,21 @@ export async function POST(request: Request) {
                 messages: [message],
                 responseMessages: response.messages,
               });
-              await fetchMutation(api.messages.saveMessage, {
-                message: {
-                  id: assistantId,
-                  userId: userConfig.userId,
-                  threadId: id,
-                  role: "assistant",
-                  content: assistantMessage.content,
-                  attachments: [],
-                  parts: assistantMessage.parts ?? [],
+              await fetchMutation(
+                api.messages.saveMessage,
+                {
+                  message: {
+                    id: assistantId,
+                    userId: userConfig.userId,
+                    threadId: id,
+                    role: "assistant",
+                    content: assistantMessage.content,
+                    attachments: [],
+                    parts: assistantMessage.parts ?? [],
+                  },
                 },
-              });
+                { token }
+              );
 
               dataStream.writeData({
                 type: "remaining-tokens",
@@ -264,6 +284,8 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const token = await getAuthToken();
+
   const streamContext = getStreamContext();
   const resumeRequestedAt = new Date();
 
@@ -318,9 +340,13 @@ export async function GET(request: Request) {
    * but the resumable stream has concluded at this point.
    */
   if (!stream) {
-    const messages = await fetchQuery(api.messages.getMessagesForThread, {
-      threadId,
-    });
+    const messages = await fetchQuery(
+      api.messages.getMessagesForThread,
+      {
+        threadId,
+      },
+      { token }
+    );
 
     const mostRecentMessage = messages.at(-1);
 

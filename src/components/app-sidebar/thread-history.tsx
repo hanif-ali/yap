@@ -11,6 +11,7 @@ import {
 import { useQueryWithLocalStorageCache } from "@/hooks/use-query-with-local-storage-cache";
 import { memo, useMemo } from "react";
 import { Doc } from "../../../convex/_generated/dataModel";
+import Cookies from "js-cookie";
 
 interface ThreadHistoryProps {
   searchQuery: string;
@@ -19,7 +20,8 @@ interface ThreadHistoryProps {
 export const ThreadHistory = memo(({ searchQuery }: ThreadHistoryProps) => {
   const chats = useQueryWithLocalStorageCache<Doc<"threads">[]>(
     "chats",
-    api.threads.getForCurrentUser
+    api.threads.getForCurrentUser,
+    { anonId: Cookies.get("anonId") ?? "" }
   );
 
   // Filter chats based on search query

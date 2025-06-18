@@ -4,6 +4,7 @@ import { UIMessage } from "ai";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Doc } from "../../convex/_generated/dataModel";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,4 +45,36 @@ export function convertToUIMessages(
     createdAt: new Date(message.createdAt),
     experimental_attachments: (message.attachments as Array<Attachment>) ?? [],
   }));
+}
+export async function fetchWithErrorHandlers(
+  input: RequestInfo | URL,
+  init?: RequestInit
+) {
+  try {
+    const response = await fetch(input, init);
+
+    if (response.status === 429) {
+      toast.error(
+        "You have reached the maximum number of messages you can send. Please try again later."
+      );
+      return;
+    }
+
+    if (!response.ok) {
+      const { code, cause } = await response.json();
+      toast.error(cause);
+      console.error({ code, cause });
+      return;
+    }
+
+    return response;
+  } catch (error: unknown) {
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      toast.error("You are offline");
+      // throw new ChatSDKError('offline:chat');
+    }
+    toast.error("Something went wrong");
+
+    throw error;
+  }
 }

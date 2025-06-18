@@ -7,10 +7,10 @@ export const Cutout = () => {
   const { state: sidebarState } = useSidebar();
 
   return (
-    <div className="fixed right-0 top-0 max-sm:hidden z-40">
+    <div className="fixed right-0 top-0 max-sm:hidden z-10">
       <div
         className={cn(
-          "group pointer-events-none absolute top-3.5 z-10 -mb-8 h-32 w-full origin-top transition-all ease-snappy bg-gradient-noise-top",
+          "group pointer-events-none absolute top-3.5 z-9 -mb-8 h-32 w-full origin-top transition-all ease-snappy bg-gradient-noise-top",
           {
             "-translate-y-3.5 scale-y-0": sidebarState === "collapsed",
           }
