@@ -12,7 +12,7 @@ export default clerkMiddleware((auth, request) => {
   }
 
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-anon-id", anonId);
+ // requestHeaders.set("x-anon-id", anonId);
 
   const response = NextResponse.next({
     request: {
