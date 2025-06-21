@@ -1,10 +1,10 @@
-import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateUUID } from "@/lib/utils";
 import { fetchMutation } from "convex/nextjs";
 import { api } from "../../../../../convex/_generated/api";
+import { getCurrentUserConfig } from "@/lib/auth";
 
 // Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
@@ -20,12 +20,7 @@ const FileSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  // todo fix auth
-  const authData = await auth();
-
-  if (!authData.userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const userConfig = await getCurrentUserConfig();
 
   if (request.body === null) {
     return new Response("Request body is empty", { status: 400 });
@@ -58,7 +53,7 @@ export async function POST(request: Request) {
     const fileBuffer = await file.arrayBuffer();
 
     const attachmentId = await fetchMutation(api.attachments.createAttachment, {
-      userId: authData.userId,
+      userId: userConfig.userId,
       attachmentType: file.type,
       fileName: uniqueFilename,
       mimeType: file.type,
