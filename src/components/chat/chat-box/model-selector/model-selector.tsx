@@ -108,8 +108,8 @@ export function ModelSelector({
         </PopoverTrigger>
         <PopoverContent
           className={cn(
-            "p-2 border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200",
-            showAll ? "w-[580px]" : "w-[425px]"
+            "p-2 border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200 w-[90vw]",
+            showAll ? "max-w-[580px]" : "max-w-[425px]"
           )}
           side="top"
           align="start"
@@ -140,7 +140,7 @@ export function ModelSelector({
             )}
           </div>
 
-          <ScrollArea className="h-[50vh] max-h-[550px]">
+          <ScrollArea className="h-[70vh] max-h-[550px]">
             {showAll ? (
               <>
                 <div className="px-3 pt-4">

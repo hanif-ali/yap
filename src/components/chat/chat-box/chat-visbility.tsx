@@ -14,6 +14,7 @@ import { useUserConfig } from "@/providers/user-config-provider";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useWindowSize } from "usehooks-ts";
 
 export const ChatVisibility = ({ threadId }: { threadId: string }) => {
   const [open, setOpen] = useState(false);
@@ -50,17 +51,22 @@ export const ChatVisibility = ({ threadId }: { threadId: string }) => {
     [threadId, setThreadVisibility]
   );
 
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = windowWidth ? windowWidth < 768 : false;
+
   if (!thread) return null;
   if (sidebarState === "collapsed") return null;
 
   return (
     <div className="absolute top-7 left-4 right-0 bottom-0 z-10 h-10 w-fit rounded-md flex hover:bg-[hsl(var(--gradient-noise-top))] transition-all ease-snappy">
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" className="">
-            <ExternalLink />
-          </Button>
-        </PopoverTrigger>
+        {!isMobile && (
+          <PopoverTrigger asChild className="sm:block">
+            <Button variant="ghost" className="">
+              <ExternalLink />
+            </Button>
+          </PopoverTrigger>
+        )}
         <PopoverContent
           className={cn(
             "p-2 border-gray-800 text-white animate-in slide-in-from-bottom-2 duration-200 w-fit max-w-[450px] min-w-[300px]"
