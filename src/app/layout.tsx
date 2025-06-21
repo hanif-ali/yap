@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Analytics } from "@vercel/analytics/next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
@@ -56,6 +57,7 @@ export default async function RootLayout({
           </ConvexClientProvider>
         </ClerkProvider>
         <Toaster richColors theme="dark" />
+        <Analytics />
       </body>
     </html>
   );
