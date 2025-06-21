@@ -140,7 +140,7 @@ export function ModelSelector({
             )}
           </div>
 
-          <ScrollArea className="h-[550px]">
+          <ScrollArea className="h-[50vh] max-h-[550px]">
             {showAll ? (
               <>
                 <div className="px-3 pt-4">
