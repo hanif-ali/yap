@@ -75,7 +75,11 @@ Yap is a feature-rich AI chat application that supports multimodal conversations
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+Contributions are welcome! Please feel free to submit a Pull Request. 
+Major things that I need help with are: 
+- Improving the authorization (it is very hacky right now)
+- Reliability of model responses (Prompts)
+- Rate limiting
 
 ### Development
 

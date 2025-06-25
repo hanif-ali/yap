@@ -81,6 +81,19 @@ export const getOrCreateUserConfig = mutation({
         deletionSchedule: "never",
       });
 
+      // update all anon chats to the new user config
+      await ctx.db
+        .query("threads")
+        .filter((q) => q.eq(q.field("userId"), args.anonId))
+        .collect()
+        .then((threads) => {
+          threads.forEach((thread) => {
+            ctx.db.patch(thread._id, {
+              userId: identity.subject,
+            });
+          });
+        });
+
       return await ctx.db.get(newUserConfig);
     }
 
