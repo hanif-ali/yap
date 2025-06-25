@@ -115,6 +115,7 @@ export const systemPrompt = ({
   if (modelDefinition.inputCapabilities.includes("file")) {
     prompt += `\n\n${filePrompt}`;
   }
+  console.log(prompt)
 
   return prompt;
 };

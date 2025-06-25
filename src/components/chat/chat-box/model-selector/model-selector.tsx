@@ -41,8 +41,8 @@ export function ModelSelector({
     Array<ModelDefinition["key"]>
   >("favorite-models", [
     "grok-3-mini",
-    "gemini-2.0-flash-lite",
     "gemini-2.0-flash",
+    "gemini-2.5-flash",
   ]);
 
   const { userConfig } = useUserConfig();

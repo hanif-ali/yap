@@ -27,7 +27,7 @@ export default function ChatView({
   autoResume?: boolean;
 }) {
   const [model, setModel] = useState<ModelDefinition["key"]>(
-    "gemini-2.0-flash-lite"
+    "gemini-2.5-flash"
   );
   const { userConfig } = useUserConfig();
   const thread = useQuery(api.threads.getThreadById, { id });

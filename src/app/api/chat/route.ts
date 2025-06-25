@@ -162,9 +162,10 @@ export async function POST(request: Request) {
       { token }
     );
 
-    const activeTools = modelDefinition.tools
-      ? ["createCanvasArtifact", "updateCanvasArtifact"]
-      : [];
+    const activeTools =
+      modelDefinition.tools && canvasEnabled
+        ? ["createCanvasArtifact", "updateCanvasArtifact"]
+        : [];
     if (searchEnabled) {
       activeTools.push("webSearch");
     }
@@ -186,18 +187,19 @@ export async function POST(request: Request) {
           maxTokens: 1000,
           temperature: 0.7,
           experimental_transform: smoothStream(),
-          tools: modelDefinition.tools
-            ? {
-                createCanvasArtifact: createDocument({
-                  userConfig,
-                  dataStream,
-                }),
-                updateCanvasArtifact: updateDocument({
-                  dataStream,
-                }),
-                webSearch,
-              }
-            : undefined,
+          tools:
+            modelDefinition.tools && canvasEnabled
+              ? {
+                  createCanvasArtifact: createDocument({
+                    userConfig,
+                    dataStream,
+                  }),
+                  updateCanvasArtifact: updateDocument({
+                    dataStream,
+                  }),
+                  webSearch,
+                }
+              : undefined,
           onError: (error) => {
             console.log({ error });
           },
