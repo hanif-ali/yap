@@ -1,6 +1,5 @@
 # Yap 
 
-An open-source clone of [t3.chat](https://t3.chat), built by [Theo Browne](https://t3.gg)
 Yap is a feature-rich AI chat application that supports multimodal conversations, document creation, and web search capabilities.
 
 ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
